@@ -4,15 +4,15 @@ import logging
 
 import pandas as pd
 
-from oss_stats.github.repository import RepositoryClient
-from oss_stats.github.users import UsersClient
-from oss_stats.output import create_spreadsheet
+from oss_metrics.github.repository import RepositoryClient
+from oss_metrics.github.users import UsersClient
+from oss_metrics.output import create_spreadsheet
 
 LOGGER = logging.getLogger(__name__)
 
 
-def get_github_stats(token, repositories, name):
-    """Pull data from Github to create OSS stats.
+def get_github_metrics(token, repositories, name):
+    """Pull data from Github to create OSS metrics.
 
     Args:
         token (str):

@@ -3,7 +3,7 @@
 import pandas as pd
 from tqdm.auto import tqdm
 
-from oss_stats.github.client import GQLClient
+from oss_metrics.github.client import GQLClient
 
 USERS = """
 {{
