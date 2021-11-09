@@ -11,7 +11,7 @@ from oss_metrics.main import get_github_metrics
 def _env_setup(logfile, verbosity):
     warnings.simplefilter('ignore')
 
-    format_ = '%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(module)s - %(message)s'
+    format_ = '%(asctime)s - %(levelname)s - %(message)s'
     level = (3 - verbosity) * 10
     logging.basicConfig(filename=logfile, level=level, format=format_)
     logging.getLogger('oss_metrics').setLevel(level)
