@@ -23,7 +23,7 @@ def create_spreadsheet(filename, issues, users, stargazers):
     If the ``filename`` variable ends in ``xlsx`` it is interpreted as
     a path to where the file must be created. Otherwise, it is interpreted
     as a name to use when constructing the final filenam, which will be
-    ``github-stats-{name}-{today}.xlsx``.
+    ``github-metrics-{name}-{today}.xlsx``.
 
     The created spreadsheet contains 3 sheets:
         - Issues:
@@ -49,7 +49,7 @@ def create_spreadsheet(filename, issues, users, stargazers):
     """
     today = date.today().isoformat()
     if isinstance(filename, str) and not filename.endswith('.xlsx'):
-        filename = f'github-stats-{filename}-{today}.xlsx'
+        filename = f'github-metrics-{filename}-{today}.xlsx'
 
     LOGGER.info('Creating file %s', filename)
 

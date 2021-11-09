@@ -1,11 +1,11 @@
-"""OSS Stats CLI."""
+"""OSS Metrics CLI."""
 
 import argparse
 import logging
 import sys
 import warnings
 
-from oss_stats.main import get_github_stats
+from oss_metrics.main import get_github_metrics
 
 
 def _env_setup(logfile, verbosity):
@@ -14,7 +14,7 @@ def _env_setup(logfile, verbosity):
     format_ = '%(asctime)s - %(process)d - %(levelname)s - %(name)s - %(module)s - %(message)s'
     level = (3 - verbosity) * 10
     logging.basicConfig(filename=logfile, level=level, format=format_)
-    logging.getLogger('oss_stats').setLevel(level)
+    logging.getLogger('oss_metrics').setLevel(level)
     logging.getLogger().setLevel(logging.WARN)
 
 
@@ -25,8 +25,8 @@ def _get_parser():
     logging_args.add_argument('-l', '--logfile')
 
     parser = argparse.ArgumentParser(
-        prog='oss-stats',
-        description='OSS Stats Command Line Interface',
+        prog='oss-metrics',
+        description='OSS metrics Command Line Interface',
         parents=[logging_args]
     )
     parser.set_defaults(action=None)
@@ -34,7 +34,7 @@ def _get_parser():
     action.required = True
 
     # run
-    github = action.add_parser('github', help='Collect github stats.', parents=[logging_args])
+    github = action.add_parser('github', help='Collect github metrics.', parents=[logging_args])
     github.set_defaults(action=_github)
 
     github.add_argument('-o', '--output', type=str, required=False,
@@ -57,11 +57,11 @@ def _github(args):
     if output is None:
         output = repositories[0].split('/', 1)[0]
 
-    get_github_stats(token, repositories, output)
+    get_github_metrics(token, repositories, output)
 
 
 def main():
-    """Run OSS Stats CLI."""
+    """Run OSS Metrics CLI."""
     parser = _get_parser()
     if len(sys.argv) < 2:
         parser.print_help()

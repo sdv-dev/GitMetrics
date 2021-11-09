@@ -31,19 +31,19 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
     ],
-    description='OSS Stats',
+    description='OSS Metrics',
     entry_points={
         'console_scripts': [
-            'oss-stats=oss_stats.__main__:main'
+            'oss-metrics=oss_metrics.__main__:main'
         ]
     },
     include_package_data=True,
     install_requires=install_requires,
-    keywords='oss-stats',
+    keywords='oss-metrics',
     long_description=readme,
     long_description_content_type='text/markdown',
-    name='oss-stats',
-    packages=find_packages(include=['oss_stats']),
+    name='oss-metrics',
+    packages=find_packages(include=['oss_metrics']),
     python_requires='>=3.7,<3.10',
     version='0.0.1.dev0',
     zip_safe=False,

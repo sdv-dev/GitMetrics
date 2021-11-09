@@ -1,6 +1,6 @@
 """GraphQLClient subclass specialized in queries related to a specific repository."""
 
-from oss_stats.github.client import GQLClient
+from oss_metrics.github.client import GQLClient
 
 REPO_ENVELOPE = """
 {{
