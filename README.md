@@ -48,21 +48,25 @@ indicated above.
 >>> output_name = 'sdv-dev'
 >>> token = '<my-github-token>'
 >>> get_github_metrics(token, repositories, output_name)
-INFO:oss_metrics.main:Getting issues and stargazers for sdv-dev/RDT
-100%|████████████████████████████████████████████████████| 142/142 [00:00<00:00, 298.76it/s]
-100%|███████████████████████████████████████████████████| 37/37 [00:00<00:00, 316067.71it/s]
-INFO:oss_metrics.main:Getting issues and stargazers for sdv-dev/SDV
-100%|████████████████████████████████████████████████████| 387/387 [00:01<00:00, 200.34it/s]
-100%|████████████████████████████████████████████████████| 553/553 [00:03<00:00, 149.46it/s]
-INFO:oss_metrics.main:Getting issues and stargazers for sdv-dev/Copulas
-100%|████████████████████████████████████████████████████| 138/138 [00:00<00:00, 300.36it/s]
-100%|████████████████████████████████████████████████████| 245/245 [00:01<00:00, 217.21it/s]
-INFO:oss_metrics.main:Getting issues and stargazers for sdv-dev/CTGAN
-100%|████████████████████████████████████████████████████| 112/112 [00:00<00:00, 298.79it/s]
-100%|████████████████████████████████████████████████████| 494/494 [00:02<00:00, 175.42it/s]
-INFO:oss_metrics.main:Getting users
-100%|███████████████████████████████████████████████████▊| 212/213 [00:01<00:00, 122.67it/s]
-INFO:oss_metrics.output:Creating file github-metrics-sdv-dev-2021-11-09.xlsx
+INFO:oss_metrics.main:Getting information for repository sdv-dev/RDT
+100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 195.00it/s]
+100%|███████████████████████████████████████████████████████████████| 182/182 [00:00<00:00, 364.64it/s]
+100%|███████████████████████████████████████████████████████████████| 37/37 [00:00<00:00, 91020.09it/s]
+INFO:oss_metrics.main:Getting information for repository sdv-dev/SDV
+100%|███████████████████████████████████████████████████████████████| 389/389 [00:02<00:00, 193.20it/s]
+100%|███████████████████████████████████████████████████████████████| 219/219 [00:00<00:00, 231.17it/s]
+100%|███████████████████████████████████████████████████████████████| 561/561 [00:03<00:00, 158.39it/s]
+INFO:oss_metrics.main:Getting information for repository sdv-dev/Copulas
+100%|███████████████████████████████████████████████████████████████| 138/138 [00:00<00:00, 333.27it/s]
+100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 287.29it/s]
+100%|███████████████████████████████████████████████████████████████| 245/245 [00:01<00:00, 204.88it/s]
+INFO:oss_metrics.main:Getting information for repository sdv-dev/CTGAN
+100%|███████████████████████████████████████████████████████████████| 113/113 [00:00<00:00, 287.26it/s]
+100%|██████████████████████████████████████████████████████████████| 64/64 [00:00<00:00, 134824.44it/s]
+100%|███████████████████████████████████████████████████████████████| 498/498 [00:02<00:00, 171.11it/s]
+INFO:oss_metrics.main:Getting 164 missing users
+ 99%|██████████████████████████████████████████████████████████████▌| 163/164 [00:01<00:00, 121.99it/s]
+INFO:oss_metrics.output:Creating file github-metrics-sdv-dev-2021-11-12.xlsx
 ```
 
 
@@ -77,19 +81,42 @@ If the `-t` flag is not provided, the github token will be requested in a prompt
 ```bash
 $ oss-metrics github -o sdv-dev sdv-dev/RDT sdv-dev/SDV sdv-dev/CTGAN sdv-dev/Copulas
 Please input your Github Token: <my-github-token>
-2021-11-09 21:05:14,380 - INFO - Getting issues and stargazers for sdv-dev/RDT
-100%|████████████████████████████████████████████████████| 142/142 [00:00<00:00, 233.73it/s]
-100%|████████████████████████████████████████████████████| 37/37 [00:00<00:00, 73306.21it/s]
-2021-11-09 21:05:16,097 - INFO - Getting issues and stargazers for sdv-dev/SDV
-100%|████████████████████████████████████████████████████| 387/387 [00:02<00:00, 188.62it/s]
-100%|████████████████████████████████████████████████████| 553/553 [00:03<00:00, 152.76it/s]
-2021-11-09 21:05:23,149 - INFO - Getting issues and stargazers for sdv-dev/CTGAN
-100%|████████████████████████████████████████████████████| 112/112 [00:00<00:00, 259.83it/s]
-100%|████████████████████████████████████████████████████| 494/494 [00:02<00:00, 179.36it/s]
-2021-11-09 21:05:27,755 - INFO - Getting issues and stargazers for sdv-dev/Copulas
-100%|████████████████████████████████████████████████████| 138/138 [00:00<00:00, 348.97it/s]
-100%|████████████████████████████████████████████████████| 245/245 [00:01<00:00, 192.98it/s]
-2021-11-09 21:05:30,737 - INFO - Getting users
-100%|███████████████████████████████████████████████████▋| 212/213 [00:01<00:00, 110.94it/s]
-2021-11-09 21:05:32,651 - INFO - Creating file github-metrics-sdv-dev-2021-11-09.xlsx
+2021-11-12 15:42:43,100 - INFO - Getting information for repository sdv-dev/RDT
+100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 300.87it/s]
+100%|███████████████████████████████████████████████████████████████| 182/182 [00:00<00:00, 324.25it/s]
+100%|███████████████████████████████████████████████████████████████| 37/37 [00:00<00:00, 88276.02it/s]
+2021-11-12 15:42:45,862 - INFO - Getting information for repository sdv-dev/SDV
+100%|███████████████████████████████████████████████████████████████| 389/389 [00:01<00:00, 203.20it/s]
+100%|███████████████████████████████████████████████████████████████| 219/219 [00:00<00:00, 228.34it/s]
+100%|███████████████████████████████████████████████████████████████| 561/561 [00:03<00:00, 152.64it/s]
+2021-11-12 15:42:54,465 - INFO - Getting information for repository sdv-dev/CTGAN
+100%|███████████████████████████████████████████████████████████████| 113/113 [00:00<00:00, 283.67it/s]
+100%|██████████████████████████████████████████████████████████████| 64/64 [00:00<00:00, 134486.70it/s]
+100%|███████████████████████████████████████████████████████████████| 498/498 [00:02<00:00, 179.84it/s]
+2021-11-12 15:42:59,545 - INFO - Getting information for repository sdv-dev/Copulas
+100%|███████████████████████████████████████████████████████████████| 138/138 [00:00<00:00, 318.99it/s]
+100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 303.94it/s]
+100%|███████████████████████████████████████████████████████████████| 245/245 [00:01<00:00, 170.51it/s]
+2021-11-12 15:43:04,178 - INFO - Getting 164 missing users
+ 99%|██████████████████████████████████████████████████████████████▌| 163/164 [00:01<00:00, 110.06it/s]
+2021-11-12 15:43:05,688 - INFO - Creating file github-metrics-sdv-dev-2021-11-12.xlsx
 ```
+
+## Output
+
+The result is a spreasheet that will contain 5 tabs:
+- **Issues**:
+    Where all the issues are listed, including data about
+    the users who created them.
+- **Pull Requests**:
+    Where all the pull requests are listed, including data about
+    the users who created them.
+- **Unique Issue Users**:
+    Where the unique users that created issues
+    are listed with all the information existing in their profile
+- **Unique Contributors**:
+    Where the unique users that created pull requests
+    are listed with all the information existing in their profile
+- **Unique Stargazers**:
+    Where the unique users that stargazed the repositories
+    are listed with all the information existing in their profile

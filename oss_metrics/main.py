@@ -10,8 +10,53 @@ from oss_metrics.output import create_spreadsheet
 
 LOGGER = logging.getLogger(__name__)
 
+USER_COLUMNS = [
+    'user',
+    'name',
+    'email',
+    'blog',
+    'company',
+    'location',
+    'twitter',
+    'user_created_at',
+    'user_updated_at',
+    'bio'
+]
 
-def get_github_metrics(token, repositories, name):
+
+def _get_repository_data(token, repository):
+    LOGGER.info('Getting information for repository %s', repository)
+    repo_client = RepositoryClient(token, repository)
+
+    issues = repo_client.get_issues()
+    issues.insert(1, 'repository', repository)
+
+    pull_requests = repo_client.get_pull_requests()
+    pull_requests.insert(1, 'repository', repository)
+
+    stargazers = repo_client.get_stargazers()
+    stargazers.insert(1, 'repository', repository)
+
+    return issues, pull_requests, stargazers
+
+
+def _get_users(token, issues, pull_requests, stargazers):
+    all_users = issues.user.append(pull_requests.user, ignore_index=True)
+    unique_users = all_users.dropna().unique().tolist()
+    stargazer_users = stargazers.user.dropna().unique()
+    missing = list(set(unique_users) - set(stargazer_users))
+
+    users = stargazers[USER_COLUMNS].drop_duplicates()
+    if missing:
+        LOGGER.info('Getting %s missing users', len(missing))
+        users_client = UsersClient(token)
+        missing_users = users_client.get_users(missing)
+        users = users.append(missing_users, ignore_index=True)
+
+    return users.sort_values('user').reset_index(drop=True)
+
+
+def get_github_metrics(token, repositories, name=None):
     """Pull data from Github to create OSS metrics.
 
     Args:
@@ -23,20 +68,26 @@ def get_github_metrics(token, repositories, name):
             Output path, including the ``xlsx`` extension, or name to use
             when creating the final filename
     """
-    issues = pd.DataFrame()
-    stargazers = pd.DataFrame()
+    all_issues = pd.DataFrame()
+    all_pull_requests = pd.DataFrame()
+    all_stargazers = pd.DataFrame()
 
     for repository in repositories:
-        LOGGER.info('Getting issues and stargazers for %s', repository)
-        repo_client = RepositoryClient(token, repository)
-        issues = issues.append(repo_client.get_issues(), ignore_index=True)
-        stargazers = stargazers.append(repo_client.get_stargazers(), ignore_index=True)
+        issues, pull_requests, stargazers = _get_repository_data(token, repository)
+        all_issues = all_issues.append(issues, ignore_index=True)
+        all_pull_requests = all_pull_requests.append(pull_requests, ignore_index=True)
+        all_stargazers = all_stargazers.append(stargazers, ignore_index=True)
 
-    LOGGER.info('Getting users')
-    users_client = UsersClient(token)
-    unique_users = issues.user.dropna().unique().tolist()
-    users = users_client.get_users(unique_users)
+    stargazers = all_stargazers.sort_values('starred_at').drop_duplicates(subset='user')
+    users = _get_users(token, all_issues, all_pull_requests, stargazers)
 
-    issues = issues.merge(users, how='left', on='user')
+    issues = all_issues.merge(users, how='left', on='user').drop_duplicates()
+    pull_requests = all_pull_requests.merge(users, how='left', on='user').drop_duplicates()
+    contributors = pull_requests[USER_COLUMNS].drop_duplicates()
+    contributors = contributors.sort_values('user').reset_index(drop=True)
 
-    create_spreadsheet(name, issues, users, stargazers)
+    if name:
+        create_spreadsheet(name, issues, pull_requests, users, contributors, stargazers)
+        return None
+
+    return issues, pull_requests, users, contributors, stargazers
