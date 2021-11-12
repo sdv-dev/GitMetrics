@@ -40,7 +40,7 @@ def _get_repository_data(token, repository):
     return issues, pull_requests, stargazers
 
 
-def _get_users(token, issues, pull_requests, stargazers):
+def _get_profiles(token, issues, pull_requests, stargazers):
     all_users = issues.user.append(pull_requests.user, ignore_index=True)
     unique_users = all_users.dropna().unique().tolist()
     stargazer_users = stargazers.user.dropna().unique()
@@ -54,6 +54,20 @@ def _get_users(token, issues, pull_requests, stargazers):
         users = users.append(missing_users, ignore_index=True)
 
     return users.sort_values('user').reset_index(drop=True)
+
+
+def _get_users(issues, profiles):
+    issues_by_date = issues.sort_values('created_at')
+    users = issues_by_date[['user', 'created_at']].drop_duplicates(subset='user', keep='first')
+    users = users.rename(columns={'created_at': 'first_issue_date'})
+    users = users.merge(profiles, how='left', on='user')
+
+    first_issue_date = pd.to_datetime(users['first_issue_date'])
+    user_created_at = pd.to_datetime(users['user_created_at'])
+    days_between = (first_issue_date - user_created_at).dt.days
+    users.insert(2, 'db_account_issue_creation', days_between)
+
+    return users
 
 
 def get_github_metrics(token, repositories, name=None):
@@ -79,15 +93,16 @@ def get_github_metrics(token, repositories, name=None):
         all_stargazers = all_stargazers.append(stargazers, ignore_index=True)
 
     stargazers = all_stargazers.sort_values('starred_at').drop_duplicates(subset='user')
-    users = _get_users(token, all_issues, all_pull_requests, stargazers)
+    profiles = _get_profiles(token, all_issues, all_pull_requests, stargazers)
 
-    issues = all_issues.merge(users, how='left', on='user').drop_duplicates()
-    pull_requests = all_pull_requests.merge(users, how='left', on='user').drop_duplicates()
+    users = _get_users(all_issues, profiles)
+
+    pull_requests = all_pull_requests.merge(profiles, how='left', on='user').drop_duplicates()
     contributors = pull_requests[USER_COLUMNS].drop_duplicates()
     contributors = contributors.sort_values('user').reset_index(drop=True)
 
     if name:
-        create_spreadsheet(name, issues, pull_requests, users, contributors, stargazers)
+        create_spreadsheet(name, all_issues, pull_requests, users, contributors, stargazers)
         return None
 
-    return issues, pull_requests, users, contributors, stargazers
+    return all_issues, pull_requests, users, contributors, stargazers
