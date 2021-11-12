@@ -66,6 +66,35 @@ issues(first: 100{end_cursor}) {{
 }}
 """
 
+PULL_REQUESTS_COUNT = """
+pullRequests {{
+    totalCount
+}}
+"""
+PULL_REQUESTS = """
+pullRequests(first: 100{end_cursor}) {{
+    pageInfo {{
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
+    }}
+    totalCount
+    edges {{
+        node {{
+            author {{
+                login
+            }}
+            number
+            createdAt
+            closedAt
+            state
+            title
+        }}
+    }}
+}}
+"""
+
 
 class RepositoryClient(GQLClient):
     """GraphQLClient subclass specialized in queries related to a specific repository."""
@@ -144,9 +173,9 @@ class RepositoryClient(GQLClient):
         author = node['author'] or {}
         return {
             'user': author.get('login'),
+            'number': node['number'],
             'created_at': node['createdAt'],
             'closed_at': node['closedAt'],
-            'number': node['number'],
             'state': node['state'],
             'title': node['title'],
         }
@@ -159,5 +188,35 @@ class RepositoryClient(GQLClient):
             total='issues.totalCount',
             collection_name='issues',
             item_parser=self._issue_parser,
+            query_maker=self._make_query
+        )
+
+    def get_pull_requests_count(self):
+        """Get the number of pull requests of this repository."""
+        query = self._make_query(PULL_REQUESTS_COUNT)
+        response = self.run_query(query, prefix='data.repository')
+        return response['pullRequests.totalCount']
+
+    @staticmethod
+    def _pull_request_parser(pull_request):
+        node = pull_request['node']
+        author = node['author'] or {}
+        return {
+            'user': author.get('login'),
+            'number': node['number'],
+            'created_at': node['createdAt'],
+            'closed_at': node['closedAt'],
+            'state': node['state'],
+            'title': node['title'],
+        }
+
+    def get_pull_requests(self):
+        """Get the pull requests of this repository."""
+        return self.paginate_collection(
+            query=PULL_REQUESTS,
+            prefix='data.repository',
+            total='pullRequests.totalCount',
+            collection_name='pullRequests',
+            item_parser=self._pull_request_parser,
             query_maker=self._make_query
         )
