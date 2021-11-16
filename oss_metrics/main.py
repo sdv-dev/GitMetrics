@@ -1,12 +1,13 @@
 """Main script."""
 
 import logging
+from pathlib import Path
 
 import pandas as pd
 
 from oss_metrics.github.repository import RepositoryClient
 from oss_metrics.github.users import UsersClient
-from oss_metrics.output import create_spreadsheet
+from oss_metrics.output import create_spreadsheet, load_spreadsheet
 
 LOGGER = logging.getLogger(__name__)
 
@@ -24,12 +25,30 @@ USER_COLUMNS = [
 ]
 
 
-def _get_repository_data(token, repository):
+def _get_repository_data(token, repository, previous=None):
     LOGGER.info('Getting information for repository %s', repository)
     repo_client = RepositoryClient(token, repository)
+    if previous:
+        prev_issues = previous['Issues']
+        prev_issues = prev_issues[prev_issues.repository == repository]
+        max_date = max(
+            prev_issues['created_at'].max(),
+            prev_issues['updated_at'].max(),
+            prev_issues['closed_at'].max(),
+        )
+    else:
+        prev_issues = None
+        max_date = None
 
-    issues = repo_client.get_issues()
-    issues.insert(1, 'repository', repository)
+    issues = repo_client.get_issues(since=max_date)
+    if issues.empty:
+        issues = prev_issues
+    else:
+        issues.insert(1, 'repository', repository)
+        if prev_issues is not None and not prev_issues.empty:
+            issues = issues.append(prev_issues)
+            issues = issues.sort_values(['created_at', 'closed_at'])
+            issues = issues.drop_duplicates(['repository', 'number'], keep='last')
 
     pull_requests = repo_client.get_pull_requests()
     pull_requests.insert(1, 'repository', repository)
@@ -40,13 +59,21 @@ def _get_repository_data(token, repository):
     return issues, pull_requests, stargazers
 
 
-def _get_profiles(token, issues, pull_requests, stargazers):
+def _get_profiles(token, issues, pull_requests, stargazers, previous):
     all_users = issues.user.append(pull_requests.user, ignore_index=True)
     unique_users = all_users.dropna().unique().tolist()
-    stargazer_users = stargazers.user.dropna().unique()
-    missing = list(set(unique_users) - set(stargazer_users))
 
     users = stargazers[USER_COLUMNS].drop_duplicates()
+
+    if previous:
+        users = users.append(previous['Unique Issue Users'][USER_COLUMNS], ignore_index=True)
+        users = users.append(previous['Unique Contributors'][USER_COLUMNS], ignore_index=True)
+        users = users.append(previous['Unique Stargazers'][USER_COLUMNS], ignore_index=True)
+        users = users.sort_values('user_updated_at').drop_duplicates('user', keep='last')
+
+    known_users = users.user.dropna().unique()
+
+    missing = list(set(unique_users) - set(known_users))
     if missing:
         LOGGER.info('Getting %s missing users', len(missing))
         users_client = UsersClient(token)
@@ -68,7 +95,7 @@ def _get_users(issues, profiles):
     return users
 
 
-def get_github_metrics(token, repositories, name=None):
+def get_github_metrics(token, repositories, output_path=None):
     """Pull data from Github to create OSS metrics.
 
     Args:
@@ -76,22 +103,27 @@ def get_github_metrics(token, repositories, name=None):
             Github token to use.
         repositories (list[str]):
             List of repositories to analyze, passed as ``{org_name}/{repo_name}``
-        filename (str):
+        ouptut_path (str):
             Output path, including the ``xlsx`` extension, or name to use
             when creating the final filename
     """
+    if Path(output_path).exists():
+        previous = load_spreadsheet(output_path)
+    else:
+        previous = None
+
     all_issues = pd.DataFrame()
     all_pull_requests = pd.DataFrame()
     all_stargazers = pd.DataFrame()
 
     for repository in repositories:
-        issues, pull_requests, stargazers = _get_repository_data(token, repository)
+        issues, pull_requests, stargazers = _get_repository_data(token, repository, previous)
         all_issues = all_issues.append(issues, ignore_index=True)
         all_pull_requests = all_pull_requests.append(pull_requests, ignore_index=True)
         all_stargazers = all_stargazers.append(stargazers, ignore_index=True)
 
     stargazers = all_stargazers.sort_values('starred_at').drop_duplicates(subset='user')
-    profiles = _get_profiles(token, all_issues, all_pull_requests, stargazers)
+    profiles = _get_profiles(token, all_issues, all_pull_requests, stargazers, previous)
 
     users = _get_users(all_issues, profiles)
 
@@ -100,7 +132,7 @@ def get_github_metrics(token, repositories, name=None):
     contributors = pull_requests[USER_COLUMNS].drop_duplicates()
     contributors = contributors.sort_values('user').reset_index(drop=True)
 
-    if name:
+    if output_path:
         sheets = {
             'Issues': issues,
             'Pull Requests': pull_requests,

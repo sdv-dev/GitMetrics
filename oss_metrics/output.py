@@ -20,7 +20,7 @@ def _add_sheet(writer, data, sheet):
 def create_spreadsheet(output_path, sheets):
     """Create a spreadsheet with the indicated name and data.
 
-    If the ``filename`` variable ends in ``xlsx`` it is interpreted as
+    If the ``output_path`` variable ends in ``xlsx`` it is interpreted as
     a path to where the file must be created. Otherwise, it is interpreted
     as a name to use when constructing the final filename, which will be
     ``github-metrics-{name}-{today}.xlsx`` within the current working
@@ -30,7 +30,7 @@ def create_spreadsheet(output_path, sheets):
     titles as keys and sheet contents as values, passed as pandas.DataFrames.
 
     Args:
-        filename (str):
+        output_path (str):
             Path to where the file must be created, including the filename
             ending in ``.xlsx``, or name to be used to construct a filename.
         sheets (dict[str, pandas.DataFrame]):
@@ -38,11 +38,46 @@ def create_spreadsheet(output_path, sheets):
             keys and sheet contents as values, passed as pandas.DataFrames.
     """
     today = date.today().isoformat()
-    if isinstance(filename, str) and not filename.endswith('.xlsx'):
-        filename = f'github-metrics-{filename}-{today}.xlsx'
+    if isinstance(output_path, str) and not output_path.endswith('.xlsx'):
+        output_path = f'github-metrics-{output_path}-{today}.xlsx'
 
-    LOGGER.info('Creating file %s', filename)
+    LOGGER.info('Creating file %s', output_path)
 
     with pd.ExcelWriter(output_path, mode='w') as writer:  # pylint: disable=E0110
         for title, data in sheets.items():
             _add_sheet(writer, data, title)
+
+
+DATE_COLUMNS = [
+    'created_at',
+    'updated_at',
+    'closed_at',
+    'starred_at',
+    'user_created_at',
+    'user_updated_at',
+]
+
+
+def load_spreadsheet(output_path):
+    """Load a spreadsheet previously created by oss-metrics.
+
+    Args:
+        output_path (str):
+            Path to where the file was stored.
+
+    Return:
+        dict[str, pd.DataFrame]:
+            Dict of strings and dataframes with the contents
+            of the spreadsheet and the date fields properly
+            parsed to datetimes.
+    """
+    sheets = pd.read_excel(
+        output_path,
+        sheet_name=None,
+    )
+    for sheet in sheets.values():  # noqa
+        for column in DATE_COLUMNS:
+            if column in sheet:
+                sheet[column] = pd.to_datetime(sheet[column], utc=True).dt.tz_convert(None)
+
+    return sheets
