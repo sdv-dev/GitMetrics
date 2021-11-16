@@ -14,7 +14,7 @@ REPO_ENVELOPE = """
 """
 STARGAZER_COUNT = 'stargazerCount'
 STARGAZERS = """
-stargazers(first: 100{end_cursor}) {{
+stargazers(first: 100{end_cursor}{filter_by}) {{
     pageInfo {{
         endCursor
         hasNextPage
@@ -46,7 +46,7 @@ issues {{
 }}
 """
 ISSUES = """
-issues(first: 100{end_cursor}) {{
+issues(first: 100{end_cursor}{filter_by}) {{
     pageInfo {{
         endCursor
         hasNextPage
@@ -76,7 +76,7 @@ pullRequests {{
 }}
 """
 PULL_REQUESTS = """
-pullRequests(first: 100{end_cursor}) {{
+pullRequests(first: 100{end_cursor}{filter_by}) {{
     pageInfo {{
         endCursor
         hasNextPage
@@ -99,6 +99,8 @@ pullRequests(first: 100{end_cursor}) {{
     }}
 }}
 """
+
+SINCE = ', filterBy: {{since: "{since}"}}'
 
 
 class RepositoryClient(GQLClient):
@@ -124,7 +126,12 @@ class RepositoryClient(GQLClient):
 
         return query_body.format(**kwargs)
 
-    def _make_query(self, query_body, **kwargs):
+    def _make_query(self, query_body, since=None, **kwargs):
+        if pd.notna(since):
+            kwargs['filter_by'] = SINCE.format(since=since.isoformat())
+        else:
+            kwargs.setdefault('filter_by', '')
+
         query_body = self._indent_query(query_body, **kwargs)
         return REPO_ENVELOPE.format(
             owner=self.owner,
@@ -155,7 +162,7 @@ class RepositoryClient(GQLClient):
             'bio': node['bio'],
         }
 
-    def get_stargazers(self):
+    def get_stargazers(self, since=None):
         """Get the stargazers of this repository."""
         return self.paginate_collection(
             query=STARGAZERS,
@@ -163,7 +170,8 @@ class RepositoryClient(GQLClient):
             total='stargazers.totalCount',
             collection_name='stargazers',
             item_parser=self._stargazer_parser,
-            query_maker=self._make_query
+            query_maker=self._make_query,
+            since=since,
         )
 
     def get_issue_count(self):
@@ -186,7 +194,7 @@ class RepositoryClient(GQLClient):
             'title': node['title'],
         }
 
-    def get_issues(self):
+    def get_issues(self, since=None):
         """Get the issues of this repository."""
         return self.paginate_collection(
             query=ISSUES,
@@ -194,7 +202,8 @@ class RepositoryClient(GQLClient):
             total='issues.totalCount',
             collection_name='issues',
             item_parser=self._issue_parser,
-            query_maker=self._make_query
+            query_maker=self._make_query,
+            since=since
         )
 
     def get_pull_requests_count(self):
@@ -217,7 +226,7 @@ class RepositoryClient(GQLClient):
             'title': node['title'],
         }
 
-    def get_pull_requests(self):
+    def get_pull_requests(self, since=None):
         """Get the pull requests of this repository."""
         return self.paginate_collection(
             query=PULL_REQUESTS,
@@ -225,5 +234,6 @@ class RepositoryClient(GQLClient):
             total='pullRequests.totalCount',
             collection_name='pullRequests',
             item_parser=self._pull_request_parser,
-            query_maker=self._make_query
+            query_maker=self._make_query,
+            since=since
         )
