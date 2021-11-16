@@ -62,9 +62,7 @@ def _get_users(issues, profiles):
     users = users.rename(columns={'created_at': 'first_issue_date'})
     users = users.merge(profiles, how='left', on='user')
 
-    first_issue_date = pd.to_datetime(users['first_issue_date'])
-    user_created_at = pd.to_datetime(users['user_created_at'])
-    days_between = (first_issue_date - user_created_at).dt.days
+    days_between = (users['first_issue_date'] - users['user_created_at']).dt.days
     users.insert(2, 'db_account_issue_creation', days_between)
 
     return users
@@ -97,12 +95,20 @@ def get_github_metrics(token, repositories, name=None):
 
     users = _get_users(all_issues, profiles)
 
+    issues = all_issues.merge(profiles, how='left', on='user').drop_duplicates()
     pull_requests = all_pull_requests.merge(profiles, how='left', on='user').drop_duplicates()
     contributors = pull_requests[USER_COLUMNS].drop_duplicates()
     contributors = contributors.sort_values('user').reset_index(drop=True)
 
     if name:
-        create_spreadsheet(name, all_issues, pull_requests, users, contributors, stargazers)
+        sheets = {
+            'Issues': issues,
+            'Pull Requests': pull_requests,
+            'Unique Issue Users': users,
+            'Unique Contributors': contributors,
+            'Unique Stargazers': stargazers,
+        }
+        create_spreadsheet(output_path, sheets)
         return None
 
-    return all_issues, pull_requests, users, contributors, stargazers
+    return issues, pull_requests, users, contributors, stargazers

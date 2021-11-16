@@ -4,6 +4,7 @@ import pandas as pd
 from tqdm.auto import tqdm
 
 from oss_metrics.github.client import GQLClient
+from oss_metrics.utils import to_utc
 
 USERS = """
 {{
@@ -50,8 +51,8 @@ class UsersClient(GQLClient):
             'company': node['company'],
             'location': node['location'],
             'twitter': node['twitterUsername'],
-            'user_created_at': node['createdAt'],
-            'user_updated_at': node['updatedAt'],
+            'user_created_at': to_utc(node['createdAt']),
+            'user_updated_at': to_utc(node['updatedAt']),
             'bio': node['bio'],
         }
 

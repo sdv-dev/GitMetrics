@@ -17,43 +17,25 @@ def _add_sheet(writer, data, sheet):
         writer.sheets[sheet].set_column(col_idx, col_idx, column_width + 2)
 
 
-def create_spreadsheet(filename, issues, pull_requests, users, contributors, stargazers):
+def create_spreadsheet(output_path, sheets):
     """Create a spreadsheet with the indicated name and data.
 
     If the ``filename`` variable ends in ``xlsx`` it is interpreted as
     a path to where the file must be created. Otherwise, it is interpreted
-    as a name to use when constructing the final filenam, which will be
-    ``github-metrics-{name}-{today}.xlsx``.
+    as a name to use when constructing the final filename, which will be
+    ``github-metrics-{name}-{today}.xlsx`` within the current working
+    directory.
 
-    The created spreadsheet contains 5 sheets:
-        - Issues:
-            Where all the issues are listed, including data about
-            the users who created them.
-        - Pull Requests:
-            Where all the pull requests are listed, including data about
-            the users who created them.
-        - Unique Issue Users:
-            Where the unique users that created issues
-            are listed with all the information existing in their profile
-        - Unique Contributors:
-            Where the unique users that created pull requests
-            are listed with all the information existing in their profile
-        - Unique Stargazers:
-            Where the unique users that stargazed the repositories
-            are listed with all the information existing in their profile
+    The ``sheets`` must be passed as as dictionary that contains sheet
+    titles as keys and sheet contents as values, passed as pandas.DataFrames.
 
     Args:
         filename (str):
             Path to where the file must be created, including the filename
             ending in ``.xlsx``, or name to be used to construct a filename.
-        issues (pandas.DataFrame):
-            Table of issues.
-        pull_requests (pandas.DataFrame):
-            Table of pull requests.
-        users (pandas.DataFrame):
-            Table of unique users that created issues.
-        stargazers (pandas.DataFrame):
-            Table of unique users that stargazed the libraries.
+        sheets (dict[str, pandas.DataFrame]):
+            Sheets to created, passed as a dict that contains sheet titles as
+            keys and sheet contents as values, passed as pandas.DataFrames.
     """
     today = date.today().isoformat()
     if isinstance(filename, str) and not filename.endswith('.xlsx'):
@@ -61,9 +43,6 @@ def create_spreadsheet(filename, issues, pull_requests, users, contributors, sta
 
     LOGGER.info('Creating file %s', filename)
 
-    with pd.ExcelWriter(filename, mode='w') as writer:  # pylint: disable=E0110
-        _add_sheet(writer, issues, 'Issues')
-        _add_sheet(writer, pull_requests, 'Pull Requests')
-        _add_sheet(writer, users, 'Unique Issue Users')
-        _add_sheet(writer, contributors, 'Unique Contributors')
-        _add_sheet(writer, stargazers, 'Unique Stargazers')
+    with pd.ExcelWriter(output_path, mode='w') as writer:  # pylint: disable=E0110
+        for title, data in sheets.items():
+            _add_sheet(writer, data, title)
