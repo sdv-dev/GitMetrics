@@ -64,6 +64,10 @@ class GQLClient:
             raise RuntimeError(f'Query fail ({response.status_code}): {response.content}')
 
         response = benedict(response.json())
+        if 'errors' in response:
+            LOGGER.error(response.to_json(indent=4))
+            raise ValueError(response['errors'][0]['message'])
+
         LOGGER.debug(response.to_json(indent=4))
 
         if prefix:
@@ -121,7 +125,12 @@ class GQLClient:
             end_cursor = f', after: "{page_info["endCursor"]}"'
 
             for item in collection['edges']:
-                data.append(item_parser(item))
+                try:
+                    data.append(item_parser(item))
+                except (TypeError, KeyError):
+                    # Possibly a bot, like dependabot
+                    pass
+
                 _pbar.update(1)
 
             if not has_next_page:
