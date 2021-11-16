@@ -1,6 +1,9 @@
 """GraphQLClient subclass specialized in queries related to a specific repository."""
 
+import pandas as pd
+
 from oss_metrics.github.client import GQLClient
+from oss_metrics.utils import to_utc
 
 REPO_ENVELOPE = """
 {{
@@ -58,6 +61,7 @@ issues(first: 100{end_cursor}) {{
             }}
             number
             createdAt
+            updatedAt
             closedAt
             state
             title
@@ -87,6 +91,7 @@ pullRequests(first: 100{end_cursor}) {{
             }}
             number
             createdAt
+            updatedAt
             closedAt
             state
             title
@@ -138,15 +143,15 @@ class RepositoryClient(GQLClient):
         node = stargazer['node']
         return {
             'user': node['login'],
-            'starred_at': stargazer['starredAt'],
+            'starred_at': to_utc(stargazer['starredAt']),
             'name': node['name'],
             'email': node['email'],
             'blog': node['websiteUrl'],
             'company': node['company'],
             'location': node['location'],
             'twitter': node['twitterUsername'],
-            'user_created_at': node['createdAt'],
-            'user_updated_at': node['updatedAt'],
+            'user_created_at': to_utc(node['createdAt']),
+            'user_updated_at': to_utc(node['updatedAt']),
             'bio': node['bio'],
         }
 
@@ -174,8 +179,9 @@ class RepositoryClient(GQLClient):
         return {
             'user': author.get('login'),
             'number': node['number'],
-            'created_at': node['createdAt'],
-            'closed_at': node['closedAt'],
+            'created_at': to_utc(node['createdAt']),
+            'closed_at': to_utc(node['closedAt']),
+            'updated_at': to_utc(node['updatedAt']),
             'state': node['state'],
             'title': node['title'],
         }
@@ -204,8 +210,9 @@ class RepositoryClient(GQLClient):
         return {
             'user': author.get('login'),
             'number': node['number'],
-            'created_at': node['createdAt'],
-            'closed_at': node['closedAt'],
+            'created_at': to_utc(node['createdAt']),
+            'closed_at': to_utc(node['closedAt']),
+            'updated_at': to_utc(node['updatedAt']),
             'state': node['state'],
             'title': node['title'],
         }
