@@ -1,5 +1,6 @@
 """Functions to upload to and download from google drive."""
 
+import logging
 import os
 import pathlib
 import tempfile
@@ -11,6 +12,8 @@ from pydrive.drive import GoogleDrive
 XLSX_MIMETYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 SPREADSHEET_MIMETYPE = 'application/vnd.google-apps.spreadsheet'
 PYDRIVE_CREDENTIALS = 'PYDRIVE_CREDENTIALS'
+
+LOGGER = logging.getLogger(__name__)
 
 
 def is_drive_path(path):
@@ -93,6 +96,7 @@ def upload_spreadsheet(content, filename, folder):
 
     drive_file.content = content
     drive_file.Upload({'convert': True})
+    LOGGER.info('Created file %s', drive_file.metadata['alternateLink'])
 
 
 def download_spreadsheet(folder, filename):
