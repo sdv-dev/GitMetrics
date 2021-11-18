@@ -2,10 +2,16 @@
 
 import argparse
 import logging
+import os
+import pathlib
 import sys
 import warnings
 
-from oss_metrics.main import get_github_metrics
+import yaml
+
+from oss_metrics.main import collect_projects
+
+LOGGER = logging.getLogger(__name__)
 
 
 def _env_setup(logfile, verbosity):
@@ -16,6 +22,31 @@ def _env_setup(logfile, verbosity):
     logging.basicConfig(filename=logfile, level=level, format=format_)
     logging.getLogger('oss_metrics').setLevel(level)
     logging.getLogger().setLevel(logging.WARN)
+
+
+def _collect(args):
+    token = args.token or os.getenv('GITHUB_TOKEN')
+    if token is None:
+        token = input('Please input your Github Token: ')
+
+    config_file = pathlib.Path(args.config_file)
+    config = yaml.safe_load(config_file.read_text())
+    config_projects = config['projects']
+
+    projects = {}
+    if not args.projects:
+        projects = config_projects
+    else:
+        for project in args.projects:
+            if project not in config_projects:
+                LOGGER.error('Unknown project %s', project)
+                return
+
+            projects[project] = config_projects[project]
+
+    output_folder = args.output_folder or config.get('output_folder', '.')
+
+    collect_projects(token, projects, output_folder)
 
 
 def _get_parser():
@@ -33,31 +64,20 @@ def _get_parser():
     action = parser.add_subparsers(title='action')
     action.required = True
 
-    # run
-    github = action.add_parser('github', help='Collect github metrics.', parents=[logging_args])
-    github.set_defaults(action=_github)
+    # collect
+    collect = action.add_parser('collect', help='Collect github metrics.', parents=[logging_args])
+    collect.set_defaults(action=_collect)
 
-    github.add_argument('-o', '--output', type=str, required=False,
-                        help='Path or name to use for the output file.')
-    github.add_argument('-t', '--token', type=str, required=False,
-                        help='Github Token to use.')
-    github.add_argument('repositories', type=str, nargs='+',
-                        help='Name of the repositories to collect.')
+    collect.add_argument('-o', '--output-folder', type=str, required=False,
+                         help='Output folder path. Defaults to .')
+    collect.add_argument('-t', '--token', type=str, required=False,
+                         help='Github Token to use.')
+    collect.add_argument('-p', '--projects', type=str, nargs='*',
+                         help='Projects to collect. Defaults to ALL if not given')
+    collect.add_argument('-c', '--config-file', type=str, default='config.yaml',
+                         help='Path to the configuration file.')
 
     return parser
-
-
-def _github(args):
-    token = args.token
-    if token is None:
-        token = input('Please input your Github Token: ')
-
-    repositories = args.repositories
-    output = args.output
-    if output is None:
-        output = repositories[0].split('/', 1)[0]
-
-    get_github_metrics(token, repositories, output)
 
 
 def main():

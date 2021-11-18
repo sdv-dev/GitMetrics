@@ -111,3 +111,9 @@ ENV/
 
 notebooks
 *.xlsx
+
+settings.yaml
+credentials.json
+client_secrets.json
+
+secrets/
