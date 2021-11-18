@@ -8,5 +8,3 @@ projects:
   - sdv-dev/Copulas
   - sdv-dev/CTGAN
   - sdv-dev/DeepEcho
-  pycaret:
-  - pycaret/pycaret
