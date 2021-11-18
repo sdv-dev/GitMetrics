@@ -105,6 +105,7 @@ Please input your Github Token: <my-github-token>
 ## Output
 
 The result is a spreasheet that will contain 5 tabs:
+
 - **Issues**:
     Where all the issues are listed, including data about
     the users who created them.
@@ -120,3 +121,17 @@ The result is a spreasheet that will contain 5 tabs:
 - **Unique Stargazers**:
     Where the unique users that stargazed the repositories
     are listed with all the information existing in their profile
+
+## Google Drive Integration
+
+OSS Metrics is capable of reading and writing results in Google Spreadsheets.
+
+For this to work, the following things are required:
+
+1. The `output_path` needs to be given as a Google Drive path with the following format:
+   `gdrive://<folder-id>/<filename>`. For example: `***REMOVED***/sdv-dev`
+
+2. A set of Google Drive Credentials need to be provided in the format required by `PyDrive`. The
+   credentials can be stored in a `credentials.json` file within the working directory, alongside
+   the corresponding `settings.yaml` file, or passed via the `PYDRIVE_CREDENTIALS` environment
+   variable.
