@@ -1,7 +1,8 @@
 """Scripts to extract multiple metrics from github projects."""
 
-from oss_metrics.main import get_github_metrics
+from oss_metrics.main import collect_project_metrics, collect_projects
 
 __all__ = [
-    'get_github_metrics'
+    'collect_project_metrics',
+    'collect_projects'
 ]

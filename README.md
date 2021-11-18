@@ -34,7 +34,7 @@ To collect metrics from github you need to provide:
 
 ## Python Interface
 
-In order to run the collection script from python, the `get_github_metrics` function
+In order to run the collection script from python, the `collect_project_metrics` function
 needs to be imported from the `oss_metrics` package and executed passing the values
 indicated above.
 
@@ -43,11 +43,11 @@ indicated above.
 ```python3
 >>> import logging
 >>> logging.basicConfig(level=logging.INFO)
->>> from oss_metrics import get_github_metrics
+>>> from oss_metrics import collect_project_metrics
 >>> repositories = ['sdv-dev/RDT', 'sdv-dev/SDV', 'sdv-dev/Copulas', 'sdv-dev/CTGAN']
 >>> output_name = 'sdv-dev'
 >>> token = '<my-github-token>'
->>> get_github_metrics(token, repositories, output_name)
+>>> collect_project_metrics(token, repositories, output_name)
 INFO:oss_metrics.main:Getting information for repository sdv-dev/RDT
 100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 195.00it/s]
 100%|███████████████████████████████████████████████████████████████| 182/182 [00:00<00:00, 364.64it/s]
@@ -72,14 +72,22 @@ INFO:oss_metrics.output:Creating file github-metrics-sdv-dev-2021-11-12.xlsx
 
 ## Command Line Interface
 
-In order to run the collection script from the command line, the `oss-metrics github` command
-must be called, passing the output filename with the `-o` flag, the Github token with the
-`-t` flag, and the list of repository names separated by spaces.
+In order to run the collection script from the command line, the `oss-metrics collect` command
+must be called passing the following optional arguments:
 
-If the `-t` flag is not provided, the github token will be requested in a prompt:
+- `-c / --config-file CONFIG_FILE`: Path to the config file to use. Defaults to `config.yaml`.
+- `-o / --output-folder OUTPUT_FILDER`: Path to the folder in which spreadsheets will be created.
+  Defaults to the value given in the config file, or to `'.'` if there is none, and supports
+  `gdrive://<folder-name>` format for Google Drive folders.
+- `-p / --projects PROJECT [PROJECT [PROJECT...]]`: Names of the projects to pull. These will be
+  used to search for repository lists inside the config file. If not given, defaults to all the
+  projects found in the config file.
+- `-t / --token`: Github token to use. If not given, it will be requested in a prompt.
+- `-l / --logfile LOGFILE`: Write logs to the indicated logfile.
+- `-v / --verbose`: Be more verbose.
 
 ```bash
-$ oss-metrics github -o sdv-dev sdv-dev/RDT sdv-dev/SDV sdv-dev/CTGAN sdv-dev/Copulas
+$ oss-metrics github -p sdv-dev -c config.yaml
 Please input your Github Token: <my-github-token>
 2021-11-12 15:42:43,100 - INFO - Getting information for repository sdv-dev/RDT
 100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 300.87it/s]

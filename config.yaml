@@ -1,0 +1,12 @@
+output_folder: gdrive://1OPhUPTFWN994QnbcrSojQ9Egf9s7MuHV
+projects:
+  sdv-dev:
+  - sdv-dev/SDV
+  - sdv-dev/RDT
+  - sdv-dev/SDMetrics
+  - sdv-dev/SDGym
+  - sdv-dev/Copulas
+  - sdv-dev/CTGAN
+  - sdv-dev/DeepEcho
+  pycaret:
+  - pycaret/pycaret

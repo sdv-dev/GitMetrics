@@ -1,6 +1,7 @@
 """Main script."""
 
 import logging
+import pathlib
 
 import pandas as pd
 
@@ -94,7 +95,7 @@ def _get_users(issues, profiles):
     return users
 
 
-def get_github_metrics(token, repositories, output_path=None):
+def collect_project_metrics(token, repositories, output_path=None):
     """Pull data from Github to create OSS metrics.
 
     Args:
@@ -108,7 +109,6 @@ def get_github_metrics(token, repositories, output_path=None):
     """
     try:
         previous = load_spreadsheet(output_path)
-        LOGGER.info('Loaded previous metrics from %s', output_path)
     except FileNotFoundError:
         previous = None
 
@@ -147,3 +147,27 @@ def get_github_metrics(token, repositories, output_path=None):
         return None
 
     return issues, pull_requests, users, contributors, stargazers
+
+
+def collect_projects(token, projects, output_path):
+    """Collect github metrics for multiple projects.
+
+    Args:
+        token (str):
+            Github token to use.
+        projects (dict[str, List[str]]):
+            Projects to collect, passed as a dict of project names
+            and lists of repositories.
+        ouptut_folder (str):
+            Folder in which the metrics will be stored.
+    """
+    if not projects:
+        raise ValueError('No projects have been passed')
+
+    for project, repositories in projects.items():
+        if output_path.startswith('gdrive://'):
+            project_path = f'{output_path}/{project}'
+        else:
+            project_path = str(pathlib.Path(output_path) / project)
+
+        collect_project_metrics(token, repositories, project_path)
