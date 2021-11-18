@@ -46,7 +46,7 @@ def _collect(args):
 
     output_folder = args.output_folder or config.get('output_folder', '.')
 
-    collect_projects(token, projects, output_folder)
+    collect_projects(token, projects, output_folder, args.quiet)
 
 
 def _get_parser():
@@ -76,6 +76,8 @@ def _get_parser():
                          help='Projects to collect. Defaults to ALL if not given')
     collect.add_argument('-c', '--config-file', type=str, default='config.yaml',
                          help='Path to the configuration file.')
+    collect.add_argument('-q', '--quiet', action='store_true',
+                         help='Do not user tqdm progress bars.')
 
     return parser
 

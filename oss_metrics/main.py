@@ -25,9 +25,9 @@ USER_COLUMNS = [
 ]
 
 
-def _get_repository_data(token, repository, previous=None):
+def _get_repository_data(token, repository, previous=None, quiet=False):
     LOGGER.info('Getting information for repository %s', repository)
-    repo_client = RepositoryClient(token, repository)
+    repo_client = RepositoryClient(token, repository, quiet)
     if previous:
         prev_issues = previous['Issues']
         prev_issues = prev_issues[prev_issues.repository == repository]
@@ -59,7 +59,7 @@ def _get_repository_data(token, repository, previous=None):
     return issues, pull_requests, stargazers
 
 
-def _get_profiles(token, issues, pull_requests, stargazers, previous):
+def _get_profiles(token, issues, pull_requests, stargazers, previous, quiet):
     all_users = issues.user.append(pull_requests.user, ignore_index=True)
     unique_users = all_users.dropna().unique().tolist()
 
@@ -76,7 +76,7 @@ def _get_profiles(token, issues, pull_requests, stargazers, previous):
     missing = list(set(unique_users) - set(known_users))
     if missing:
         LOGGER.info('Getting %s missing users', len(missing))
-        users_client = UsersClient(token)
+        users_client = UsersClient(token, quiet)
         missing_users = users_client.get_users(missing)
         users = users.append(missing_users, ignore_index=True)
 
@@ -95,7 +95,7 @@ def _get_users(issues, profiles):
     return users
 
 
-def collect_project_metrics(token, repositories, output_path=None):
+def collect_project_metrics(token, repositories, output_path=None, quiet=False):
     """Pull data from Github to create OSS metrics.
 
     Args:
@@ -106,6 +106,8 @@ def collect_project_metrics(token, repositories, output_path=None):
         ouptut_path (str):
             Output path, including the ``xlsx`` extension, or name to use
             when creating the final filename
+        quiet (bool):
+            If True, disable the tqdm bars.
     """
     try:
         previous = load_spreadsheet(output_path)
@@ -117,13 +119,18 @@ def collect_project_metrics(token, repositories, output_path=None):
     all_stargazers = pd.DataFrame()
 
     for repository in repositories:
-        issues, pull_requests, stargazers = _get_repository_data(token, repository, previous)
+        issues, pull_requests, stargazers = _get_repository_data(
+            token=token,
+            repository=repository,
+            previous=previous,
+            quiet=quiet
+        )
         all_issues = all_issues.append(issues, ignore_index=True)
         all_pull_requests = all_pull_requests.append(pull_requests, ignore_index=True)
         all_stargazers = all_stargazers.append(stargazers, ignore_index=True)
 
     stargazers = all_stargazers.sort_values('starred_at').drop_duplicates(subset='user')
-    profiles = _get_profiles(token, all_issues, all_pull_requests, stargazers, previous)
+    profiles = _get_profiles(token, all_issues, all_pull_requests, stargazers, previous, quiet)
 
     users = _get_users(all_issues, profiles)
 
@@ -149,7 +156,7 @@ def collect_project_metrics(token, repositories, output_path=None):
     return issues, pull_requests, users, contributors, stargazers
 
 
-def collect_projects(token, projects, output_path):
+def collect_projects(token, projects, output_path, quiet=False):
     """Collect github metrics for multiple projects.
 
     Args:
@@ -160,6 +167,8 @@ def collect_projects(token, projects, output_path):
             and lists of repositories.
         ouptut_folder (str):
             Folder in which the metrics will be stored.
+        quiet (bool):
+            If True, disable the tqdm bars.
     """
     if not projects:
         raise ValueError('No projects have been passed')
@@ -170,4 +179,4 @@ def collect_projects(token, projects, output_path):
         else:
             project_path = str(pathlib.Path(output_path) / project)
 
-        collect_project_metrics(token, repositories, project_path)
+        collect_project_metrics(token, repositories, project_path, quiet)

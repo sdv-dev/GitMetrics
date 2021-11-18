@@ -1,10 +1,14 @@
 """GQLClient subclass specialized in user-related queries."""
 
+import logging
+
 import pandas as pd
 from tqdm.auto import tqdm
 
 from oss_metrics.github.client import GQLClient
 from oss_metrics.utils import to_utc
+
+LOGGER = logging.getLogger(__name__)
 
 USERS = """
 {{
@@ -60,7 +64,12 @@ class UsersClient(GQLClient):
         """Get the profiles of the indicated usernames."""
         out = pd.DataFrame()
         total = len(usernames)
-        pbar = tqdm(total=total)
+
+        desc = f'Collecting {total} users'
+        pbar = tqdm(total=total, disable=self.quiet, desc=desc, unit=' users')
+        if self.quiet:
+            LOGGER.info(desc)
+
         for index in range(0, total, 100):
             chunk = usernames[index:index + 100]
             usernames_query = ' '.join(f'user:{user}' for user in chunk)
