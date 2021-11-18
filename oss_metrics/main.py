@@ -1,7 +1,6 @@
 """Main script."""
 
 import logging
-from pathlib import Path
 
 import pandas as pd
 
@@ -107,9 +106,10 @@ def get_github_metrics(token, repositories, output_path=None):
             Output path, including the ``xlsx`` extension, or name to use
             when creating the final filename
     """
-    if Path(output_path).exists():
+    try:
         previous = load_spreadsheet(output_path)
-    else:
+        LOGGER.info('Loaded previous metrics from %s', output_path)
+    except FileNotFoundError:
         previous = None
 
     all_issues = pd.DataFrame()
@@ -127,7 +127,10 @@ def get_github_metrics(token, repositories, output_path=None):
 
     users = _get_users(all_issues, profiles)
 
-    issues = all_issues.merge(profiles, how='left', on='user').drop_duplicates()
+    issues = all_issues.drop_duplicates()
+    issues = issues.merge(profiles, how='left', on='user', suffixes=('', '_DROP'))
+    issues = issues.filter(regex='^(?!.*_DROP)')
+
     pull_requests = all_pull_requests.merge(profiles, how='left', on='user').drop_duplicates()
     contributors = pull_requests[USER_COLUMNS].drop_duplicates()
     contributors = contributors.sort_values('user').reset_index(drop=True)
