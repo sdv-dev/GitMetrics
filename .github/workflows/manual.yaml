@@ -19,4 +19,5 @@ jobs:
         python -m pip install .
     - name: Collect OSS Metrics
       run: python -m oss_metrics collect -t ${{ secrets.GITHUB_TOKEN }}
-
+      env:
+        PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
