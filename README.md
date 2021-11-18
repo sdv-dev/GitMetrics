@@ -76,6 +76,7 @@ In order to run the collection script from the command line, the `oss-metrics co
 must be called passing the following optional arguments:
 
 - `-c / --config-file CONFIG_FILE`: Path to the config file to use. Defaults to `config.yaml`.
+  Format of the `config.yaml` file is documented below.
 - `-o / --output-folder OUTPUT_FILDER`: Path to the folder in which spreadsheets will be created.
   Defaults to the value given in the config file, or to `'.'` if there is none, and supports
   `gdrive://<folder-name>` format for Google Drive folders.
@@ -143,3 +144,46 @@ For this to work, the following things are required:
    credentials can be stored in a `credentials.json` file within the working directory, alongside
    the corresponding `settings.yaml` file, or passed via the `PYDRIVE_CREDENTIALS` environment
    variable.
+
+# Config File Format
+
+The OSS Metrics script can be configured using a YAML file with the following contents:
+* `output_folder`: Folder where results will be written. Can be a Google Drive in the format
+  gdrive://<folder-name>
+* `projects`: YAML Dictionary with project names as keys and repository list as values
+
+```yaml
+output_folder: <folder-name>
+projects:
+  <project-name>:
+    - <organization>/<repository>
+    - <organization>/<repository>
+    - ...
+  <project-name>:
+    - <organization>/<repository>
+    - <organization>/<repository>
+    - ...
+  ...
+```
+
+For example, the following config file would only collect data for the `SDV` project,
+which would include all the `sdv-dev` libraries, and would store the results inside a
+Google Drive folder:
+
+```yaml
+output_folder: ***REMOVED***
+projects:
+  sdv-dev:
+  - sdv-dev/SDV
+  - sdv-dev/RDT
+  - sdv-dev/SDMetrics
+  - sdv-dev/SDGym
+  - sdv-dev/Copulas
+  - sdv-dev/CTGAN
+  - sdv-dev/DeepEcho
+```
+
+## Default Configuration File
+
+By default, OSS Metrics collects the projects configured in the [config.yaml](config.yaml) file
+included in the project.
