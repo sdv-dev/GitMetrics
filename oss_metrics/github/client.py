@@ -21,8 +21,9 @@ class GQLClient:
             Github token to use.
     """
 
-    def __init__(self, token):
+    def __init__(self, token, quiet):
         self.token = token
+        self.quiet = quiet
         self.headers = {'Authorization': f'token {token}'}
 
     def run_query(self, query, query_maker=None, prefix=None, **kwargs):
@@ -108,9 +109,13 @@ class GQLClient:
         if isinstance(total, str):
             total = response[total]
 
+        message = f'Collecting {total} {collection_name}'
+        if self.quiet:
+            LOGGER.info(message)
+
         data = []
         if pbar is None:
-            _pbar = tqdm(total=total)
+            _pbar = tqdm(total=total, disable=self.quiet, desc=message, unit=' ' + collection_name)
         else:
             _pbar = pbar
 

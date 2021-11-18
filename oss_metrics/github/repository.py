@@ -106,12 +106,12 @@ SINCE = ', filterBy: {{since: "{since}"}}'
 class RepositoryClient(GQLClient):
     """GraphQLClient subclass specialized in queries related to a specific repository."""
 
-    def __init__(self, token, repo):
+    def __init__(self, token, repo, quiet):
         owner, name = repo.split('/')
         self.owner = owner
         self.name = name
         self.repo = repo
-        super().__init__(token)
+        super().__init__(token, quiet)
 
     @staticmethod
     def _indent_query(query_body, **kwargs):
