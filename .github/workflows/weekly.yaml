@@ -3,7 +3,7 @@ name: Weekly collection
 on:
   workflow_dispatch:
   schedule:
-    - cron:  '0 0 * * 0'
+    - cron:  '1 0 * * 0'
 
 jobs:
   collect:
