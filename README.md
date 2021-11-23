@@ -83,6 +83,13 @@ must be called passing the following optional arguments:
 - `-p / --projects PROJECT [PROJECT [PROJECT...]]`: Names of the projects to pull. These will be
   used to search for repository lists inside the config file. If not given, defaults to all the
   projects found in the config file.
+- `-r / --repositories REPOSITORY [REPOSITORY [REPOSITORY...]]`: Optional, list of repositories
+  to extract for the indicated project. If this is given, one and only one `project` must be
+  passed, which will be used as the name for the output spreasheet.
+- `-m / --add-metrics`: If indicated, add a `Metrics` tab with the project metrics to the
+  spreadsheet.
+- `-n / --not-incremental`: If indicated, collect data from scratch instead of doing it
+  incrementally over the existing data.
 - `-t / --token`: Github token to use. If not given, it will be requested in a prompt.
 - `-l / --logfile LOGFILE`: Write logs to the indicated logfile.
 - `-v / --verbose`: Be more verbose.
@@ -130,6 +137,9 @@ The result is a spreasheet that will contain 5 tabs:
 - **Unique Stargazers**:
     Where the unique users that stargazed the repositories
     are listed with all the information existing in their profile
+
+Optionally, and additional spreadsheet called **Metrics** will be created with the
+aggregation metrics for the entire project.
 
 ## Google Drive Integration
 
