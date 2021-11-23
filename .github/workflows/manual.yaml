@@ -2,7 +2,15 @@ name: Manual collection
 
 on:
   workflow_dispatch:
-  push:
+    inputs:
+      project:
+        description: 'Name of the project to collect'
+        required: true
+        default: ''
+      repositories:
+        description: 'List of repositories to collect'
+        required: false
+        default: ''
 
 jobs:
   collect:
@@ -18,6 +26,10 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install .
     - name: Collect OSS Metrics
-      run: python -m oss_metrics collect -t ${{ secrets.GITHUB_TOKEN }} -q
+      run: |
+        oss-metrics collect -q \
+          -t ${{ secrets.GITHUB_TOKEN }} \
+          -p ${{ github.event.inputs.project }} \
+          -r ${{ github.event.inputs.repositories }}
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
