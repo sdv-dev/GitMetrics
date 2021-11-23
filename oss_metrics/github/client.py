@@ -1,6 +1,8 @@
 """GraphQL client that handles requests and collection pagination."""
 
 import logging
+import time
+from datetime import datetime
 
 import pandas as pd
 import requests
@@ -11,6 +13,17 @@ LOGGER = logging.getLogger(__name__)
 
 
 GRAPHQL_URL = 'https://api.github.com/graphql'
+RATE_LIMIT_QUERY = """
+query {
+  rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
+}
+"""
+ISO_DATETIME = '%Y-%m-%dT%H:%M:%SZ'
 
 
 class GQLClient:
@@ -24,7 +37,18 @@ class GQLClient:
     def __init__(self, token, quiet):
         self.token = token
         self.quiet = quiet
-        self.headers = {'Authorization': f'token {token}'}
+
+    def _post_query(self, query):
+        response = requests.post(
+            GRAPHQL_URL,
+            json={'query': query},
+            headers={'Authorization': f'token {self.token}'}
+        )
+
+        if response.status_code != 200:
+            raise RuntimeError(f'Query fail ({response.status_code}): {response.content}')
+
+        return benedict(response.json())
 
     def run_query(self, query, query_maker=None, prefix=None, **kwargs):
         """Execute the given query and extract the body from the prefix key.
@@ -55,16 +79,22 @@ class GQLClient:
 
         LOGGER.debug(query)
 
-        response = requests.post(
-            GRAPHQL_URL,
-            json={'query': query},
-            headers=self.headers
-        )
+        response = self._post_query(query)
 
-        if response.status_code != 200:
-            raise RuntimeError(f'Query fail ({response.status_code}): {response.content}')
+        if 'errors' in response:
+            first_error = response['errors'][0]
+            if first_error.get('type') == 'RATE_LIMITED':
+                LOGGER.warning('Rate Limit Hit!')
+                rate_limit = self._post_query(RATE_LIMIT_QUERY)
+                LOGGER.warning(rate_limit.to_json(indent=4))
 
-        response = benedict(response.json())
+                reset_at = datetime.strptime(rate_limit['data.rateLimit.resetAt'], ISO_DATETIME)
+                sleep = int((reset_at - datetime.utcnow()).total_seconds()) + 10
+
+                LOGGER.warning('Sleeping for %s seconds', sleep)
+                time.sleep(sleep)
+                response = self._post_query(query)
+
         if 'errors' in response:
             LOGGER.error(response.to_json(indent=4))
             raise ValueError(response['errors'][0]['message'])
@@ -110,7 +140,7 @@ class GQLClient:
             total = response[total]
 
         message = f'Collecting {total} {collection_name}'
-        if self.quiet:
+        if self.quiet and pbar is None:
             LOGGER.info(message)
 
         data = []
