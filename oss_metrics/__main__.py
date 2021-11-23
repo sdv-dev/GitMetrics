@@ -24,7 +24,7 @@ def _env_setup(logfile, verbosity):
     logging.getLogger().setLevel(logging.WARN)
 
 
-def _collect(args):
+def _collect(args, parser):
     token = args.token or os.getenv('GITHUB_TOKEN')
     if token is None:
         token = input('Please input your Github Token: ')
@@ -34,8 +34,19 @@ def _collect(args):
     config_projects = config['projects']
 
     projects = {}
-    if not args.projects:
+    if args.repositories:
+        if not args.projects:
+            parser.error('If repositories are given, project name must be provided.')
+        elif len(args.projects) > 1:
+            parser.error('If repositories are given, only one project name must be provided.')
+
+        projects = {
+            args.projects[0]: args.repositories
+        }
+
+    elif not args.projects:
         projects = config_projects
+
     else:
         for project in args.projects:
             if project not in config_projects:
@@ -46,7 +57,14 @@ def _collect(args):
 
     output_folder = args.output_folder or config.get('output_folder', '.')
 
-    collect_projects(token, projects, output_folder, args.quiet)
+    collect_projects(
+        token=token,
+        projects=projects,
+        output_folder=output_folder,
+        quiet=args.quiet,
+        incremental=args.incremental,
+        add_metrics=args.add_metrics
+    )
 
 
 def _get_parser():
@@ -78,6 +96,12 @@ def _get_parser():
                          help='Path to the configuration file.')
     collect.add_argument('-q', '--quiet', action='store_true',
                          help='Do not user tqdm progress bars.')
+    collect.add_argument('-m', '--add-metrics', action='store_true',
+                         help='Whether to add a metrics tab.')
+    collect.add_argument('-r', '--repositories', nargs='*',
+                         help='List of repositories to add.')
+    collect.add_argument('-n', '--not-incremental', dest='incremental', action='store_false',
+                         help='Start from scratch instead of incrementing over existing data.')
 
     return parser
 
@@ -92,7 +116,7 @@ def main():
     args = parser.parse_args()
 
     _env_setup(args.logfile, args.verbose)
-    args.action(args)
+    args.action(args, parser)
 
 
 if __name__ == '__main__':
