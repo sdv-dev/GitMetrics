@@ -1,13 +1,5 @@
-output_folder: ***REMOVED***
+folder: ***REMOVED***
 projects:
-  sdv-dev:
-  - sdv-dev/SDV
-  - sdv-dev/RDT
-  - sdv-dev/SDMetrics
-  - sdv-dev/SDGym
-  - sdv-dev/Copulas
-  - sdv-dev/CTGAN
-  - sdv-dev/DeepEcho
   PyTorchLightning:
   - PyTorchLightning/deep-learning-project-template
   - PyTorchLightning/lightning-bolts
