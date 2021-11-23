@@ -131,7 +131,7 @@ class GQLClient:
 
             for item in collection['edges']:
                 try:
-                    data.append(item_parser(item))
+                    data.append(item_parser(benedict(item)))
                 except (TypeError, KeyError):
                     # Possibly a bot, like dependabot
                     pass

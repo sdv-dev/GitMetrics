@@ -7,6 +7,7 @@ import pandas as pd
 
 from oss_metrics.github.repository import RepositoryClient
 from oss_metrics.github.users import UsersClient
+from oss_metrics.metrics import compute_metrics
 from oss_metrics.output import create_spreadsheet, load_spreadsheet
 
 LOGGER = logging.getLogger(__name__)
@@ -83,9 +84,24 @@ def _get_profiles(token, issues, pull_requests, stargazers, previous, quiet):
     return users.sort_values('user').reset_index(drop=True)
 
 
+def _get_issues(all_issues, profiles):
+    issues = all_issues.drop_duplicates()
+    issues = issues.merge(profiles, how='left', on='user', suffixes=('', '_DROP'))
+    return issues.filter(regex='^(?!.*_DROP)')
+
+
+def _get_pull_requests(all_pull_requests, profiles):
+    return all_pull_requests.merge(profiles, how='left', on='user').drop_duplicates()
+
+
 def _get_users(issues, profiles):
     issues_by_date = issues.sort_values('created_at')
-    users = issues_by_date[['user', 'created_at']].drop_duplicates(subset='user', keep='first')
+    grouped = issues_by_date.groupby('user')
+    users = grouped.created_at.first().to_frame()
+    users['opened_issues'] = grouped.size()
+    users['num_repositories'] = grouped.repository.nunique()
+    users = users.reset_index()
+
     users = users.rename(columns={'created_at': 'first_issue_date'})
     users = users.merge(profiles, how='left', on='user')
 
@@ -95,7 +111,31 @@ def _get_users(issues, profiles):
     return users
 
 
-def collect_project_metrics(token, repositories, output_path=None, quiet=False):
+def _get_contributors(pull_requests):
+    prs_by_date = pull_requests.sort_values('created_at')
+    contributors = prs_by_date[USER_COLUMNS].drop_duplicates()
+    contributors = contributors.sort_values('user').set_index('user')
+
+    prs_by_user = pull_requests.groupby('user')
+    contributors.insert(1, 'opened_prs', prs_by_user.size())
+    contributors.insert(2, 'first_pr_date', prs_by_user.created_at.first())
+    contributors.insert(3, 'num_repositories', prs_by_user.repository.nunique())
+
+    return contributors.reset_index(drop=False)
+
+
+def _get_stargazers(all_stargazers):
+    stargazers = all_stargazers.sort_values('starred_at').drop_duplicates(subset='user')
+    stargazers = stargazers.set_index('user')
+    stargazers.insert(0, 'starred_repositories', all_stargazers.groupby('user').size())
+    stargazers = stargazers.rename(columns={
+        'repository': 'first_starred_repository'
+    })
+    return stargazers.reset_index()
+
+
+def collect_project_metrics(token, repositories, output_path=None, quiet=False, incremental=True,
+                            add_metrics=False):
     """Pull data from Github to create OSS metrics.
 
     Args:
@@ -108,11 +148,23 @@ def collect_project_metrics(token, repositories, output_path=None, quiet=False):
             when creating the final filename
         quiet (bool):
             If True, disable the tqdm bars.
+        incremental (bool):
+            Whether to increment over the previous data (True) or start from
+            scratch (False). Defatuls to True.
+        add_metrics (bool):
+            Whether to add the metrics tab. Defaults to False.
+
+    Returns:
+        dict[str, pd.DataFrame] or None:
+            If output_path is None, a dict with the sheets is returned.
     """
-    try:
-        previous = load_spreadsheet(output_path)
-    except FileNotFoundError:
+    if not incremental:
         previous = None
+    else:
+        try:
+            previous = load_spreadsheet(output_path)
+        except FileNotFoundError:
+            previous = None
 
     all_issues = pd.DataFrame()
     all_pull_requests = pd.DataFrame()
@@ -129,34 +181,34 @@ def collect_project_metrics(token, repositories, output_path=None, quiet=False):
         all_pull_requests = all_pull_requests.append(pull_requests, ignore_index=True)
         all_stargazers = all_stargazers.append(stargazers, ignore_index=True)
 
-    stargazers = all_stargazers.sort_values('starred_at').drop_duplicates(subset='user')
-    profiles = _get_profiles(token, all_issues, all_pull_requests, stargazers, previous, quiet)
+    profiles = _get_profiles(token, all_issues, all_pull_requests, all_stargazers, previous, quiet)
 
+    issues = _get_issues(all_issues, profiles)
+    pull_requests = _get_pull_requests(all_pull_requests, profiles)
     users = _get_users(all_issues, profiles)
+    contributors = _get_contributors(pull_requests)
+    stargazers = _get_stargazers(all_stargazers)
 
-    issues = all_issues.drop_duplicates()
-    issues = issues.merge(profiles, how='left', on='user', suffixes=('', '_DROP'))
-    issues = issues.filter(regex='^(?!.*_DROP)')
-
-    pull_requests = all_pull_requests.merge(profiles, how='left', on='user').drop_duplicates()
-    contributors = pull_requests[USER_COLUMNS].drop_duplicates()
-    contributors = contributors.sort_values('user').reset_index(drop=True)
+    sheets = {
+        'Issues': issues,
+        'Pull Requests': pull_requests,
+        'Unique Issue Users': users,
+        'Unique Contributors': contributors,
+        'Unique Stargazers': stargazers,
+    }
+    if add_metrics:
+        metrics = compute_metrics(issues, pull_requests, users, contributors, stargazers)
+        sheets = dict({'Metrics': metrics}, **sheets)
 
     if output_path:
-        sheets = {
-            'Issues': issues,
-            'Pull Requests': pull_requests,
-            'Unique Issue Users': users,
-            'Unique Contributors': contributors,
-            'Unique Stargazers': stargazers,
-        }
         create_spreadsheet(output_path, sheets)
         return None
 
-    return issues, pull_requests, users, contributors, stargazers
+    return sheets
 
 
-def collect_projects(token, projects, output_path, quiet=False):
+def collect_projects(token, projects, output_folder, quiet=False, incremental=True,
+                     add_metrics=False):
     """Collect github metrics for multiple projects.
 
     Args:
@@ -169,14 +221,19 @@ def collect_projects(token, projects, output_path, quiet=False):
             Folder in which the metrics will be stored.
         quiet (bool):
             If True, disable the tqdm bars.
+        incremental (bool):
+            Whether to increment over the previous data (True) or start from
+            scratch (False). Defatuls to True.
+        add_metrics (bool):
+            Whether to add the metrics tab. Defaults to False.
     """
     if not projects:
         raise ValueError('No projects have been passed')
 
     for project, repositories in projects.items():
-        if output_path.startswith('gdrive://'):
-            project_path = f'{output_path}/{project}'
+        if output_folder.startswith('gdrive://'):
+            project_path = f'{output_folder}/{project}'
         else:
-            project_path = str(pathlib.Path(output_path) / project)
+            project_path = str(pathlib.Path(output_folder) / project)
 
-        collect_project_metrics(token, repositories, project_path, quiet)
+        collect_project_metrics(token, repositories, project_path, quiet, incremental, add_metrics)
