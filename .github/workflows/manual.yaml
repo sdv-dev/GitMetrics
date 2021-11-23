@@ -11,6 +11,10 @@ on:
         description: 'List of repositories to collect'
         required: false
         default: ''
+      extras:
+        description: 'Extra arguments to pass (e.g. --not-incremental --add-metrics)'
+        required: false
+        default: '--not-incremental --add-metrics'
 
 jobs:
   collect:
@@ -30,6 +34,7 @@ jobs:
         oss-metrics collect -q \
           -t ${{ secrets.GITHUB_TOKEN }} \
           -p ${{ github.event.inputs.project }} \
-          -r ${{ github.event.inputs.repositories }}
+          -r ${{ github.event.inputs.repositories }} \
+          ${{ github.event.inputs.extras }}
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
