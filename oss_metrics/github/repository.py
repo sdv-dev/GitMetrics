@@ -65,6 +65,9 @@ issues(first: 100{end_cursor}{filter_by}) {{
             closedAt
             state
             title
+            comments {{
+                totalCount
+            }}
         }}
     }}
 }}
@@ -95,6 +98,9 @@ pullRequests(first: 100{end_cursor}{filter_by}) {{
             closedAt
             state
             title
+            comments {{
+                totalCount
+            }}
         }}
     }}
 }}
@@ -187,6 +193,7 @@ class RepositoryClient(GQLClient):
         return {
             'user': author.get('login'),
             'number': node['number'],
+            'comments': node['comments.totalCount'],
             'created_at': to_utc(node['createdAt']),
             'closed_at': to_utc(node['closedAt']),
             'updated_at': to_utc(node['updatedAt']),
@@ -219,6 +226,7 @@ class RepositoryClient(GQLClient):
         return {
             'user': author.get('login'),
             'number': node['number'],
+            'comments': node['comments.totalCount'],
             'created_at': to_utc(node['createdAt']),
             'closed_at': to_utc(node['closedAt']),
             'updated_at': to_utc(node['updatedAt']),
