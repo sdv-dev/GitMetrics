@@ -44,7 +44,7 @@ setup(
     long_description=readme,
     long_description_content_type='text/markdown',
     name='oss-metrics',
-    packages=find_packages(include=['oss_metrics']),
+    packages=find_packages(include=['oss_metrics', 'oss_metrics.*']),
     python_requires='>=3.7,<3.10',
     version='0.0.1.dev0',
     zip_safe=False,
