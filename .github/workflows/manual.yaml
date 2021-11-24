@@ -8,9 +8,13 @@ on:
         required: true
         default: ''
       repositories:
-        description: 'List of repositories to collect'
+        description: 'List of repositories to collect, separated by spaces'
         required: false
         default: ''
+      output-folder:
+        description: 'ID of the Google Drive Output folder'
+        required: false
+        default: '1THOw8GIdnF2tTwKfj6dyDA9iS_HHd6XV'
       extras:
         description: 'Extra arguments to pass (e.g. --not-incremental --add-metrics)'
         required: false
@@ -35,6 +39,7 @@ jobs:
           -t ${{ secrets.GITHUB_TOKEN }} \
           -p ${{ github.event.inputs.project }} \
           -r ${{ github.event.inputs.repositories }} \
+          -o gdrive://${{ github.event.inputs.output-folder }} \
           ${{ github.event.inputs.extras }}
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
