@@ -1,6 +1,7 @@
 """OSS Metrics CLI."""
 
 import argparse
+import copy
 import logging
 import os
 import pathlib
@@ -24,13 +25,34 @@ def _env_setup(logfile, verbosity):
     logging.getLogger().setLevel(logging.WARN)
 
 
+def _load_config(config_path):
+    config_path = pathlib.Path(config_path)
+    config = yaml.safe_load(config_path.read_text())
+    import_config = config.pop('import_config', None)
+    if import_config:
+        import_config_path = pathlib.Path(import_config)
+        if import_config_path.is_absolute():
+            import_config_path = config_path.parent / import_config_path
+
+        import_config = _load_config(import_config_path)
+        import_projects = import_config['projects']
+
+        import_config.update(config)
+        config = import_config
+
+        config_projects = config['projects']
+        for project, repositories in config_projects.items():
+            if not repositories:
+                config_projects[project] = import_projects[project]
+
+    return config
+
 def _collect(args, parser):
     token = args.token or os.getenv('GITHUB_TOKEN')
     if token is None:
         token = input('Please input your Github Token: ')
 
-    config_file = pathlib.Path(args.config_file)
-    config = yaml.safe_load(config_file.read_text())
+    config = _load_config(args.config_file)
     config_projects = config['projects']
 
     projects = {}

@@ -1,86 +1,26 @@
-folder: gdrive://1OPhUPTFWN994QnbcrSojQ9Egf9s7MuHV
+output_folder: gdrive://1MxHzo-QmxnypvekJTPZeSy4mQi4pAID2
+import_config: config.yaml
 projects:
   PyTorchLightning:
-  - PyTorchLightning/deep-learning-project-template
-  - PyTorchLightning/lightning-bolts
-  - PyTorchLightning/lightning-flash
-  - PyTorchLightning/lightning-transformers
-  - PyTorchLightning/lightning-tutorials
-  - PyTorchLightning/metrics
-  - PyTorchLightning/pytorch-lightning
   airbyte:
-  - airbytehq/airbyte
   airflow:
-  - apache/airflow
   dagster:
-  - dagster-io/dagster
   dbt:
-  - dbt-labs/dbt-core
   determined:
-  - determined-ai/determined
   earthly:
-  - earthly/earthly
   feast:
-  - feast-dev/feast
   featuretools:
-  - alteryx/featuretools
   getsynth:
-  - getsynth/bigquery-storage
-  - getsynth/synth
   grafana:
-  - grafana/grafana
-  - grafana/k6
-  - grafana/loki
-  - grafana/tempo
   gretel:
-  - gretelai/contact-tracing-experiment
-  - gretelai/gretel-blueprints
-  - gretelai/gretel-python-client
-  - gretelai/gretel-synthetics
-  - gretelai/gretel-tools
-  - gretelai/s3-object-lambda-gretel-transforms
-  - gretelai/support
   huggingface:
-  - huggingface/accelerate
-  - huggingface/autonlp
-  - huggingface/awesome-huggingface
-  - huggingface/datasets
-  - huggingface/huggingface_hub
-  - huggingface/knockknock
-  - huggingface/neuralcoref
-  - huggingface/node-question-answering
-  - huggingface/notebooks
-  - huggingface/optimum
-  - huggingface/pytorch-openai-transformer-lm
-  - huggingface/swift-coreml-transformers
-  - huggingface/tokenizers
-  - huggingface/transformers
   mariadb:
-  - MariaDB/mariadb-docker
-  - MariaDB/server
   mostly:
-  - mostly-ai/ansible-role-tensorflow-gpu
-  - mostly-ai/virtualdatalab
   pandas:
-  - pandas-dev/pandas
   prefect:
-  - PrefectHQ/prefect
-  - PrefectHQ/server
-  - PrefectHQ/ui
   pycaret:
-  - pycaret/pycaret
   ray:
-  - ray-project/kuberay
-  - ray-project/lightgbm_ray
-  - ray-project/ray
-  - ray-project/ray_lightning
-  - ray-project/tune-sklearn
-  - ray-project/xgboost_ray
   scikit-learn:
-  - scikit-learn/scikit-learn
   snorkel:
-  - snorkel-team/snorkel
   spacy:
-  - explosion/spaCy
   ydata:
-  - ydataai/ydata-synthetic
