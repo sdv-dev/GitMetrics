@@ -1,11 +1,11 @@
-# OSS Metrics
+# Github Analytics
 
-Scripts to extract multiple metrics from OSS projects.
+Scripts to extract multiple metrics from Github Projects.
 
 ## Install
 
 ```bash
-pip install git+ssh://git@github.com/datacebo/oss-metrics
+pip install git+ssh://git@github.com/datacebo/github-analytics
 ```
 
 ### Development
@@ -13,8 +13,8 @@ pip install git+ssh://git@github.com/datacebo/oss-metrics
 For development, clone the repository and install `dev-requirements.txt`:
 
 ```bash
-git clone git@github.com:datacebo/oss-metrics
-cd oss-metrics
+git clone git@github.com:datacebo/github-analytics
+cd github-analytics
 pip install -r dev-requirements.txt
 ```
 
@@ -35,7 +35,7 @@ To collect metrics from github you need to provide:
 ## Python Interface
 
 In order to run the collection script from python, the `collect_project_metrics` function
-needs to be imported from the `oss_metrics` package and executed passing the values
+needs to be imported from the `github_analytics` package and executed passing the values
 indicated above.
 
 **NOTE**: For detailed output, logging must be enabled as shown in the example below.
@@ -43,36 +43,36 @@ indicated above.
 ```python3
 >>> import logging
 >>> logging.basicConfig(level=logging.INFO)
->>> from oss_metrics import collect_project_metrics
+>>> from github_analytics import collect_project_metrics
 >>> repositories = ['sdv-dev/RDT', 'sdv-dev/SDV', 'sdv-dev/Copulas', 'sdv-dev/CTGAN']
 >>> output_name = 'sdv-dev'
 >>> token = '<my-github-token>'
 >>> collect_project_metrics(token, repositories, output_name)
-INFO:oss_metrics.main:Getting information for repository sdv-dev/RDT
+INFO:github_analytics.main:Getting information for repository sdv-dev/RDT
 100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 195.00it/s]
 100%|███████████████████████████████████████████████████████████████| 182/182 [00:00<00:00, 364.64it/s]
 100%|███████████████████████████████████████████████████████████████| 37/37 [00:00<00:00, 91020.09it/s]
-INFO:oss_metrics.main:Getting information for repository sdv-dev/SDV
+INFO:github_analytics.main:Getting information for repository sdv-dev/SDV
 100%|███████████████████████████████████████████████████████████████| 389/389 [00:02<00:00, 193.20it/s]
 100%|███████████████████████████████████████████████████████████████| 219/219 [00:00<00:00, 231.17it/s]
 100%|███████████████████████████████████████████████████████████████| 561/561 [00:03<00:00, 158.39it/s]
-INFO:oss_metrics.main:Getting information for repository sdv-dev/Copulas
+INFO:github_analytics.main:Getting information for repository sdv-dev/Copulas
 100%|███████████████████████████████████████████████████████████████| 138/138 [00:00<00:00, 333.27it/s]
 100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 287.29it/s]
 100%|███████████████████████████████████████████████████████████████| 245/245 [00:01<00:00, 204.88it/s]
-INFO:oss_metrics.main:Getting information for repository sdv-dev/CTGAN
+INFO:github_analytics.main:Getting information for repository sdv-dev/CTGAN
 100%|███████████████████████████████████████████████████████████████| 113/113 [00:00<00:00, 287.26it/s]
 100%|██████████████████████████████████████████████████████████████| 64/64 [00:00<00:00, 134824.44it/s]
 100%|███████████████████████████████████████████████████████████████| 498/498 [00:02<00:00, 171.11it/s]
-INFO:oss_metrics.main:Getting 164 missing users
+INFO:github_analytics.main:Getting 164 missing users
  99%|██████████████████████████████████████████████████████████████▌| 163/164 [00:01<00:00, 121.99it/s]
-INFO:oss_metrics.output:Creating file github-metrics-sdv-dev-2021-11-12.xlsx
+INFO:github_analytics.output:Creating file github-metrics-sdv-dev-2021-11-12.xlsx
 ```
 
 
 ## Command Line Interface
 
-In order to run the collection script from the command line, the `oss-metrics collect` command
+In order to run the collection script from the command line, the `github-analytics collect` command
 must be called passing the following optional arguments:
 
 - `-c / --config-file CONFIG_FILE`: Path to the config file to use. Defaults to `config.yaml`.
@@ -95,7 +95,7 @@ must be called passing the following optional arguments:
 - `-v / --verbose`: Be more verbose.
 
 ```bash
-$ oss-metrics github -p sdv-dev -c config.yaml
+$ github-analytics github -p sdv-dev -c config.yaml
 Please input your Github Token: <my-github-token>
 2021-11-12 15:42:43,100 - INFO - Getting information for repository sdv-dev/RDT
 100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 300.87it/s]
@@ -143,7 +143,7 @@ aggregation metrics for the entire project.
 
 ## Google Drive Integration
 
-OSS Metrics is capable of reading and writing results in Google Spreadsheets.
+Github Analytics is capable of reading and writing results in Google Spreadsheets.
 
 For this to work, the following things are required:
 
@@ -157,7 +157,7 @@ For this to work, the following things are required:
 
 # Config File Format
 
-The OSS Metrics script can be configured using a YAML file with the following contents:
+The Github Analytics script can be configured using a YAML file with the following contents:
 * `output_folder`: Folder where results will be written. Can be a Google Drive in the format
   gdrive://<folder-name>
 * `projects`: YAML Dictionary with project names as keys and repository list as values
@@ -195,5 +195,5 @@ projects:
 
 ## Default Configuration File
 
-By default, OSS Metrics collects the projects configured in the [config.yaml](config.yaml) file
+By default, Github Analytics collects the projects configured in the [config.yaml](config.yaml) file
 included in the project.

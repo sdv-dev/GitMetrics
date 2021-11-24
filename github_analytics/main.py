@@ -5,10 +5,10 @@ import pathlib
 
 import pandas as pd
 
-from oss_metrics.github.repository import RepositoryClient
-from oss_metrics.github.users import UsersClient
-from oss_metrics.metrics import compute_metrics
-from oss_metrics.output import create_spreadsheet, load_spreadsheet
+from github_analytics.github.repository import RepositoryClient
+from github_analytics.github.users import UsersClient
+from github_analytics.metrics import compute_metrics
+from github_analytics.output import create_spreadsheet, load_spreadsheet
 
 LOGGER = logging.getLogger(__name__)
 
@@ -136,7 +136,7 @@ def _get_stargazers(all_stargazers):
 
 def collect_project_metrics(token, repositories, output_path=None, quiet=False, incremental=True,
                             add_metrics=False):
-    """Pull data from Github to create OSS metrics.
+    """Pull data from Github to create metrics.
 
     Args:
         token (str):

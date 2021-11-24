@@ -1,4 +1,4 @@
-"""OSS Metrics CLI."""
+"""Github Analytics CLI."""
 
 import argparse
 import copy
@@ -10,7 +10,7 @@ import warnings
 
 import yaml
 
-from oss_metrics.main import collect_projects
+from github_analytics.main import collect_projects
 
 LOGGER = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ def _env_setup(logfile, verbosity):
     format_ = '%(asctime)s - %(levelname)s - %(message)s'
     level = (3 - verbosity) * 10
     logging.basicConfig(filename=logfile, level=level, format=format_)
-    logging.getLogger('oss_metrics').setLevel(level)
+    logging.getLogger('github_analytics').setLevel(level)
     logging.getLogger().setLevel(logging.WARN)
 
 
@@ -96,8 +96,8 @@ def _get_parser():
     logging_args.add_argument('-l', '--logfile')
 
     parser = argparse.ArgumentParser(
-        prog='oss-metrics',
-        description='OSS metrics Command Line Interface',
+        prog='github-analytics',
+        description='Github Analytics Command Line Interface',
         parents=[logging_args]
     )
     parser.set_defaults(action=None)
@@ -129,7 +129,7 @@ def _get_parser():
 
 
 def main():
-    """Run OSS Metrics CLI."""
+    """Run the Github Analytics CLI."""
     parser = _get_parser()
     if len(sys.argv) < 2:
         parser.print_help()

@@ -6,7 +6,7 @@ import pathlib
 
 import pandas as pd
 
-from oss_metrics import drive
+from github_analytics import drive
 
 LOGGER = logging.getLogger(__name__)
 
@@ -69,7 +69,7 @@ def create_spreadsheet(output_path, sheets):
 
 
 def load_spreadsheet(spreadsheet):
-    """Load a spreadsheet previously created by oss-metrics.
+    """Load a spreadsheet previously created by github-analytics.
 
     Args:
         spreadsheet (str or stream):

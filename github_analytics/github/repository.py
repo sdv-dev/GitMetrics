@@ -2,8 +2,8 @@
 
 import pandas as pd
 
-from oss_metrics.github.client import GQLClient
-from oss_metrics.utils import to_utc
+from github_analytics.github.client import GQLClient
+from github_analytics.utils import to_utc
 
 REPO_ENVELOPE = """
 {{
