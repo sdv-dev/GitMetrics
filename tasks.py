@@ -3,7 +3,7 @@ from invoke import task
 
 @task
 def lint(c):
-    c.run('flake8 oss_metrics')
-    c.run('pydocstyle oss_metrics')
-    c.run('isort -c oss_metrics')
-    c.run('pylint oss_metrics --rcfile=setup.cfg')
+    c.run('flake8 github_analytics')
+    c.run('pydocstyle github_analytics')
+    c.run('isort -c github_analytics')
+    c.run('pylint github_analytics --rcfile=setup.cfg')

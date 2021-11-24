@@ -32,19 +32,19 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
     ],
-    description='OSS Metrics',
+    description='Scripts to extract multiple metrics from Github Projects.',
     entry_points={
         'console_scripts': [
-            'oss-metrics=oss_metrics.__main__:main'
+            'github-analytics=github_analytics.__main__:main'
         ]
     },
     include_package_data=True,
     install_requires=install_requires,
-    keywords='oss-metrics',
+    keywords='github-analytics',
     long_description=readme,
     long_description_content_type='text/markdown',
-    name='oss-metrics',
-    packages=find_packages(include=['oss_metrics', 'oss_metrics.*']),
+    name='github-analytics',
+    packages=find_packages(include=['github_analytics', 'github_analytics.*']),
     python_requires='>=3.7,<3.10',
     version='0.0.1.dev0',
     zip_safe=False,
