@@ -20,6 +20,6 @@ jobs:
         python -m pip install .
     - name: Collect Github Data
       run: |
-        github-analytics collect -q -t ${{ secrets.GITHUB_TOKEN }} -c weekly.yaml
+        github-analytics collect -q -t ${{ secrets.GITHUB_TOKEN }} -m -c weekly.yaml
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
