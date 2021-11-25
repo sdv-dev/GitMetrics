@@ -34,6 +34,9 @@ def compute_metrics(issues, pull_requests, users, contributors, stargazers):
     non_contrib_stars = stargazers[~stargazers.user.isin(contributors.user)]
     num_non_contrib_stars = len(non_contrib_stars)
 
+    usr = num_users / num_stargazers if num_stargazers else None
+    usrc = num_non_contrib_users / num_non_contrib_stars if num_non_contrib_stars else None
+
     return pd.DataFrame([
         {
             'metric': 'num_issues',
@@ -72,12 +75,12 @@ def compute_metrics(issues, pull_requests, users, contributors, stargazers):
         },
         {
             'metric': 'USR',
-            'value': num_users / num_stargazers,
+            'value': usr,
             'description': 'Users / Stargazers ratio',
         },
         {
             'metric': 'USR-C',
-            'value': num_non_contrib_users / num_non_contrib_stars,
+            'value': usrc,
             'description': 'USR Excluding Contributors',
         },
     ])

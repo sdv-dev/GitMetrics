@@ -39,6 +39,19 @@ USERS = """
     }}
 }}
 """
+USERS_COLUMNS = [
+    'user',
+    'name',
+    'email',
+    'blog',
+    'company',
+    'location',
+    'twitter',
+    'user_created_at',
+    'user_updated_at',
+    'bio',
+]
+
 
 
 class UsersClient(GQLClient):
@@ -79,7 +92,8 @@ class UsersClient(GQLClient):
                 total='userCount',
                 item_parser=self._user_parser,
                 pbar=pbar,
-                usernames=usernames_query
+                usernames=usernames_query,
+                columns=USERS_COLUMNS,
             )
             out = out.append(chunk_users, ignore_index=True)
 

@@ -12,7 +12,7 @@ REPO_ENVELOPE = """
     }}
 }}
 """
-STARGAZER_COUNT = 'stargazerCount'
+STARGAZERS_COUNT = 'stargazerCount'
 STARGAZERS = """
 stargazers(first: 100{end_cursor}{filter_by}) {{
     pageInfo {{
@@ -39,8 +39,21 @@ stargazers(first: 100{end_cursor}{filter_by}) {{
     }}
 }}
 """
+STARGAZERS_COLUMNS = [
+    'user',
+    'starred_at',
+    'name',
+    'email',
+    'blog',
+    'company',
+    'location',
+    'twitter',
+    'user_created_at',
+    'user_updated_at',
+    'bio',
+]
 
-ISSUE_COUNT = """
+ISSUES_COUNT = """
 issues {{
     totalCount
 }}
@@ -72,6 +85,16 @@ issues(first: 100{end_cursor}{filter_by}) {{
     }}
 }}
 """
+ISSUES_COLUMNS = [
+    'user',
+    'number',
+    'comments',
+    'created_at',
+    'closed_at',
+    'updated_at',
+    'state',
+    'title',
+]
 
 PULL_REQUESTS_COUNT = """
 pullRequests {{
@@ -105,6 +128,16 @@ pullRequests(first: 100{end_cursor}{filter_by}) {{
     }}
 }}
 """
+PULL_REQUESTS_COLUMNS = [
+    'user',
+    'number',
+    'comments',
+    'created_at',
+    'closed_at',
+    'updated_at',
+    'state',
+    'title',
+]
 
 SINCE = ', filterBy: {{since: "{since}"}}'
 
@@ -147,9 +180,9 @@ class RepositoryClient(GQLClient):
 
     def get_stargazer_count(self):
         """Get the number of stargazers of this repository."""
-        query = self._make_query(STARGAZER_COUNT)
+        query = self._make_query(STARGAZERS_COUNT)
         response = self.run_query(query, prefix='data.repository')
-        return response[STARGAZER_COUNT]
+        return response[STARGAZERS_COUNT]
 
     @staticmethod
     def _stargazer_parser(stargazer):
@@ -178,11 +211,12 @@ class RepositoryClient(GQLClient):
             item_parser=self._stargazer_parser,
             query_maker=self._make_query,
             since=since,
+            columns=STARGAZERS_COLUMNS,
         )
 
     def get_issue_count(self):
         """Get the number of issues of this repository."""
-        query = self._make_query(ISSUE_COUNT)
+        query = self._make_query(ISSUES_COUNT)
         response = self.run_query(query, prefix='data.repository')
         return response['issues.totalCount']
 
@@ -210,7 +244,8 @@ class RepositoryClient(GQLClient):
             collection_name='issues',
             item_parser=self._issue_parser,
             query_maker=self._make_query,
-            since=since
+            since=since,
+            columns=ISSUES_COLUMNS,
         )
 
     def get_pull_requests_count(self):
@@ -243,5 +278,6 @@ class RepositoryClient(GQLClient):
             collection_name='pullRequests',
             item_parser=self._pull_request_parser,
             query_maker=self._make_query,
-            since=since
+            since=since,
+            columns=PULL_REQUESTS_COLUMNS,
         )
