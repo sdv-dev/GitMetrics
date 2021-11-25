@@ -107,7 +107,7 @@ class GQLClient:
         return response
 
     def paginate_collection(self, query, prefix, total, item_parser, query_maker=None,
-                            collection_name=None, pbar=None, **kwargs):
+                            collection_name=None, pbar=None, columns=None, **kwargs):
         """Run the given query and paginate the corresponding collection.
 
         Args:
@@ -128,6 +128,8 @@ class GQLClient:
                 indicated key.
             pbar (tqdm):
                 tqdm progress bar to update. If not given, one is initialized.
+            columns (list):
+                Columns to include in the output DataFrame.
             **kwargs:
                 Any additional keyword arguments are passed to the query_maker.
 
@@ -177,4 +179,4 @@ class GQLClient:
         if pbar is None:
             _pbar.close()
 
-        return pd.DataFrame(data)
+        return pd.DataFrame(data, columns=columns)

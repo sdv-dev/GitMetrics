@@ -42,7 +42,7 @@ def _get_repository_data(token, repository, previous=None, quiet=False):
         max_date = None
 
     issues = repo_client.get_issues(since=max_date)
-    if issues.empty:
+    if issues.empty and prev_issues is not None:
         issues = prev_issues
     else:
         issues.insert(1, 'repository', repository)
@@ -105,7 +105,11 @@ def _get_users(issues, profiles):
     users = users.rename(columns={'created_at': 'first_issue_date'})
     users = users.merge(profiles, how='left', on='user')
 
-    days_between = (users['first_issue_date'] - users['user_created_at']).dt.days
+    if not users.empty:
+        days_between = (users['first_issue_date'] - users['user_created_at']).dt.days
+    else:
+        days_between = None
+
     users.insert(2, 'db_account_issue_creation', days_between)
 
     return users
