@@ -1,7 +1,6 @@
 """Github Analytics CLI."""
 
 import argparse
-import copy
 import logging
 import os
 import pathlib
@@ -46,6 +45,7 @@ def _load_config(config_path):
                 config_projects[project] = import_projects[project]
 
     return config
+
 
 def _collect(args, parser):
     token = args.token or os.getenv('GITHUB_TOKEN')
