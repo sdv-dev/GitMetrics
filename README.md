@@ -18,9 +18,10 @@ cd github-analytics
 pip install -r dev-requirements.txt
 ```
 
-# Usage
+# Local Usage
 
-To collect metrics from github you need to provide:
+To collect metrics from github by running `github-analytics` on your computer you need to provide:
+
 1. A Github Token. Documentation about how to create a Personal Access Token can be found
    [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 2. A list of Github Repositories for which to collect the metrics. The repositories need
@@ -28,7 +29,7 @@ To collect metrics from github you need to provide:
 3. (Optional) A filename where the output will be stored. If a name containing the `.xlsx`
    extension is given (like `path/to/my-filename.xlsx`), it will be used as provided.
    Otherwise, a filename will be created as `github-metrics-{name}-{today}.xlsx` within
-   the same folder where the scrpit is run. For example, if `sdv` is passed as the name,
+   the same folder where the script is run. For example, if `sdv` is passed as the name,
    and the script is run on November, 9th, 2021, the output file will be
    `github-metrics-sdv-2021-11-09.xlsx`.
 
@@ -85,7 +86,7 @@ must be called passing the following optional arguments:
   projects found in the config file.
 - `-r / --repositories REPOSITORY [REPOSITORY [REPOSITORY...]]`: Optional, list of repositories
   to extract for the indicated project. If this is given, one and only one `project` must be
-  passed, which will be used as the name for the output spreasheet.
+  passed, which will be used as the name for the output spreadsheet.
 - `-m / --add-metrics`: If indicated, add a `Metrics` tab with the project metrics to the
   spreadsheet.
 - `-n / --not-incremental`: If indicated, collect data from scratch instead of doing it
@@ -120,7 +121,7 @@ Please input your Github Token: <my-github-token>
 
 ## Output
 
-The result is a spreasheet that will contain 5 tabs:
+The result is a spreadsheet that will contain 5 tabs:
 
 - **Issues**:
     Where all the issues are listed, including data about
@@ -155,45 +156,11 @@ For this to work, the following things are required:
    the corresponding `settings.yaml` file, or passed via the `PYDRIVE_CREDENTIALS` environment
    variable.
 
-# Config File Format
+# Github Analytics Configuration
 
-The Github Analytics script can be configured using a YAML file with the following contents:
-* `output_folder`: Folder where results will be written. Can be a Google Drive in the format
-  gdrive://<folder-name>
-* `projects`: YAML Dictionary with project names as keys and repository list as values
+The Github Analytics script can be configured using a YAML file that indicates which repositories
+to collect and where to store the collected data, as well as when to execute the collection
+of data using Github Actions.
 
-```yaml
-output_folder: <folder-name>
-projects:
-  <project-name>:
-    - <organization>/<repository>
-    - <organization>/<repository>
-    - ...
-  <project-name>:
-    - <organization>/<repository>
-    - <organization>/<repository>
-    - ...
-  ...
-```
-
-For example, the following config file would only collect data for the `SDV` project,
-which would include all the `sdv-dev` libraries, and would store the results inside a
-Google Drive folder:
-
-```yaml
-output_folder: ***REMOVED***
-projects:
-  sdv-dev:
-  - sdv-dev/SDV
-  - sdv-dev/RDT
-  - sdv-dev/SDMetrics
-  - sdv-dev/SDGym
-  - sdv-dev/Copulas
-  - sdv-dev/CTGAN
-  - sdv-dev/DeepEcho
-```
-
-## Default Configuration File
-
-By default, Github Analytics collects the projects configured in the [config.yaml](config.yaml) file
-included in the project.
+For more details about how to configure this, check the [CONFIGURATION.md](CONFIGURATION.md)
+document.
