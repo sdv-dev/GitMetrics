@@ -6,6 +6,7 @@ import pathlib
 import pandas as pd
 
 from github_analytics.github.repository import RepositoryClient
+from github_analytics.github.repository_owner import RepositoryOwnerClient
 from github_analytics.github.users import UsersClient
 from github_analytics.metrics import compute_metrics
 from github_analytics.output import create_spreadsheet, load_spreadsheet
@@ -58,6 +59,12 @@ def _get_repository_data(token, repository, previous=None, quiet=False):
     stargazers.insert(1, 'repository', repository)
 
     return issues, pull_requests, stargazers
+
+
+def _get_repositories_list(token, owner, quiet=False):
+    owner_client = RepositoryOwnerClient(token, owner, quiet)
+    repositories = owner_client.get_repositories()
+    return (owner + '/' + repositories)['repository'].tolist()
 
 
 def _get_profiles(token, issues, pull_requests, stargazers, previous, quiet):
@@ -147,7 +154,7 @@ def collect_project_metrics(token, repositories, output_path=None, quiet=False, 
             Github token to use.
         repositories (list[str]):
             List of repositories to analyze, passed as ``{org_name}/{repo_name}``
-        ouptut_path (str):
+        output_path (str):
             Output path, including the ``xlsx`` extension, or name to use
             when creating the final filename
         quiet (bool):
@@ -174,7 +181,14 @@ def collect_project_metrics(token, repositories, output_path=None, quiet=False, 
     all_pull_requests = pd.DataFrame()
     all_stargazers = pd.DataFrame()
 
+    all_repositories = []
     for repository in repositories:
+        if '/' in repository:
+            all_repositories.append(repository)
+        else:
+            all_repositories.extend(_get_repositories_list(token, repository))
+
+    for repository in all_repositories:
         issues, pull_requests, stargazers = _get_repository_data(
             token=token,
             repository=repository,

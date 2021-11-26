@@ -53,7 +53,6 @@ USERS_COLUMNS = [
 ]
 
 
-
 class UsersClient(GQLClient):
     """GQLClient subclass specialized in user-related queries."""
 
