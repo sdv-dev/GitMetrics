@@ -1,5 +1,6 @@
 """Functions to upload to and download from google drive."""
 
+import json
 import logging
 import os
 import pathlib
@@ -39,15 +40,18 @@ def _get_drive_client():
             credentials_file_path = pathlib.Path(tempdir) / 'credentials.json'
             credentials_file_path.write_text(tmp_credentials)
 
+            credentials = json.loads(tmp_credentials)
+
             settings = {
                 'client_config_backend': 'settings',
                 'client_config': {
-                    'client_id': 'dummy',
-                    'client_secret': 'dummy',
+                    'client_id': credentials['client_id'],
+                    'client_secret': credentials['client_secret'],
                 },
                 'save_credentials': True,
                 'save_credentials_backend': 'file',
-                'save_credentials_file': str(credentials_file_path)
+                'save_credentials_file': str(credentials_file_path),
+                'get_refresh_token': True,
             }
             settings_file = pathlib.Path(tempdir) / 'settings.yaml'
             settings_file.write_text(yaml.safe_dump(settings))
