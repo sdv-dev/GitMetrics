@@ -186,7 +186,7 @@ def collect_project_metrics(token, repositories, output_path=None, quiet=False, 
         if '/' in repository:
             all_repositories.append(repository)
         else:
-            all_repositories.extend(_get_repositories_list(token, repository))
+            all_repositories.extend(_get_repositories_list(token, repository, quiet))
 
     for repository in all_repositories:
         issues, pull_requests, stargazers = _get_repository_data(
