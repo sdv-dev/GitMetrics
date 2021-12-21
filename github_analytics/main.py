@@ -94,11 +94,12 @@ def _get_profiles(token, issues, pull_requests, stargazers, previous, quiet):
 def _get_issues(all_issues, profiles):
     issues = all_issues.drop_duplicates()
     issues = issues.merge(profiles, how='left', on='user', suffixes=('', '_DROP'))
-    return issues.filter(regex='^(?!.*_DROP)')
+    return issues.filter(regex='^(?!.*_DROP)').sort_values('created_at')
 
 
 def _get_pull_requests(all_pull_requests, profiles):
-    return all_pull_requests.merge(profiles, how='left', on='user').drop_duplicates()
+    prs = all_pull_requests.merge(profiles, how='left', on='user').drop_duplicates()
+    return prs.sort_values('created_at')
 
 
 def _get_users(issues, profiles):
@@ -119,7 +120,7 @@ def _get_users(issues, profiles):
 
     users.insert(2, 'db_account_issue_creation', days_between)
 
-    return users
+    return users.sort_values('first_issue_date')
 
 
 def _get_contributors(pull_requests):
@@ -132,7 +133,7 @@ def _get_contributors(pull_requests):
     contributors.insert(2, 'first_pr_date', prs_by_user.created_at.first())
     contributors.insert(3, 'num_repositories', prs_by_user.repository.nunique())
 
-    return contributors.reset_index(drop=False)
+    return contributors.reset_index(drop=False).sort_values('first_pr_date')
 
 
 def _get_stargazers(all_stargazers):
@@ -142,7 +143,7 @@ def _get_stargazers(all_stargazers):
     stargazers = stargazers.rename(columns={
         'repository': 'first_starred_repository'
     })
-    return stargazers.reset_index()
+    return stargazers.reset_index().sort_values('starred_at')
 
 
 def collect_project_metrics(token, repositories, output_path=None, quiet=False, incremental=True,
