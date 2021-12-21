@@ -92,8 +92,11 @@ def _collect(args, parser):
 def _get_parser():
     # Logging
     logging_args = argparse.ArgumentParser(add_help=False)
-    logging_args.add_argument('-v', '--verbose', action='count', default=1)
-    logging_args.add_argument('-l', '--logfile')
+    logging_args.add_argument('-v', '--verbose', action='count', default=0,
+                              help='Be verbose. Use `-vv` for increased verbosity.')
+    logging_args.add_argument('-l', '--logfile',
+                              help='If given, file where the logs will be written.')
+
 
     parser = argparse.ArgumentParser(
         prog='github-analytics',
