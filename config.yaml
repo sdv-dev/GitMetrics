@@ -8,6 +8,20 @@ projects:
   - sdv-dev/Copulas
   - sdv-dev/CTGAN
   - sdv-dev/DeepEcho
+  sdv:
+  - sdv-dev/SDV
+  rdt:
+  - sdv-dev/RDT
+  sdmetrics:
+  - sdv-dev/SDMetrics
+  sdgym:
+  - sdv-dev/SDGym
+  copulas:
+  - sdv-dev/Copulas
+  ctgan:
+  - sdv-dev/CTGAN
+  deepecho:
+  - sdv-dev/DeepEcho
   PyTorchLightning:
   - PyTorchLightning/deep-learning-project-template
   - PyTorchLightning/lightning-bolts
