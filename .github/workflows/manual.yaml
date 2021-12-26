@@ -35,7 +35,7 @@ jobs:
         python -m pip install .
     - name: Collect Github Data
       run: |
-        github-analytics collect -q \
+        github-analytics collect -v -q \
           -t ${{ secrets.GITHUB_TOKEN }} \
           -p ${{ github.event.inputs.project }} \
           -r ${{ github.event.inputs.repositories }} \
