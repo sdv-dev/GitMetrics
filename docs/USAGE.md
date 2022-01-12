@@ -23,7 +23,7 @@ Clicking on the "Run workflow" button will bring up a form of arguments to provi
     results will be stored into.
   * **Extra arguments to pass**: By default, we will use `--not-incremental` and `--add-metrics`.
 
-<img src="docs/manual_collection.png" width="300">
+<img src="imgs/manual_collection.png" width="300">
 
 In the above example, the GitHub analytics for the `sdv` and `ctgan` repositories within the
 `sdv-dev` project will be collected into a folder titled 'sdv' within your specified
