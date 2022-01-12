@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       project:
-        description: 'Name of the project to collect'
+        description: 'Name of the project folder to collect results into'
         required: true
         default: ''
       repositories:
-        description: 'List of repositories to collect, separated by spaces'
+        description: 'List of repositories (project/repo) to collect, separated by spaces'
         required: false
         default: ''
       output-folder:
