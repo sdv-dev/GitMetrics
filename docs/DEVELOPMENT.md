@@ -1,6 +1,8 @@
-# Github Analytics
+# Github Analytics Development Guide
 
-Scripts to extract multiple metrics from Github Projects.
+This guide covers how to download and install Download Analytics to run it locally
+and modify its code. It also describes the secrets required to run the scripts and
+how to obtain those secrets.
 
 ## Install
 
@@ -156,11 +158,48 @@ For this to work, the following things are required:
    the corresponding `settings.yaml` file, or passed via the `PYDRIVE_CREDENTIALS` environment
    variable.
 
-# Github Analytics Configuration
+## Secrets Setup
 
-The Github Analytics script can be configured using a YAML file that indicates which repositories
-to collect and where to store the collected data, as well as when to execute the collection
-of data using Github Actions.
+The GitHub Analytics project requires privileged access to the following resources:
+- Google Drive, which is accessed via the `PyDrive` library.
 
-For more details about how to configure this, check the [CONFIGURATION.md](CONFIGURATION.md)
-document.
+In this section, we cover how to generate generate and configure credentials to authenticate
+with these two services.
+
+### PyDrive Credentials
+
+In order to authenticate with Google Drive you will need the GitHub Metrics GCP application keys,
+which should be stored in a `settings.yaml` file within the project folder with the following
+format:
+
+```yaml
+client_config_backend: settings
+client_config:
+  client_id: <client-id>
+  client_secret: <client-secret>
+
+save_credentials: True
+save_credentials_backend: file
+save_credentials_file: credentials.json
+```
+
+**IMPORTANT**: Notice that this file should never be committed alongside the code, since
+if contains the application KEY which should never be made public.
+
+TODO
+
+### Github Actions Setup
+
+When using GitHub Analytics via GitHub Actions, the authentication credentials for Google
+Drive and Big Query must be passed as repository `secrets`, which will later on be declared
+as environment variables.
+
+1. Open the [Settings page of the GitHub Analytics repository](
+   https://github.com/datacebo/github-analytics/settings/secrets/actions) and click on `Secrets`.
+
+2. If the `secret` that you will create does not exist yet, click on `New Repository Secret`,
+   otherwise click on the `Update` button of the corresponding secret to update its value.
+
+3. Paste the contents of the credentials JSON file in the box and click update. The following
+   secrets need to be created for each credentials file:
+   - `PYDRIVE_CREDENTIALS` for the `credentials.json` file that you created in the steps above.

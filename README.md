@@ -15,6 +15,5 @@ collected check the resources below.
 |               | Document                            | Description |
 | ------------- | ----------------------------------- | ----------- |
 | :pilot:       | [USAGE](docs/USAGE.md)           | How to run the workflows and collect data. |
-| :gear:        | [SETUP](docs/SETUP.md)                   | How to generate the required credential to run workflows. |
 | :keyboard:    | [DEVELOPMENT](docs/DEVELOPMENT.md)       | How to install and run the scripts locally. Overview of the project implementation. |
 | :floppy_disk: | [COLLECTED DATA](docs/COLLECTED_DATA.md) | Explanation about the data that is being collected. |
