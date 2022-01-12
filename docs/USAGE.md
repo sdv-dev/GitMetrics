@@ -105,9 +105,8 @@ In order to use a different Google Drive folder, you may have to update the GDri
 being used in the GitHub Actions workflow if the current secrets does not have access to
 the desired folder.
 
-1. Get your google drive credentials.
-2. Upload this secret to the repository [here](https://github.com/datacebo/github-analytics/settings/secrets/actions).
-3. Update the `PYDRIVE_CREDENTIALS` in the desired workflow. For example, for the manual workflow,
+1. Get your google drive credentials and upload if necessary (see instructions [here](DEVELOPMENT.md#pydrive-credentials)).
+2. Update the `PYDRIVE_CREDENTIALS` in the desired workflow. For example, for the manual workflow,
    update [this line](https://github.com/datacebo/github-analytics/blob/main/.github/workflows/manual.yaml#L45).
 
 ## Collect data using a different GitHub access token
@@ -115,7 +114,7 @@ the desired folder.
 It might be necessary to use a different GitHub access token if you want to collect data on
 a private repository that the current access token does not have access to.
 
-1. Get the GitHub access token with desired permissions.
-2. Upload this secret to the repository [here](https://github.com/datacebo/github-analytics/settings/secrets/actions).
-3. Update references to `GITHUB_TOKEN` and replace with the name of your new GitHub access token.
+1. Get the GitHub access token with desired permissions and upload it if necessary
+   (see instructions [here](DEVELOPMENT.md#github-actions-setup)).
+2. Update references to `GITHUB_TOKEN` and replace with the name of your new GitHub access token.
    For example, to update the manual workflow, update [this line](https://github.com/datacebo/github-analytics/blob/main/.github/workflows/manual.yaml#L39).
