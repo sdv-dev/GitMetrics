@@ -7,8 +7,8 @@ Scripts to extract metrics about GitHub repositories.
 The GitHub Analytics project is a collection of scripts and tools to extract information
 about GitHub activity for a given repository using the GitHub API.
 
-For more information about how to configure and use the software, or about the data that is being
-collected check the resources below.
+For more information about how to configure and use the software or the data that is being
+collected, check the resources below.
 
 ## Resources
 

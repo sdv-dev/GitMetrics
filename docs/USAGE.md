@@ -1,7 +1,7 @@
-# Usage
+# Github Analytics Usage
 
 The github-analytics repository can be run either locally or through GitHub Actions.
-For local usage, see the [README.md](README.md).
+For local usage, see the [DEVELOPMENT.md](DEVELOPMENT.md).
 
 Through GitHub Actions, we can trigger manual runs to collect GitHub analytics for specific
 repositories, or we can view the regularly-scheduled daily and weekly collections. In this

@@ -162,15 +162,17 @@ For this to work, the following things are required:
 
 The GitHub Analytics project requires privileged access to the following resources:
 - Google Drive, which is accessed via the `PyDrive` library.
+- The GitHub API using a Github Token. Documentation about how to create a
+  Personal Access Token can be found [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token).
 
 In this section, we cover how to generate generate and configure credentials to authenticate
 with these two services.
 
 ### PyDrive Credentials
 
-In order to authenticate with Google Drive you will need the GitHub Metrics GCP application keys,
-which should be stored in a `settings.yaml` file within the project folder with the following
-format:
+In order to authenticate with Google Drive you will need the GCP application keys that have
+access to the desired Google Drive. The application keys should be stored in a `settings.yaml`
+file with the following contents:
 
 ```yaml
 client_config_backend: settings
@@ -186,7 +188,17 @@ save_credentials_file: credentials.json
 **IMPORTANT**: Notice that this file should never be committed alongside the code, since
 if contains the application KEY which should never be made public.
 
-TODO
+Once the file is created, you can follow these steps:
+
+1. Run the `github-analytics collect` command. If the `settings.yaml` file has been properly
+   created, this will **open a new tab on your web browser**, where you need to authenticate.
+
+2. Click on the Google account which you which to authenticate with. Notice that the account that
+   you use must have access to the Google Drive folder you wish to write to.
+
+3. Once you click on the selected account, a message indicating that the authentication flow
+   has completed will appear, and a `credetials.json` file will have been created in your
+   working directory.
 
 ### Github Actions Setup
 
@@ -202,4 +214,5 @@ as environment variables.
 
 3. Paste the contents of the credentials JSON file in the box and click update. The following
    secrets need to be created for each credentials file:
+   - `PERSONAL_ACCESS_TOKEN` for the GitHub Token.
    - `PYDRIVE_CREDENTIALS` for the `credentials.json` file that you created in the steps above.
