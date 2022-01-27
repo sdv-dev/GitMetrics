@@ -92,29 +92,11 @@ These steps could be done directly via Github UI.
 
 ## Collect data into a **different Google Drive folder**
 
-In order to store data into a different Google Drive folder, get the `Folder ID`. To find the
-`Folder ID`, navigate to the folder in Google Drive. The `Folder ID` is everything that comes after
-"folder/" in the URL.
-
-To change the output folder in a manual collection run, you can input this `Folder ID` in the
-"Run workflow" options. To change the output folder in the daily or weekly run, you can
-update the `output_folder` parameter in the configuration yaml file (described above).
-
-### Using different Google Drive Secrets
-In order to use a different Google Drive folder, you may have to update the GDrive secrets
-being used in the GitHub Actions workflow if the current secrets does not have access to
-the desired folder.
-
-1. Get your google drive credentials and upload if necessary (see instructions [here](DEVELOPMENT.md#pydrive-credentials)).
-2. Update the `PYDRIVE_CREDENTIALS` in the desired workflow. For example, for the manual workflow,
-   update [this line](https://github.com/datacebo/github-analytics/blob/main/.github/workflows/manual.yaml#L45).
-
-## Collect data using a different GitHub access token
-
-It might be necessary to use a different GitHub access token if you want to collect data on
-a private repository that the current access token does not have access to.
-
-1. Get the GitHub access token with desired permissions and upload it if necessary
-   (see instructions [here](DEVELOPMENT.md#github-actions-setup)).
-2. Update references to `GITHUB_TOKEN` and replace with the name of your new GitHub access token.
-   For example, to update the manual workflow, update [this line](https://github.com/datacebo/github-analytics/blob/main/.github/workflows/manual.yaml#L39).
+In order to store data into a different Google Drive folder:
+1. Get the `Folder ID`. To find the `Folder ID`, navigate to the folder in Google Drive.
+   The `Folder ID` is everything that comes after "folder/" in the URL.
+2. Make sure that the current secrets have access to the new folder. To do this, you can share
+   the folder with the DataCebo user. Please contact team@datacebo.com for this use case.
+3. To change the output folder in a manual collection run, you can input this `Folder ID` in the
+   "Run workflow" options. To change the output folder in the daily or weekly run, you can
+   update the `output_folder` parameter in the configuration yaml file (described above).
