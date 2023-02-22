@@ -61,7 +61,6 @@ projects:
   - gretelai/gretel-synthetics
   - gretelai/gretel-tools
   - gretelai/s3-object-lambda-gretel-transforms
-  - gretelai/support
   huggingface:
   - huggingface/accelerate
   - huggingface/autonlp
