@@ -190,15 +190,18 @@ def collect_project_metrics(token, repositories, output_path=None, quiet=False, 
             all_repositories.extend(_get_repositories_list(token, repository, quiet))
 
     for repository in all_repositories:
-        issues, pull_requests, stargazers = _get_repository_data(
-            token=token,
-            repository=repository,
-            previous=previous,
-            quiet=quiet
-        )
-        all_issues = all_issues.append(issues, ignore_index=True)
-        all_pull_requests = all_pull_requests.append(pull_requests, ignore_index=True)
-        all_stargazers = all_stargazers.append(stargazers, ignore_index=True)
+        try:
+            issues, pull_requests, stargazers = _get_repository_data(
+                token=token,
+                repository=repository,
+                previous=previous,
+                quiet=quiet
+            )
+            all_issues = all_issues.append(issues, ignore_index=True)
+            all_pull_requests = all_pull_requests.append(pull_requests, ignore_index=True)
+            all_stargazers = all_stargazers.append(stargazers, ignore_index=True)
+        except Exception:
+            LOGGER.info(f'Failed to get repository data: {repository}.')
 
     profiles = _get_profiles(token, all_issues, all_pull_requests, all_stargazers, previous, quiet)
 
