@@ -40,16 +40,16 @@ USERS = """
 }}
 """
 USERS_COLUMNS = [
-    'user',
-    'name',
-    'email',
-    'blog',
-    'company',
-    'location',
-    'twitter',
-    'user_created_at',
-    'user_updated_at',
-    'bio',
+    "user",
+    "name",
+    "email",
+    "blog",
+    "company",
+    "location",
+    "twitter",
+    "user_created_at",
+    "user_updated_at",
+    "bio",
 ]
 
 
@@ -58,18 +58,18 @@ class UsersClient(GQLClient):
 
     @staticmethod
     def _user_parser(user):
-        node = user['node']
+        node = user["node"]
         return {
-            'user': node['login'],
-            'name': node['name'],
-            'email': node['email'],
-            'blog': node['websiteUrl'],
-            'company': node['company'],
-            'location': node['location'],
-            'twitter': node['twitterUsername'],
-            'user_created_at': to_utc(node['createdAt']),
-            'user_updated_at': to_utc(node['updatedAt']),
-            'bio': node['bio'],
+            "user": node["login"],
+            "name": node["name"],
+            "email": node["email"],
+            "blog": node["websiteUrl"],
+            "company": node["company"],
+            "location": node["location"],
+            "twitter": node["twitterUsername"],
+            "user_created_at": to_utc(node["createdAt"]),
+            "user_updated_at": to_utc(node["updatedAt"]),
+            "bio": node["bio"],
         }
 
     def get_users(self, usernames):
@@ -77,18 +77,18 @@ class UsersClient(GQLClient):
         out = pd.DataFrame()
         total = len(usernames)
 
-        desc = f'Collecting {total} users'
-        pbar = tqdm(total=total, disable=self.quiet, desc=desc, unit=' users')
+        desc = f"Collecting {total} users"
+        pbar = tqdm(total=total, disable=self.quiet, desc=desc, unit=" users")
         if self.quiet:
             LOGGER.info(desc)
 
         for index in range(0, total, 100):
-            chunk = usernames[index:index + 100]
-            usernames_query = ' '.join(f'user:{user}' for user in chunk)
+            chunk = usernames[index : index + 100]
+            usernames_query = " ".join(f"user:{user}" for user in chunk)
             chunk_users = self.paginate_collection(
                 query=USERS,
-                prefix='data.search',
-                total='userCount',
+                prefix="data.search",
+                total="userCount",
                 item_parser=self._user_parser,
                 pbar=pbar,
                 usernames=usernames_query,
@@ -98,4 +98,4 @@ class UsersClient(GQLClient):
 
         pbar.close()
 
-        return out.sort_values('user', ignore_index=True)
+        return out.sort_values("user", ignore_index=True)

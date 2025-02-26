@@ -12,7 +12,7 @@ from tqdm.auto import tqdm
 LOGGER = logging.getLogger(__name__)
 
 
-GRAPHQL_URL = 'https://api.github.com/graphql'
+GRAPHQL_URL = "https://api.github.com/graphql"
 RATE_LIMIT_QUERY = """
 query {
   rateLimit {
@@ -23,7 +23,7 @@ query {
   }
 }
 """
-ISO_DATETIME = '%Y-%m-%dT%H:%M:%SZ'
+ISO_DATETIME = "%Y-%m-%dT%H:%M:%SZ"
 
 
 class GQLClient:
@@ -41,12 +41,14 @@ class GQLClient:
     def _post_query(self, query):
         response = requests.post(
             GRAPHQL_URL,
-            json={'query': query},
-            headers={'Authorization': f'token {self.token}'}
+            json={"query": query},
+            headers={"Authorization": f"token {self.token}"},
         )
 
         if response.status_code != 200:
-            raise RuntimeError(f'Query fail ({response.status_code}): {response.content}')
+            raise RuntimeError(
+                f"Query fail ({response.status_code}): {response.content}"
+            )
 
         return benedict(response.json())
 
@@ -81,23 +83,25 @@ class GQLClient:
 
         response = self._post_query(query)
 
-        if 'errors' in response:
-            first_error = response['errors'][0]
-            if first_error.get('type') == 'RATE_LIMITED':
-                LOGGER.warning('Rate Limit Hit!')
+        if "errors" in response:
+            first_error = response["errors"][0]
+            if first_error.get("type") == "RATE_LIMITED":
+                LOGGER.warning("Rate Limit Hit!")
                 rate_limit = self._post_query(RATE_LIMIT_QUERY)
                 LOGGER.warning(rate_limit.to_json(indent=4))
 
-                reset_at = datetime.strptime(rate_limit['data.rateLimit.resetAt'], ISO_DATETIME)
+                reset_at = datetime.strptime(
+                    rate_limit["data.rateLimit.resetAt"], ISO_DATETIME
+                )
                 sleep = int((reset_at - datetime.utcnow()).total_seconds()) + 10
 
-                LOGGER.warning('Sleeping for %s seconds', sleep)
+                LOGGER.warning("Sleeping for %s seconds", sleep)
                 time.sleep(sleep)
                 response = self._post_query(query)
 
-        if 'errors' in response:
+        if "errors" in response:
             LOGGER.error(response.to_json(indent=4))
-            raise ValueError(response['errors'][0]['message'])
+            raise ValueError(response["errors"][0]["message"])
 
         LOGGER.debug(response.to_json(indent=4))
 
@@ -106,8 +110,18 @@ class GQLClient:
 
         return response
 
-    def paginate_collection(self, query, prefix, total, item_parser, query_maker=None,
-                            collection_name=None, pbar=None, columns=None, **kwargs):
+    def paginate_collection(
+        self,
+        query,
+        prefix,
+        total,
+        item_parser,
+        query_maker=None,
+        collection_name=None,
+        pbar=None,
+        columns=None,
+        **kwargs,
+    ):
         """Run the given query and paginate the corresponding collection.
 
         Args:
@@ -137,17 +151,22 @@ class GQLClient:
             pandas.DataFrame:
                 Table with the collection contents.
         """
-        response = self.run_query(query, query_maker, prefix, end_cursor='', **kwargs)
+        response = self.run_query(query, query_maker, prefix, end_cursor="", **kwargs)
         if isinstance(total, str):
             total = response[total]
 
-        message = f'Collecting {total} {collection_name}'
+        message = f"Collecting {total} {collection_name}"
         if self.quiet and pbar is None:
             LOGGER.info(message)
 
         data = []
         if pbar is None:
-            _pbar = tqdm(total=total, disable=self.quiet, desc=message, unit=' ' + collection_name)
+            _pbar = tqdm(
+                total=total,
+                disable=self.quiet,
+                desc=message,
+                unit=" " + collection_name,
+            )
         else:
             _pbar = pbar
 
@@ -157,11 +176,11 @@ class GQLClient:
             else:
                 collection = response
 
-            page_info = collection['pageInfo']
-            has_next_page = page_info['hasNextPage']
+            page_info = collection["pageInfo"]
+            has_next_page = page_info["hasNextPage"]
             end_cursor = f', after: "{page_info["endCursor"]}"'
 
-            for item in collection['edges']:
+            for item in collection["edges"]:
                 try:
                     data.append(item_parser(benedict(item)))
                 except (TypeError, KeyError):
@@ -173,8 +192,9 @@ class GQLClient:
             if not has_next_page:
                 break
 
-            response = self.run_query(query, query_maker, prefix,
-                                      end_cursor=end_cursor, **kwargs)
+            response = self.run_query(
+                query, query_maker, prefix, end_cursor=end_cursor, **kwargs
+            )
 
         if pbar is None:
             _pbar.close()
