@@ -3,7 +3,11 @@ from invoke import task
 
 @task
 def lint(c):
-    c.run('flake8 github_analytics')
-    c.run('pydocstyle github_analytics')
-    c.run('isort -c github_analytics')
-    c.run('pylint github_analytics --rcfile=setup.cfg')
+    c.run("ruff check .")
+    c.run("ruff format --check --diff .")
+
+
+@task
+def fix_lint(c):
+    c.run("ruff check --fix .")
+    c.run("ruff format .")
