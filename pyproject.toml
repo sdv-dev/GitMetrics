@@ -31,8 +31,8 @@ Homepage = "https://github.com/DataCebo/github-analytics"
 [project.scripts]
 github-analytics = "github_analytics.__main__:main"
 
-[tool.setuptools]
-packages = ["github_analytics"]
+[tool.setuptools.packages.find]
+include = ['github_analytics', 'github_analytics.*']
 
 [project.optional-dependencies]
 dev = [
