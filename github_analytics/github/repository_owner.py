@@ -23,7 +23,7 @@ REPOSITORIES = """
 }}
 """
 REPOSITORY_COLUMNS = [
-    "repository",
+    'repository',
 ]
 
 
@@ -36,18 +36,18 @@ class RepositoryOwnerClient(GQLClient):
 
     @staticmethod
     def _repository_parser(user):
-        node = user["node"]
+        node = user['node']
         return {
-            "repository": node["name"],
+            'repository': node['name'],
         }
 
     def get_repositories(self):
         """Get the repositories of this repository owner."""
         return self.paginate_collection(
             query=REPOSITORIES,
-            prefix="data.repositoryOwner",
-            total="repositories.totalCount",
-            collection_name="repositories",
+            prefix='data.repositoryOwner',
+            total='repositories.totalCount',
+            collection_name='repositories',
             item_parser=self._repository_parser,
             columns=REPOSITORY_COLUMNS,
             repository_owner=self._repository_owner,

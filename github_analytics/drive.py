@@ -10,22 +10,22 @@ import yaml
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
-XLSX_MIMETYPE = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-SPREADSHEET_MIMETYPE = "application/vnd.google-apps.spreadsheet"
-PYDRIVE_CREDENTIALS = "PYDRIVE_CREDENTIALS"
+XLSX_MIMETYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+SPREADSHEET_MIMETYPE = 'application/vnd.google-apps.spreadsheet'
+PYDRIVE_CREDENTIALS = 'PYDRIVE_CREDENTIALS'
 
 LOGGER = logging.getLogger(__name__)
 
 
 def is_drive_path(path):
     """Tell if the drive is a Google Drive path or not."""
-    return path.startswith("gdrive://")
+    return path.startswith('gdrive://')
 
 
 def split_drive_path(path):
     """Extract the folder and filename from the google drive path string."""
-    assert is_drive_path(path), f"{path} is not a google drive path"
-    folder, filename = path[9:].split("/")
+    assert is_drive_path(path), f'{path} is not a google drive path'
+    folder, filename = path[9:].split('/')
 
     return folder, filename
 
@@ -37,23 +37,23 @@ def _get_drive_client():
         gauth.LocalWebserverAuth()
     else:
         with tempfile.TemporaryDirectory() as tempdir:
-            credentials_file_path = pathlib.Path(tempdir) / "credentials.json"
+            credentials_file_path = pathlib.Path(tempdir) / 'credentials.json'
             credentials_file_path.write_text(tmp_credentials)
 
             credentials = json.loads(tmp_credentials)
 
             settings = {
-                "client_config_backend": "settings",
-                "client_config": {
-                    "client_id": credentials["client_id"],
-                    "client_secret": credentials["client_secret"],
+                'client_config_backend': 'settings',
+                'client_config': {
+                    'client_id': credentials['client_id'],
+                    'client_secret': credentials['client_secret'],
                 },
-                "save_credentials": True,
-                "save_credentials_backend": "file",
-                "save_credentials_file": str(credentials_file_path),
-                "get_refresh_token": True,
+                'save_credentials': True,
+                'save_credentials_backend': 'file',
+                'save_credentials_file': str(credentials_file_path),
+                'get_refresh_token': True,
             }
-            settings_file = pathlib.Path(tempdir) / "settings.yaml"
+            settings_file = pathlib.Path(tempdir) / 'settings.yaml'
             settings_file.write_text(yaml.safe_dump(settings))
 
             gauth = GoogleAuth(str(settings_file))
@@ -63,15 +63,13 @@ def _get_drive_client():
 
 
 def _find_file(drive, filename, folder):
-    query = {"q": f"'{folder}' in parents and trashed=false"}
+    query = {'q': f"'{folder}' in parents and trashed=false"}
     files = drive.ListFile(query).GetList()
     for found_file in files:
-        if filename == found_file["title"]:
+        if filename == found_file['title']:
             return found_file
 
-    raise FileNotFoundError(
-        f"File '{filename}' not found in Google Drive folder {folder}"
-    )
+    raise FileNotFoundError(f"File '{filename}' not found in Google Drive folder {folder}")
 
 
 def upload_spreadsheet(content, filename, folder):
@@ -90,12 +88,12 @@ def upload_spreadsheet(content, filename, folder):
     try:
         drive_file = _find_file(drive, filename, folder)
     except FileNotFoundError:
-        file_config = {"title": filename, "parents": [{"id": folder}]}
+        file_config = {'title': filename, 'parents': [{'id': folder}]}
         drive_file = drive.CreateFile(file_config)
 
     drive_file.content = content
-    drive_file.Upload({"convert": True})
-    LOGGER.info("Created file %s", drive_file.metadata["alternateLink"])
+    drive_file.Upload({'convert': True})
+    LOGGER.info('Created file %s', drive_file.metadata['alternateLink'])
 
 
 def download_spreadsheet(folder, filename):

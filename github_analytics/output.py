@@ -11,12 +11,12 @@ from github_analytics import drive
 LOGGER = logging.getLogger(__name__)
 
 DATE_COLUMNS = [
-    "created_at",
-    "updated_at",
-    "closed_at",
-    "starred_at",
-    "user_created_at",
-    "user_updated_at",
+    'created_at',
+    'updated_at',
+    'closed_at',
+    'starred_at',
+    'user_created_at',
+    'user_updated_at',
 ]
 
 
@@ -50,19 +50,19 @@ def create_spreadsheet(output_path, sheets):
     """
     output = io.BytesIO()
 
-    with pd.ExcelWriter(output, engine="xlsxwriter") as writer:  # pylint: disable=E0110
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:  # pylint: disable=E0110
         for title, data in sheets.items():
             _add_sheet(writer, data, title)
 
     if drive.is_drive_path(output_path):
-        LOGGER.info("Creating file %s", output_path)
+        LOGGER.info('Creating file %s', output_path)
         folder, filename = drive.split_drive_path(output_path)
         drive.upload_spreadsheet(output, filename, folder)
     else:
-        if not output_path.endswith(".xslx"):
-            output_path += ".xlsx"
+        if not output_path.endswith('.xslx'):
+            output_path += '.xlsx'
 
-        LOGGER.info("Creating file %s", output_path)
+        LOGGER.info('Creating file %s', output_path)
         output_path = pathlib.Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_bytes(output.getbuffer())
@@ -86,18 +86,16 @@ def load_spreadsheet(spreadsheet):
         path = spreadsheet
         folder, filename = drive.split_drive_path(spreadsheet)
         spreadsheet = drive.download_spreadsheet(folder, filename)
-    elif not spreadsheet.endswith(".xslx"):
-        spreadsheet += ".xlsx"
+    elif not spreadsheet.endswith('.xslx'):
+        spreadsheet += '.xlsx'
         path = spreadsheet
 
     sheets = pd.read_excel(spreadsheet, sheet_name=None)
     for sheet in sheets.values():  # noqa
         for column in DATE_COLUMNS:
             if column in sheet:
-                sheet[column] = pd.to_datetime(sheet[column], utc=True).dt.tz_convert(
-                    None
-                )
+                sheet[column] = pd.to_datetime(sheet[column], utc=True).dt.tz_convert(None)
 
-    LOGGER.info("Loaded spreadsheet %s", path)
+    LOGGER.info('Loaded spreadsheet %s', path)
 
     return sheets

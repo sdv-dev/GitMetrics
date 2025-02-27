@@ -15,31 +15,31 @@ LOGGER = logging.getLogger(__name__)
 
 
 def _env_setup(logfile, verbosity):
-    warnings.simplefilter("ignore")
+    warnings.simplefilter('ignore')
 
-    format_ = "%(asctime)s - %(levelname)s - %(message)s"
+    format_ = '%(asctime)s - %(levelname)s - %(message)s'
     level = (3 - verbosity) * 10
     logging.basicConfig(filename=logfile, level=level, format=format_)
-    logging.getLogger("github_analytics").setLevel(level)
+    logging.getLogger('github_analytics').setLevel(level)
     logging.getLogger().setLevel(logging.WARN)
 
 
 def _load_config(config_path):
     config_path = pathlib.Path(config_path)
     config = yaml.safe_load(config_path.read_text())
-    import_config = config.pop("import_config", None)
+    import_config = config.pop('import_config', None)
     if import_config:
         import_config_path = pathlib.Path(import_config)
         if import_config_path.is_absolute():
             import_config_path = config_path.parent / import_config_path
 
         import_config = _load_config(import_config_path)
-        import_projects = import_config["projects"]
+        import_projects = import_config['projects']
 
         import_config.update(config)
         config = import_config
 
-        config_projects = config["projects"]
+        config_projects = config['projects']
         for project, repositories in config_projects.items():
             if not repositories:
                 config_projects[project] = import_projects[project]
@@ -48,21 +48,19 @@ def _load_config(config_path):
 
 
 def _collect(args, parser):
-    token = args.token or os.getenv("GITHUB_TOKEN")
+    token = args.token or os.getenv('GITHUB_TOKEN')
     if token is None:
-        token = input("Please input your Github Token: ")
+        token = input('Please input your Github Token: ')
 
     config = _load_config(args.config_file)
-    config_projects = config["projects"]
+    config_projects = config['projects']
 
     projects = {}
     if args.repositories:
         if not args.projects:
-            parser.error("If repositories are given, project name must be provided.")
+            parser.error('If repositories are given, project name must be provided.')
         elif len(args.projects) > 1:
-            parser.error(
-                "If repositories are given, only one project name must be provided."
-            )
+            parser.error('If repositories are given, only one project name must be provided.')
 
         projects = {args.projects[0]: args.repositories}
 
@@ -72,12 +70,12 @@ def _collect(args, parser):
     else:
         for project in args.projects:
             if project not in config_projects:
-                LOGGER.error("Unknown project %s", project)
+                LOGGER.error('Unknown project %s', project)
                 return
 
             projects[project] = config_projects[project]
 
-    output_folder = args.output_folder or config.get("output_folder", ".")
+    output_folder = args.output_folder or config.get('output_folder', '.')
 
     collect_projects(
         token=token,
@@ -93,70 +91,64 @@ def _get_parser():
     # Logging
     logging_args = argparse.ArgumentParser(add_help=False)
     logging_args.add_argument(
-        "-v",
-        "--verbose",
-        action="count",
+        '-v',
+        '--verbose',
+        action='count',
         default=0,
-        help="Be verbose. Use `-vv` for increased verbosity.",
+        help='Be verbose. Use `-vv` for increased verbosity.',
     )
     logging_args.add_argument(
-        "-l", "--logfile", help="If given, file where the logs will be written."
+        '-l', '--logfile', help='If given, file where the logs will be written.'
     )
 
     parser = argparse.ArgumentParser(
-        prog="github-analytics",
-        description="Github Analytics Command Line Interface",
+        prog='github-analytics',
+        description='Github Analytics Command Line Interface',
         parents=[logging_args],
     )
     parser.set_defaults(action=None)
-    action = parser.add_subparsers(title="action")
+    action = parser.add_subparsers(title='action')
     action.required = True
 
     # collect
-    collect = action.add_parser(
-        "collect", help="Collect github metrics.", parents=[logging_args]
-    )
+    collect = action.add_parser('collect', help='Collect github metrics.', parents=[logging_args])
     collect.set_defaults(action=_collect)
 
     collect.add_argument(
-        "-o",
-        "--output-folder",
+        '-o',
+        '--output-folder',
         type=str,
         required=False,
-        help="Output folder path. Defaults to .",
+        help='Output folder path. Defaults to .',
     )
+    collect.add_argument('-t', '--token', type=str, required=False, help='Github Token to use.')
     collect.add_argument(
-        "-t", "--token", type=str, required=False, help="Github Token to use."
-    )
-    collect.add_argument(
-        "-p",
-        "--projects",
+        '-p',
+        '--projects',
         type=str,
-        nargs="*",
-        help="Projects to collect. Defaults to ALL if not given",
+        nargs='*',
+        help='Projects to collect. Defaults to ALL if not given',
     )
     collect.add_argument(
-        "-c",
-        "--config-file",
+        '-c',
+        '--config-file',
         type=str,
-        default="config.yaml",
-        help="Path to the configuration file.",
+        default='config.yaml',
+        help='Path to the configuration file.',
     )
     collect.add_argument(
-        "-q", "--quiet", action="store_true", help="Do not user tqdm progress bars."
+        '-q', '--quiet', action='store_true', help='Do not user tqdm progress bars.'
     )
     collect.add_argument(
-        "-m", "--add-metrics", action="store_true", help="Whether to add a metrics tab."
+        '-m', '--add-metrics', action='store_true', help='Whether to add a metrics tab.'
     )
+    collect.add_argument('-r', '--repositories', nargs='*', help='List of repositories to add.')
     collect.add_argument(
-        "-r", "--repositories", nargs="*", help="List of repositories to add."
-    )
-    collect.add_argument(
-        "-n",
-        "--not-incremental",
-        dest="incremental",
-        action="store_false",
-        help="Start from scratch instead of incrementing over existing data.",
+        '-n',
+        '--not-incremental',
+        dest='incremental',
+        action='store_false',
+        help='Start from scratch instead of incrementing over existing data.',
     )
 
     return parser
@@ -175,5 +167,5 @@ def main():
     args.action(args, parser)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
