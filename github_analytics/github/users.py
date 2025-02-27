@@ -94,7 +94,7 @@ class UsersClient(GQLClient):
                 usernames=usernames_query,
                 columns=USERS_COLUMNS,
             )
-            out = out.append(chunk_users, ignore_index=True)
+            out = pd.concat([out, chunk_users], ignore_index=True)
 
         pbar.close()
 

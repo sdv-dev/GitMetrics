@@ -48,7 +48,7 @@ def _get_repository_data(token, repository, previous=None, quiet=False):
     else:
         issues.insert(1, "repository", repository)
         if prev_issues is not None and not prev_issues.empty:
-            issues = issues.append(prev_issues)
+            issues = pd.concat([issues, prev_issues], ignore_index=True)
             issues = issues.sort_values(["created_at", "closed_at"])
             issues = issues.drop_duplicates(["repository", "number"], keep="last")
 
@@ -68,21 +68,15 @@ def _get_repositories_list(token, owner, quiet=False):
 
 
 def _get_profiles(token, issues, pull_requests, stargazers, previous, quiet):
-    all_users = issues.user.append(pull_requests.user, ignore_index=True)
+    all_users = pd.concat([issues.user, pull_requests.user], ignore_index=True)
     unique_users = all_users.dropna().unique().tolist()
 
     users = stargazers[USER_COLUMNS].drop_duplicates()
 
     if previous:
-        users = users.append(
-            previous["Unique Issue Users"][USER_COLUMNS], ignore_index=True
-        )
-        users = users.append(
-            previous["Unique Contributors"][USER_COLUMNS], ignore_index=True
-        )
-        users = users.append(
-            previous["Unique Stargazers"][USER_COLUMNS], ignore_index=True
-        )
+        users = pd.concat([users, previous["Unique Issue Users"][USER_COLUMNS]], ignore_index=True)
+        users = pd.concat([users, previous["Unique Contributors"][USER_COLUMNS]], ignore_index=True)
+        users = pd.concat([users, previous["Unique Stargazers"][USER_COLUMNS]], ignore_index=True)
         users = users.sort_values("user_updated_at").drop_duplicates(
             "user", keep="last"
         )
@@ -94,7 +88,7 @@ def _get_profiles(token, issues, pull_requests, stargazers, previous, quiet):
         LOGGER.info("Getting %s missing users", len(missing))
         users_client = UsersClient(token, quiet)
         missing_users = users_client.get_users(missing)
-        users = users.append(missing_users, ignore_index=True)
+        users = pd.concat([users, missing_users], ignore_index=True)
 
     return users.sort_values("user").reset_index(drop=True)
 
@@ -206,11 +200,10 @@ def collect_project_metrics(
             issues, pull_requests, stargazers = _get_repository_data(
                 token=token, repository=repository, previous=previous, quiet=quiet
             )
-            all_issues = all_issues.append(issues, ignore_index=True)
-            all_pull_requests = all_pull_requests.append(
-                pull_requests, ignore_index=True
-            )
-            all_stargazers = all_stargazers.append(stargazers, ignore_index=True)
+            all_issues = pd.concat([all_issues, issues], ignore_index=True)
+            all_pull_requests = pd.concat([all_pull_requests, pull_requests], ignore_index=True)
+            all_stargazers = pd.concat([all_stargazers, stargazers], ignore_index=True)
+
         except Exception:
             LOGGER.info(f"Failed to get repository data: {repository}.")
 
