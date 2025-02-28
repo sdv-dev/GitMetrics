@@ -59,7 +59,7 @@ install: clean-build clean-pyc ## install the package to the active Python's sit
 
 .PHONY: install-develop
 install-develop: clean-build clean-pyc ## install the package in editable mode and dependencies for development
-	pip install -r dev-requirements.txt -e .
+	pip install -e .[dev]
 
 
 # LINT TARGETS
@@ -67,3 +67,7 @@ install-develop: clean-build clean-pyc ## install the package in editable mode a
 .PHONY: lint
 lint: ## check style with flake8 and isort
 	invoke lint
+
+.PHONY: fix-lint
+fix-lint:
+	invoke fix-lint

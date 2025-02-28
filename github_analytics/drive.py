@@ -88,14 +88,7 @@ def upload_spreadsheet(content, filename, folder):
     try:
         drive_file = _find_file(drive, filename, folder)
     except FileNotFoundError:
-        file_config = {
-            'title': filename,
-            'parents': [
-                {
-                    'id': folder
-                }
-            ]
-        }
+        file_config = {'title': filename, 'parents': [{'id': folder}]}
         drive_file = drive.CreateFile(file_config)
 
     drive_file.content = content

@@ -62,9 +62,7 @@ def _collect(args, parser):
         elif len(args.projects) > 1:
             parser.error('If repositories are given, only one project name must be provided.')
 
-        projects = {
-            args.projects[0]: args.repositories
-        }
+        projects = {args.projects[0]: args.repositories}
 
     elif not args.projects:
         projects = config_projects
@@ -85,23 +83,28 @@ def _collect(args, parser):
         output_folder=output_folder,
         quiet=args.quiet,
         incremental=args.incremental,
-        add_metrics=args.add_metrics
+        add_metrics=args.add_metrics,
     )
 
 
 def _get_parser():
     # Logging
     logging_args = argparse.ArgumentParser(add_help=False)
-    logging_args.add_argument('-v', '--verbose', action='count', default=0,
-                              help='Be verbose. Use `-vv` for increased verbosity.')
-    logging_args.add_argument('-l', '--logfile',
-                              help='If given, file where the logs will be written.')
-
+    logging_args.add_argument(
+        '-v',
+        '--verbose',
+        action='count',
+        default=0,
+        help='Be verbose. Use `-vv` for increased verbosity.',
+    )
+    logging_args.add_argument(
+        '-l', '--logfile', help='If given, file where the logs will be written.'
+    )
 
     parser = argparse.ArgumentParser(
         prog='github-analytics',
         description='Github Analytics Command Line Interface',
-        parents=[logging_args]
+        parents=[logging_args],
     )
     parser.set_defaults(action=None)
     action = parser.add_subparsers(title='action')
@@ -111,22 +114,42 @@ def _get_parser():
     collect = action.add_parser('collect', help='Collect github metrics.', parents=[logging_args])
     collect.set_defaults(action=_collect)
 
-    collect.add_argument('-o', '--output-folder', type=str, required=False,
-                         help='Output folder path. Defaults to .')
-    collect.add_argument('-t', '--token', type=str, required=False,
-                         help='Github Token to use.')
-    collect.add_argument('-p', '--projects', type=str, nargs='*',
-                         help='Projects to collect. Defaults to ALL if not given')
-    collect.add_argument('-c', '--config-file', type=str, default='config.yaml',
-                         help='Path to the configuration file.')
-    collect.add_argument('-q', '--quiet', action='store_true',
-                         help='Do not user tqdm progress bars.')
-    collect.add_argument('-m', '--add-metrics', action='store_true',
-                         help='Whether to add a metrics tab.')
-    collect.add_argument('-r', '--repositories', nargs='*',
-                         help='List of repositories to add.')
-    collect.add_argument('-n', '--not-incremental', dest='incremental', action='store_false',
-                         help='Start from scratch instead of incrementing over existing data.')
+    collect.add_argument(
+        '-o',
+        '--output-folder',
+        type=str,
+        required=False,
+        help='Output folder path. Defaults to .',
+    )
+    collect.add_argument('-t', '--token', type=str, required=False, help='Github Token to use.')
+    collect.add_argument(
+        '-p',
+        '--projects',
+        type=str,
+        nargs='*',
+        help='Projects to collect. Defaults to ALL if not given',
+    )
+    collect.add_argument(
+        '-c',
+        '--config-file',
+        type=str,
+        default='config.yaml',
+        help='Path to the configuration file.',
+    )
+    collect.add_argument(
+        '-q', '--quiet', action='store_true', help='Do not user tqdm progress bars.'
+    )
+    collect.add_argument(
+        '-m', '--add-metrics', action='store_true', help='Whether to add a metrics tab.'
+    )
+    collect.add_argument('-r', '--repositories', nargs='*', help='List of repositories to add.')
+    collect.add_argument(
+        '-n',
+        '--not-incremental',
+        dest='incremental',
+        action='store_false',
+        help='Start from scratch instead of incrementing over existing data.',
+    )
 
     return parser
 
