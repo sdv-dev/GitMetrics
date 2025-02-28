@@ -156,11 +156,7 @@ class RepositoryClient(GQLClient):
     def _indent_query(query_body, **kwargs):
         if '\n' in query_body:
             query_lines = query_body.split('\n')
-            indented = [
-                ' ' * 8 + line
-                for line in query_lines[2:]
-                if line
-            ]
+            indented = [' ' * 8 + line for line in query_lines[2:] if line]
             query_body = '\n'.join(query_lines[1:2] + indented)
 
         return query_body.format(**kwargs)
@@ -172,11 +168,7 @@ class RepositoryClient(GQLClient):
             kwargs.setdefault('filter_by', '')
 
         query_body = self._indent_query(query_body, **kwargs)
-        return REPO_ENVELOPE.format(
-            owner=self.owner,
-            name=self.name,
-            query_body=query_body
-        )[1:-1]
+        return REPO_ENVELOPE.format(owner=self.owner, name=self.name, query_body=query_body)[1:-1]
 
     def get_stargazer_count(self):
         """Get the number of stargazers of this repository."""

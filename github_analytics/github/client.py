@@ -42,7 +42,7 @@ class GQLClient:
         response = requests.post(
             GRAPHQL_URL,
             json={'query': query},
-            headers={'Authorization': f'token {self.token}'}
+            headers={'Authorization': f'token {self.token}'},
         )
 
         if response.status_code != 200:
@@ -106,8 +106,18 @@ class GQLClient:
 
         return response
 
-    def paginate_collection(self, query, prefix, total, item_parser, query_maker=None,
-                            collection_name=None, pbar=None, columns=None, **kwargs):
+    def paginate_collection(
+        self,
+        query,
+        prefix,
+        total,
+        item_parser,
+        query_maker=None,
+        collection_name=None,
+        pbar=None,
+        columns=None,
+        **kwargs,
+    ):
         """Run the given query and paginate the corresponding collection.
 
         Args:
@@ -147,7 +157,12 @@ class GQLClient:
 
         data = []
         if pbar is None:
-            _pbar = tqdm(total=total, disable=self.quiet, desc=message, unit=' ' + collection_name)
+            _pbar = tqdm(
+                total=total,
+                disable=self.quiet,
+                desc=message,
+                unit=' ' + collection_name,
+            )
         else:
             _pbar = pbar
 
@@ -173,8 +188,7 @@ class GQLClient:
             if not has_next_page:
                 break
 
-            response = self.run_query(query, query_maker, prefix,
-                                      end_cursor=end_cursor, **kwargs)
+            response = self.run_query(query, query_maker, prefix, end_cursor=end_cursor, **kwargs)
 
         if pbar is None:
             _pbar.close()
