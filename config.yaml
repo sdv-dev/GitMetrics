@@ -79,7 +79,7 @@ projects:
   mariadb:
   - MariaDB/mariadb-docker
   - MariaDB/server
-  mostly:
+  mostly-ai:
   - mostly-ai/mostly-openapi
   - mostly-ai/paper-tabular-argn
   - mostly-ai/mostlyai
@@ -89,7 +89,6 @@ projects:
   - mostly-ai/mostlyai-qa
   - mostly-ai/public-demo-data
   - mostly-ai/mostly-tutorials
-  - mostly-ai/.github
   - mostly-ai/paper-fidelity-accuracy
   - mostly-ai/gcp-marketplace
   - mostly-ai/paper-rule-adherence

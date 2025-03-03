@@ -2,3 +2,11 @@ output_folder: gdrive://1i65f_fZee1ckrxvfLonQ6P9iYunbxKQL
 import_config: config.yaml
 projects:
   sdv-dev:
+  gretel:
+  getsynth:
+  mostly-ai:
+  ydata:
+  be_great:
+  smartnoise-sdk:
+  synthcity:
+  realtabformer:
