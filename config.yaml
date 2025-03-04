@@ -116,6 +116,8 @@ projects:
   - explosion/spaCy
   ydata:
   - ydataai/ydata-synthetic
+  - ydataai/ydata-quality
+  - ydataai/ydata-fabric-sdk
   realtabformer:
   - worldbank/REaLTabFormer
   synthcity:
