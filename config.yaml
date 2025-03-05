@@ -79,8 +79,19 @@ projects:
   mariadb:
   - MariaDB/mariadb-docker
   - MariaDB/server
-  mostly:
-  - mostly-ai/ansible-role-tensorflow-gpu
+  mostly-ai:
+  - mostly-ai/mostly-openapi
+  - mostly-ai/paper-tabular-argn
+  - mostly-ai/mostlyai
+  - mostly-ai/datallm
+  - mostly-ai/mostlyai-docs
+  - mostly-ai/mostlyai-engine
+  - mostly-ai/mostlyai-qa
+  - mostly-ai/public-demo-data
+  - mostly-ai/mostly-tutorials
+  - mostly-ai/paper-fidelity-accuracy
+  - mostly-ai/gcp-marketplace
+  - mostly-ai/paper-rule-adherence
   - mostly-ai/virtualdatalab
   pandas:
   - pandas-dev/pandas
@@ -105,3 +116,13 @@ projects:
   - explosion/spaCy
   ydata:
   - ydataai/ydata-synthetic
+  - ydataai/ydata-quality
+  - ydataai/ydata-fabric-sdk
+  realtabformer:
+  - worldbank/REaLTabFormer
+  synthcity:
+  - vanderschaarlab/synthcity
+  smartnoise-sdk:
+  - opendp/smartnoise-sdk
+  be_great:
+  - kathrinse/be_great
