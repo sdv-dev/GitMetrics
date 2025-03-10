@@ -119,3 +119,43 @@ def download_spreadsheet(folder, filename):
     drive_file = _find_file(drive, filename, folder)
     drive_file.FetchContent(mimetype=XLSX_MIMETYPE)
     return drive_file.content
+
+
+def get_or_create_gdrive_folder(parent_folder: str, folder_name: str) -> str:
+    """Check if a folder exists in Google Drive, create it if not, and return its ID.
+
+    Args:
+        parent_folder (str):
+            ID of the parent Google Drive folder.
+        folder_name (str):
+            Name of the folder to check or create.
+
+    Returns:
+        str:
+            The Google Drive folder ID.
+    """
+    drive = _get_drive_client()
+
+    # Check if folder already exists
+    if parent_folder.startswith('gdrive://'):
+        parent_folder = parent_folder.replace('gdrive://', '')
+
+    query = {
+        'q': f"title = '{folder_name}' and mimeType = 'application/vnd.google-apps.folder' "
+             f"and '{parent_folder}' in parents and trashed = false"
+    }
+    folders = drive.ListFile(query).GetList()
+
+    if folders:
+        return folders[0]['id']  # Return existing folder ID
+
+    # Create folder if it does not exist
+    folder_metadata = {
+        'title': folder_name,
+        'mimeType': 'application/vnd.google-apps.folder',
+        'parents': [{'id': parent_folder}]
+    }
+    folder = drive.CreateFile(folder_metadata)
+    folder.Upload()
+
+    return folder['id']

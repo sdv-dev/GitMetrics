@@ -9,7 +9,7 @@ import warnings
 
 import yaml
 
-from github_analytics.main import collect_projects
+from github_analytics.main import collect_projects, collect_traffic
 
 LOGGER = logging.getLogger(__name__)
 
@@ -87,6 +87,43 @@ def _collect(args, parser):
     )
 
 
+def _traffic_collection(args, parser):
+    token = args.token or os.getenv('GITHUB_TOKEN')
+    if token is None:
+        token = input('Please input your Github Token: ')
+
+    config = _load_config(args.config_file)
+    config_projects = config['projects']
+
+    projects = {}
+    if args.repositories:
+        if not args.projects:
+            parser.error('If repositories are given, project name must be provided.')
+        elif len(args.projects) > 1:
+            parser.error('If repositories are given, only one project name must be provided.')
+
+        projects = {args.projects[0]: args.repositories}
+
+    elif not args.projects:
+        projects = config_projects
+
+    else:
+        for project in args.projects:
+            if project not in config_projects:
+                LOGGER.error('Unknown project %s', project)
+                return
+
+            projects[project] = config_projects[project]
+
+    output_folder = args.output_folder or config.get('output_folder', '.')
+
+    collect_traffic(
+        token=token,
+        projects=projects,
+        output_folder=output_folder,
+    )
+
+
 def _get_parser():
     # Logging
     logging_args = argparse.ArgumentParser(add_help=False)
@@ -150,6 +187,35 @@ def _get_parser():
         action='store_false',
         help='Start from scratch instead of incrementing over existing data.',
     )
+
+    # Traffic
+    traffic = action.add_parser(
+        'traffic', help='Collect github traffic metrics.', parents=[logging_args])
+    traffic.set_defaults(action=_traffic_collection)
+
+    traffic.add_argument('-t', '--token', type=str, required=False, help='Github Token to use.')
+    traffic.add_argument(
+        '-c',
+        '--config-file',
+        type=str,
+        default='traffic_config.yaml',
+        help='Path to the configuration file.',
+    )
+    traffic.add_argument(
+        '-o',
+        '--output-folder',
+        type=str,
+        required=False,
+        help='Output folder path.'
+    )
+    traffic.add_argument(
+        '-p',
+        '--projects',
+        type=str,
+        nargs='*',
+        help='Projects to collect. Defaults to ALL if not given',
+    )
+    traffic.add_argument('-r', '--repositories', nargs='*', help='List of repositories to add.')
 
     return parser
 
