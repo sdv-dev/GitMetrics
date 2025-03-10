@@ -32,10 +32,12 @@ jobs:
   alert:
     needs: [collect_traffic]
     runs-on: ubuntu-latest
-    if: failure() || canceled()
+    if: failure() || github.job.status == 'cancelled'
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
     - name: Install slack dependencies
       run: |
         python -m pip install --upgrade pip
