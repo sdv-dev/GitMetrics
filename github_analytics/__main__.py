@@ -190,7 +190,8 @@ def _get_parser():
 
     # Traffic
     traffic = action.add_parser(
-        'traffic', help='Collect github traffic metrics.', parents=[logging_args])
+        'traffic', help='Collect github traffic metrics.', parents=[logging_args]
+    )
     traffic.set_defaults(action=_traffic_collection)
 
     traffic.add_argument('-t', '--token', type=str, required=False, help='Github Token to use.')
@@ -202,11 +203,7 @@ def _get_parser():
         help='Path to the configuration file.',
     )
     traffic.add_argument(
-        '-o',
-        '--output-folder',
-        type=str,
-        required=False,
-        help='Output folder path.'
+        '-o', '--output-folder', type=str, required=False, help='Output folder path.'
     )
     traffic.add_argument(
         '-p',

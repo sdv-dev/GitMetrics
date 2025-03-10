@@ -142,7 +142,7 @@ def get_or_create_gdrive_folder(parent_folder: str, folder_name: str) -> str:
 
     query = {
         'q': f"title = '{folder_name}' and mimeType = 'application/vnd.google-apps.folder' "
-             f"and '{parent_folder}' in parents and trashed = false"
+        f"and '{parent_folder}' in parents and trashed = false"
     }
     folders = drive.ListFile(query).GetList()
 
@@ -153,7 +153,7 @@ def get_or_create_gdrive_folder(parent_folder: str, folder_name: str) -> str:
     folder_metadata = {
         'title': folder_name,
         'mimeType': 'application/vnd.google-apps.folder',
-        'parents': [{'id': parent_folder}]
+        'parents': [{'id': parent_folder}],
     }
     folder = drive.CreateFile(folder_metadata)
     folder.Upload()

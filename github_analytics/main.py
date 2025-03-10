@@ -6,13 +6,13 @@ import pathlib
 
 import pandas as pd
 
+from github_analytics.drive import get_or_create_gdrive_folder
 from github_analytics.github.repository import RepositoryClient
 from github_analytics.github.repository_owner import RepositoryOwnerClient
 from github_analytics.github.traffic import TrafficClient
 from github_analytics.github.users import UsersClient
 from github_analytics.metrics import compute_metrics
 from github_analytics.output import create_spreadsheet, load_spreadsheet
-from github_analytics.drive import get_or_create_gdrive_folder
 
 LOGGER = logging.getLogger(__name__)
 
@@ -279,7 +279,7 @@ def collect_traffic(token, projects, output_folder):
         ouptut_folder (str):
             Folder in which the metrics will be stored.
     """
-    timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     for project, repositories in projects.items():
         for repository in repositories:
             repository_name = repository.split('/')[-1]
@@ -321,4 +321,4 @@ def collect_project_traffic(token, repository, repo_path):
         create_spreadsheet(f'gdrive://{repo_path}', traffic_data)
         return None
 
-    return sheets
+    return traffic_data

@@ -69,8 +69,8 @@ def post_slack_message_in_thread(channel, text, thread_ts):
     return response
 
 
-
 def send_alert(args):
+    """Send an alert message to a slack channel."""
     url = GITHUB_URL_PREFIX + args.run_id
     message = f'Github Analytics build failed :fire: :dumpster-fire: :fire: See errors <{url}|here>'
     post_slack_message(args.channel, message)
