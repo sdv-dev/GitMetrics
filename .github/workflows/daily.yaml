@@ -58,7 +58,7 @@ jobs:
   alert:
     needs: [collect_traffic]
     runs-on: ubuntu-latest
-    if: failure() || canceled()
+    if: failure() || job.status == 'cancelled'
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
