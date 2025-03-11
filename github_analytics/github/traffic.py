@@ -75,9 +75,8 @@ class TrafficClient:
         LOGGER.info(f'Fetching traffic referrers for {repo}.')
         data = self._get_traffic_data(repo, 'popular/referrers')
         df = pd.DataFrame(data, columns=['referrer', 'count', 'uniques'])
-        df.rename(
+        df = df.rename(
             columns={'referrer': 'site', 'count': 'views', 'uniques': 'unique_visitors'},
-            inplace=True
         )
         LOGGER.info(f'Retrieved {len(df)} referrer records for {repo}.')
         return df
@@ -99,9 +98,8 @@ class TrafficClient:
         LOGGER.info(f'Fetching traffic paths for {repo}.')
         data = self._get_traffic_data(repo, 'popular/paths')
         df = pd.DataFrame(data, columns=['path', 'title', 'count', 'uniques'])
-        df.rename(
+        df = df.rename(
             columns={'path': 'content', 'count': 'views', 'uniques': 'unique_visitors'},
-            inplace=True
         )
         LOGGER.info(f'Retrieved {len(df)} path records for {repo}.')
         return df
@@ -122,7 +120,7 @@ class TrafficClient:
         """
         data = self._get_traffic_data(repo, 'views')
         df = pd.DataFrame(data['views'], columns=['timestamp', 'count', 'uniques'])
-        df.rename(columns={'count': 'views', 'uniques': 'unique_visitors'}, inplace=True)
+        df = df.rename(columns={'count': 'views', 'uniques': 'unique_visitors'})
         LOGGER.info(f'Retrieved {len(df)} views for {repo}.')
         return df
 
@@ -142,7 +140,7 @@ class TrafficClient:
         """
         data = self._get_traffic_data(repo, 'clones')
         df = pd.DataFrame(data['clones'], columns=['timestamp', 'count', 'uniques'])
-        df.rename(columns={'count': 'clones', 'uniques': 'unique_cloners'}, inplace=True)
+        df = df.rename(columns={'count': 'clones', 'uniques': 'unique_cloners'})
         LOGGER.info(f'Retrieved {len(df)} clones for {repo}.')
         return df
 
