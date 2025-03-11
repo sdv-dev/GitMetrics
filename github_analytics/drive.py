@@ -15,11 +15,12 @@ SPREADSHEET_MIMETYPE = 'application/vnd.google-apps.spreadsheet'
 PYDRIVE_CREDENTIALS = 'PYDRIVE_CREDENTIALS'
 
 LOGGER = logging.getLogger(__name__)
+GDRIVE_LINK = 'gdrive://'
 
 
 def is_drive_path(path):
     """Tell if the drive is a Google Drive path or not."""
-    return path.startswith('gdrive://')
+    return path.startswith(GDRIVE_LINK)
 
 
 def split_drive_path(path):
@@ -137,8 +138,8 @@ def get_or_create_gdrive_folder(parent_folder: str, folder_name: str) -> str:
     drive = _get_drive_client()
 
     # Check if folder already exists
-    if parent_folder.startswith('gdrive://'):
-        parent_folder = parent_folder.replace('gdrive://', '')
+    if parent_folder.startswith(GDRIVE_LINK):
+        parent_folder = parent_folder.replace(GDRIVE_LINK, '')
 
     query = {
         'q': f"title = '{folder_name}' and mimeType = 'application/vnd.google-apps.folder' "
