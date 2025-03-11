@@ -34,7 +34,8 @@ include = ['github_analytics', 'github_analytics.*']
 [project.optional-dependencies]
 dev = [
     "ruff>=0.9.8",
-    "invoke"
+    "invoke",
+    "slack-sdk>=3.34,<4.0",
 ]
 
 [tool.ruff]

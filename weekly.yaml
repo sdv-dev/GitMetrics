@@ -15,7 +15,7 @@ projects:
   gretel:
   huggingface:
   mariadb:
-  mostly:
+  mostly-ai:
   pandas:
   prefect:
   pycaret:

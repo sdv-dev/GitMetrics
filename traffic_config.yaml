@@ -1,0 +1,11 @@
+output_folder: ***REMOVED***
+projects:
+  sdv-dev:
+  - sdv-dev/SDV
+  - sdv-dev/RDT
+  - sdv-dev/SDMetrics
+  - sdv-dev/SDGym
+  - sdv-dev/Copulas
+  - sdv-dev/CTGAN
+  - sdv-dev/TGAN
+  - sdv-dev/DeepEcho

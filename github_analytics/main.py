@@ -1,17 +1,22 @@
 """Main script."""
 
+import datetime
 import logging
 import pathlib
 
 import pandas as pd
 
+from github_analytics.drive import get_or_create_gdrive_folder
 from github_analytics.github.repository import RepositoryClient
 from github_analytics.github.repository_owner import RepositoryOwnerClient
+from github_analytics.github.traffic import TrafficClient
 from github_analytics.github.users import UsersClient
 from github_analytics.metrics import compute_metrics
 from github_analytics.output import create_spreadsheet, load_spreadsheet
 
 LOGGER = logging.getLogger(__name__)
+
+GDRIVE_LINK = 'gdrive://'
 
 USER_COLUMNS = [
     'user',
@@ -256,9 +261,66 @@ def collect_projects(
         raise ValueError('No projects have been passed')
 
     for project, repositories in projects.items():
-        if output_folder.startswith('gdrive://'):
+        if output_folder.startswith(GDRIVE_LINK):
             project_path = f'{output_folder}/{project}'
         else:
             project_path = str(pathlib.Path(output_folder) / project)
 
         collect_project_metrics(token, repositories, project_path, quiet, incremental, add_metrics)
+
+
+def collect_traffic(token, projects, output_folder):
+    """Collect github metrics for multiple projects.
+
+    Args:
+        token (str):
+            Github token to use.
+        projects (dict[str, List[str]]):
+            Projects to collect, passed as a dict of project names
+            and lists of repositories.
+        ouptut_folder (str):
+            Folder in which the metrics will be stored.
+    """
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    for project, repositories in projects.items():
+        for repository in repositories:
+            repository_name = repository.split('/')[-1]
+            if output_folder.startswith(GDRIVE_LINK):
+                repo_folder = get_or_create_gdrive_folder(output_folder, repository_name)
+                repo_path = f'{repo_folder}/{timestamp}'
+
+            else:
+                repo_path = str(pathlib.Path(output_folder) / project / repository_name)
+
+            collect_project_traffic(token, repository, repo_path)
+
+
+def collect_project_traffic(token, repository, repo_path):
+    """Collects traffic data (popular referrers & paths) from GitHub repositories.
+
+    Args:
+        token (str):
+            GitHub token for authentication.
+
+        repository (str):
+            Repository name such as "owner/repository".
+
+        repo_path (str):
+            Output path to store the results.
+
+    Returns:
+        dict[str, pd.DataFrame] or None:
+            If repo_path is None, returns a dictionary containing traffic data.
+    """
+    client = TrafficClient(token)
+    try:
+        traffic_data = client.get_all_traffic(repository)
+
+    except Exception as e:
+        LOGGER.warning(f'Failed to fetch traffic data for {repository}: {e}')
+
+    if repo_path:
+        create_spreadsheet(f'{GDRIVE_LINK}{repo_path}', traffic_data)
+        return None
+
+    return traffic_data
