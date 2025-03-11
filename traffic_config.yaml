@@ -7,4 +7,5 @@ projects:
   - sdv-dev/SDGym
   - sdv-dev/Copulas
   - sdv-dev/CTGAN
+  - sdv-dev/TGAN
   - sdv-dev/DeepEcho

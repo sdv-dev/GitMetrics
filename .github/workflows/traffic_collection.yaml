@@ -32,7 +32,7 @@ jobs:
   alert:
     needs: [collect_traffic]
     runs-on: ubuntu-latest
-    if: failure() || github.job.status == 'cancelled'
+    if: failure()
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
@@ -43,7 +43,7 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install invoke
         python -m pip install -e .[dev]
-    - name: Slack alert if failure or cancelled
+    - name: Slack alert if failure
       run: python -m github_analytics.slack_utils -r ${{ github.run_id }} -c ${{ github.event.inputs.slack_channel || 'sdv-alerts' }}
       env:
         SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}

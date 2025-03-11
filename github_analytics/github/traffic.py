@@ -35,7 +35,8 @@ class TrafficClient:
             repo (str):
                 The repository in the format "owner/repo".
             endpoint (str):
-                The traffic API endpoint (e.g., "popular/referrers" or "popular/paths").
+                The traffic API endpoint (e.g., "popular/referrers", "popular/paths", "views" or
+                "clones").
 
         Returns:
             list:
@@ -97,6 +98,67 @@ class TrafficClient:
         LOGGER.info(f'Retrieved {len(df)} path records for {repo}.')
         return df
 
+    def get_traffic_views(self, repo: str) -> pd.DataFrame:
+        """Fetches the number of views for the given repository over time.
+
+        Args:
+            repo (str):
+                The repository in the format "owner/repo".
+
+        Returns:
+            pd.DataFrame:
+                DataFrame containing repository views with columns:
+                    - `timestamp`: Date of views.
+                    - `count`: Number of views.
+                    - `uniques`: Number of unique visitors.
+        """
+        data = self._get_traffic_data(repo, 'views')
+        return pd.DataFrame(data['views'], columns=['timestamp', 'count', 'uniques'])
+
+    def get_traffic_clones(self, repo: str) -> pd.DataFrame:
+        """Fetches the number of repository clones over time.
+
+        Args:
+            repo (str):
+                The repository in the format "owner/repo".
+
+        Returns:
+            pd.DataFrame:
+                DataFrame containing repository clones with columns:
+                    - `timestamp`: Date of clones.
+                    - `count`: Number of clones.
+                    - `uniques`: Number of unique cloners.
+        """
+        data = self._get_traffic_data(repo, 'clones')
+        return pd.DataFrame(data['clones'], columns=['timestamp', 'count', 'uniques'])
+
+    def generate_timeframe(cls, traffic_data):
+        """Generates a timeframe DataFrame with the start and end timestamps from traffic data.
+
+        Args:
+            traffic_data (dict[str, pd.DataFrame]):
+                Dictionary containing traffic data, including "Traffic Views" and "Traffic Clones".
+
+        Returns:
+            pd.DataFrame:
+                A DataFrame with a single row containing 'Start Date' and 'End Date'.
+        """
+        start_date = None
+        end_date = None
+        all_timestamps = []
+
+        if 'Traffic Views' in traffic_data and not traffic_data['Traffic Views'].empty:
+            all_timestamps.extend(traffic_data['Traffic Views']['timestamp'].tolist())
+
+        if 'Traffic Clones' in traffic_data and not traffic_data['Traffic Clones'].empty:
+            all_timestamps.extend(traffic_data['Traffic Clones']['timestamp'].tolist())
+
+        if all_timestamps:
+            start_date = min(all_timestamps)
+            end_date = max(all_timestamps)
+
+        return pd.DataFrame({'Start Date': [start_date], 'End Date': [end_date]})
+
     def get_all_traffic(self, repo: str) -> dict[str, pd.DataFrame]:
         """Fetches all available traffic data for the given repository.
 
@@ -109,11 +171,14 @@ class TrafficClient:
                 A dictionary containing traffic data:
                     - `"referrers"`: DataFrame with referrer traffic.
                     - `"paths"`: DataFrame with popular paths.
+                    - `"views"`: DataFrame with repository views over time.
+                    - `"clones"`: DataFrame with repository clones over time.
         """
-        LOGGER.info(f'Fetching all traffic data for {repo}.')
         traffic_data = {
             'Traffic Referrers': self.get_traffic_referrers(repo),
             'Traffic Paths': self.get_traffic_paths(repo),
+            'Traffic Views': self.get_traffic_views(repo),
+            'Traffic Clones': self.get_traffic_clones(repo),
         }
-        LOGGER.info(f'Successfully retrieved all traffic data for {repo}.')
+        traffic_data['Timeframe'] = self.generate_timeframe(traffic_data)
         return traffic_data

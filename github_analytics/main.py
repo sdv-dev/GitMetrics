@@ -16,6 +16,8 @@ from github_analytics.output import create_spreadsheet, load_spreadsheet
 
 LOGGER = logging.getLogger(__name__)
 
+GDRIVE_LINK = 'gdrive://'
+
 USER_COLUMNS = [
     'user',
     'name',
@@ -259,7 +261,7 @@ def collect_projects(
         raise ValueError('No projects have been passed')
 
     for project, repositories in projects.items():
-        if output_folder.startswith('gdrive://'):
+        if output_folder.startswith(GDRIVE_LINK):
             project_path = f'{output_folder}/{project}'
         else:
             project_path = str(pathlib.Path(output_folder) / project)
@@ -283,7 +285,7 @@ def collect_traffic(token, projects, output_folder):
     for project, repositories in projects.items():
         for repository in repositories:
             repository_name = repository.split('/')[-1]
-            if output_folder.startswith('gdrive://'):
+            if output_folder.startswith(GDRIVE_LINK):
                 repo_folder = get_or_create_gdrive_folder(output_folder, repository_name)
                 repo_path = f'{repo_folder}/{timestamp}'
 
@@ -318,7 +320,7 @@ def collect_project_traffic(token, repository, repo_path):
         LOGGER.warning(f'Failed to fetch traffic data for {repository}: {e}')
 
     if repo_path:
-        create_spreadsheet(f'gdrive://{repo_path}', traffic_data)
+        create_spreadsheet(f'{GDRIVE_LINK}{repo_path}', traffic_data)
         return None
 
     return traffic_data
