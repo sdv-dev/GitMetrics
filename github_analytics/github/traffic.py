@@ -75,6 +75,10 @@ class TrafficClient:
         LOGGER.info(f'Fetching traffic referrers for {repo}.')
         data = self._get_traffic_data(repo, 'popular/referrers')
         df = pd.DataFrame(data, columns=['referrer', 'count', 'uniques'])
+        df.rename(
+            columns={'referrer': 'site', 'count': 'views', 'uniques': 'unique_visitors'},
+            inplace=True
+        )
         LOGGER.info(f'Retrieved {len(df)} referrer records for {repo}.')
         return df
 
@@ -95,6 +99,10 @@ class TrafficClient:
         LOGGER.info(f'Fetching traffic paths for {repo}.')
         data = self._get_traffic_data(repo, 'popular/paths')
         df = pd.DataFrame(data, columns=['path', 'title', 'count', 'uniques'])
+        df.rename(
+            columns={'path': 'content', 'count': 'views', 'uniques': 'unique_visitors'},
+            inplace=True
+        )
         LOGGER.info(f'Retrieved {len(df)} path records for {repo}.')
         return df
 
@@ -113,7 +121,10 @@ class TrafficClient:
                     - `uniques`: Number of unique visitors.
         """
         data = self._get_traffic_data(repo, 'views')
-        return pd.DataFrame(data['views'], columns=['timestamp', 'count', 'uniques'])
+        df = pd.DataFrame(data['views'], columns=['timestamp', 'count', 'uniques'])
+        df.rename(columns={'count': 'views', 'uniques': 'unique_visitors'}, inplace=True)
+        LOGGER.info(f'Retrieved {len(df)} views for {repo}.')
+        return df
 
     def get_traffic_clones(self, repo: str) -> pd.DataFrame:
         """Fetches the number of repository clones over time.
@@ -130,14 +141,18 @@ class TrafficClient:
                     - `uniques`: Number of unique cloners.
         """
         data = self._get_traffic_data(repo, 'clones')
-        return pd.DataFrame(data['clones'], columns=['timestamp', 'count', 'uniques'])
+        df = pd.DataFrame(data['clones'], columns=['timestamp', 'count', 'uniques'])
+        df.rename(columns={'count': 'clones', 'uniques': 'unique_cloners'}, inplace=True)
+        LOGGER.info(f'Retrieved {len(df)} clones for {repo}.')
+        return df
 
     def generate_timeframe(cls, traffic_data):
         """Generates a timeframe DataFrame with the start and end timestamps from traffic data.
 
         Args:
             traffic_data (dict[str, pd.DataFrame]):
-                Dictionary containing traffic data, including "Traffic Views" and "Traffic Clones".
+                Dictionary containing traffic data, including "Traffic Visitors" and
+                "Traffic Git Clones".
 
         Returns:
             pd.DataFrame:
@@ -147,11 +162,11 @@ class TrafficClient:
         end_date = None
         all_timestamps = []
 
-        if 'Traffic Views' in traffic_data and not traffic_data['Traffic Views'].empty:
-            all_timestamps.extend(traffic_data['Traffic Views']['timestamp'].tolist())
+        if 'Traffic Visitors' in traffic_data and not traffic_data['Traffic Visitors'].empty:
+            all_timestamps.extend(traffic_data['Traffic Visitors']['timestamp'].tolist())
 
-        if 'Traffic Clones' in traffic_data and not traffic_data['Traffic Clones'].empty:
-            all_timestamps.extend(traffic_data['Traffic Clones']['timestamp'].tolist())
+        if 'Traffic Git Clones' in traffic_data and not traffic_data['Traffic Git Clones'].empty:
+            all_timestamps.extend(traffic_data['Traffic Git Clones']['timestamp'].tolist())
 
         if all_timestamps:
             start_date = min(all_timestamps)
@@ -175,10 +190,10 @@ class TrafficClient:
                     - `"clones"`: DataFrame with repository clones over time.
         """
         traffic_data = {
-            'Traffic Referrers': self.get_traffic_referrers(repo),
-            'Traffic Paths': self.get_traffic_paths(repo),
-            'Traffic Views': self.get_traffic_views(repo),
-            'Traffic Clones': self.get_traffic_clones(repo),
+            'Traffic Referring Sites': self.get_traffic_referrers(repo),
+            'Traffic Popular Content': self.get_traffic_paths(repo),
+            'Traffic Visitors': self.get_traffic_views(repo),
+            'Traffic Git Clones': self.get_traffic_clones(repo),
         }
         traffic_data['Timeframe'] = self.generate_timeframe(traffic_data)
         return traffic_data
