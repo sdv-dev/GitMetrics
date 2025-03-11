@@ -23,3 +23,4 @@ jobs:
         github-analytics collect -v -q -t ${{ secrets.GITHUB_TOKEN }} -m -c daily.yaml
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
+
