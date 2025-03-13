@@ -36,7 +36,7 @@ jobs:
     - name: Collect Github Data
       run: |
         github-analytics collect -v -q \
-          -t ${{ secrets.GH_ACCESS_TOKEN }} \
+          -t ${{ secrets.GITHUB_TOKEN }} \
           -p ${{ github.event.inputs.project }} \
           -r ${{ github.event.inputs.repositories }} \
           -o gdrive://${{ github.event.inputs.output-folder }} \
