@@ -26,7 +26,7 @@ jobs:
         python -m pip install .
     - name: Collect Github Traffic Data
       run: |
-        github-analytics traffic -v -t ${{ secrets.PERSONAL_ACCESS_TOKEN }} -c traffic_config.yaml
+        github-analytics traffic -v -t ${{ secrets.GH_TRAFFIC_TOKEN }} -c traffic_config.yaml
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
   alert:
