@@ -10,12 +10,9 @@ projects:
   earthly:
   feast:
   featuretools:
-  getsynth:
   grafana:
-  gretel:
   huggingface:
   mariadb:
-  mostly-ai:
   pandas:
   prefect:
   pycaret:
@@ -23,4 +20,3 @@ projects:
   scikit-learn:
   snorkel:
   spacy:
-  ydata:
