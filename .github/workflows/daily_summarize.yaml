@@ -1,0 +1,19 @@
+name: Daily Summarize
+
+on:
+  workflow_dispatch:
+    inputs:
+      slack_channel:
+        description: Slack channel to post the error message to if the builds fail.
+        required: false
+        default: "sdv-alerts-debug"
+
+  schedule:
+    - cron:  '0 1 * * *'
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - uses: actions/checkout@v4
