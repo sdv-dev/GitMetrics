@@ -1,11 +1,24 @@
 
 import os
 import pandas as pd
+import logging
+
+from github_analytics.time_utils import get_current_year, get_min_max_dt_in_year
+from github_analytics.output import create_spreadsheet, load_spreadsheet
+
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
+
+LOGGER = logging.getLogger(__name__)
 
 ECOSYSTEM_COLUMN_NAME = 'Ecosystem'
 TOTAL_COLUMN_NAME = 'Total Since Beginning'
-from github_analytics.time_utils import get_current_year, get_min_max_dt_in_year
 OUTPUT_FILENAME = 'GitHub_Summary'
+SHEET_NAMES = [
+    'Unique users',
+    'User issues',
+    'vendor-mapping'
+]
 
 def summarize_metrics(
     projects,
@@ -33,30 +46,25 @@ def summarize_metrics(
             continue
         github_org = github_org.lower()
 
-        filename = f'{github_org}.xlsx'
+        filename = f'{github_org}'
         metrics_filepath = os.path.join(input_folder, filename)
-        metrics_df = pd.read_excel(metrics_filepath)
+        df = load_spreadsheet(metrics_filepath)
 
+        metrics_df = df['Metrics']
         metrics_dict = pd.Series(metrics_df['value'].values,
                                  index=metrics_df['metric']).to_dict()
         unique_users_row[TOTAL_COLUMN_NAME] = int(metrics_dict['num_issues'])
         user_issues_row[TOTAL_COLUMN_NAME] = int(metrics_dict['num_users'])
 
-        issue_users_df = pd.read_excel(metrics_filepath,
-                                  sheet_name="Unique Issue Users",
-                                  parse_dates=['first_issue_date'])
+        issue_users_df = df['Unique Issue Users']
         for year in range(2021, get_current_year() + 1):
             min_datetime, max_datetime = get_min_max_dt_in_year(year)
             issue_users = issue_users_df[issue_users_df['first_issue_date'] >= min_datetime]
             issue_users = issue_users[issue_users['first_issue_date'] <= max_datetime]
             unique_users_row[year] = len(issue_users)
-
         unique_users_df = append_row(unique_users_df, unique_users_row)
 
-        issues_df = pd.read_excel(metrics_filepath,
-                                  sheet_name="Issues",
-                                  parse_dates=['created_at'])
-
+        issues_df = df['Issues']
         for year in range(2021, get_current_year() + 1):
             min_datetime, max_datetime = get_min_max_dt_in_year(year)
             issues_in_year = issues_df[issues_df['created_at'] >= min_datetime]
@@ -65,9 +73,24 @@ def summarize_metrics(
 
         users_issues_df = append_row(users_issues_df, user_issues_row)
 
-    print(users_issues_df)
-    print(unique_users_df)
-    print(vendor_df)
+    vendor_df = vendor_df.rename(columns={vendor_df.columns[0]: ECOSYSTEM_COLUMN_NAME})
+    sheets = {
+        SHEET_NAMES[0]: unique_users_df,
+        SHEET_NAMES[1]: users_issues_df,
+        SHEET_NAMES[2]: vendor_df
+    }
+    if verbose:
+        for sheet_name, df in sheets.items():
+            LOGGER.info(f'Sheet Name: {sheet_name}')
+            LOGGER.info(df)
+    if not dry_run:
+        # Write to Google Drive/Output folder
+        output_path = os.path.join(output_folder, OUTPUT_FILENAME)
+        create_spreadsheet(output_path=output_path, sheets=sheets)
+
+        # Write to local directory
+        output_path = os.path.join(dir_path, OUTPUT_FILENAME)
+        create_spreadsheet(output_path=output_path, sheets=sheets)
 
 
 def _create_df():
