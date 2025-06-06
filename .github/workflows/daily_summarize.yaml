@@ -9,4 +9,66 @@ on:
         default: "sdv-alerts-debug"
 
   schedule:
-    - cron:  '0 0 * * *'
+    - cron:  '0 1 * * *'
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
+      with:
+        enable-cache: true
+        activate-environment: true
+    - name: Install pip and dependencies
+      run: |
+        uv pip install -U pip
+        uv pip install .
+    - name: Run Summarize
+      run: |
+        uv run github-analytics summarize \
+          --input-folder gdrive://1ZvsuVbFAUk3BN-n6Pv_lUBLwviHZSxM2
+      env:
+        PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
+    - uses: actions/checkout@v4
+      with:
+        repository: sdv-dev/sdv-dev.github.io
+        path: sdv-dev.github.io
+        ref: 'gatsby-home'
+        token: ${{ secrets.GH_TOKEN }}
+    - name: Write to sdv-dev.github.io repo
+      run: |
+        ls
+        find ./ -name '*.xlsx' -exec cp -prv '{}' 'sdv-dev.github.io/assets/' ';'
+        cd sdv-dev.github.io
+        git config --local user.name "github-actions[bot]"
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add --force assets/*.xlsx
+        git commit -m "Upload GitHub Summary - $(date '+%Y-%m-%d %H:%M:%S')"
+        git remote set-url origin https://sdv-team:${{ secrets.GH_TOKEN }}@github.com/sdv-dev/sdv-dev.github.io
+        git push origin gatsby-home
+  alert:
+    needs: [summarize]
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v6
+      with:
+        enable-cache: true
+        activate-environment: true
+    - name: Install pip and dependencies
+      run: |
+        uv pip install -U pip
+        uv pip install .[dev]
+    - name: Slack alert if failure
+      run: |
+        uv run python -m github_analytics.slack_utils \
+        -r ${{ github.run_id }} \
+        -c ${{ github.event.inputs.slack_channel || 'sdv-alerts' }} \
+        -m 'Summarize GitHub Analytics build failed :fire: :dumpster-fire: :fire:'
+      env:
+        SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
