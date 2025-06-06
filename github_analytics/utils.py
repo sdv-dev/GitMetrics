@@ -15,6 +15,7 @@ def to_utc(data):
 
 
 def is_url(url_string: str) -> bool:
+    """Check if a URL is valid."""
     result = validators.url(url_string)
     if isinstance(result, ValidationError):
         return False

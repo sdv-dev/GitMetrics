@@ -10,8 +10,8 @@ import warnings
 import yaml
 
 from github_analytics.main import collect_projects, collect_traffic
-from github_analytics.utils import is_url
 from github_analytics.summarize import summarize_metrics
+from github_analytics.utils import is_url
 
 LOGGER = logging.getLogger(__name__)
 
@@ -27,7 +27,6 @@ def _env_setup(logfile, verbosity):
 
 
 def _load_config(config_path):
-
     if is_url(config_path):
         with open(config_path) as stream:
             config = yaml.safe_load(stream)
@@ -130,6 +129,7 @@ def _traffic_collection(args, parser):
         projects=projects,
         output_folder=output_folder,
     )
+
 
 def _summarize(args, parser):
     config = _load_config(args.config_file)

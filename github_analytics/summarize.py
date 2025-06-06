@@ -1,10 +1,12 @@
+"""Summarize GitHub Analytics."""
 
-import os
-import pandas as pd
 import logging
+import os
 
-from github_analytics.time_utils import get_current_year, get_min_max_dt_in_year
+import pandas as pd
+
 from github_analytics.output import create_spreadsheet, load_spreadsheet
+from github_analytics.time_utils import get_current_year, get_min_max_dt_in_year
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -14,11 +16,8 @@ LOGGER = logging.getLogger(__name__)
 ECOSYSTEM_COLUMN_NAME = 'Ecosystem'
 TOTAL_COLUMN_NAME = 'Total Since Beginning'
 OUTPUT_FILENAME = 'GitHub_Summary'
-SHEET_NAMES = [
-    'Unique users',
-    'User issues',
-    'vendor-mapping'
-]
+SHEET_NAMES = ['Unique users', 'User issues', 'vendor-mapping']
+
 
 def summarize_metrics(
     projects,
@@ -28,6 +27,7 @@ def summarize_metrics(
     dry_run=False,
     verbose=False,
 ):
+    """Summarize GitHub analytics."""
     vendor_df = pd.DataFrame.from_records(vendors)
     unique_users_df = _create_df()
     users_issues_df = _create_df()
@@ -51,8 +51,7 @@ def summarize_metrics(
         df = load_spreadsheet(metrics_filepath)
 
         metrics_df = df['Metrics']
-        metrics_dict = pd.Series(metrics_df['value'].values,
-                                 index=metrics_df['metric']).to_dict()
+        metrics_dict = pd.Series(metrics_df['value'].values, index=metrics_df['metric']).to_dict()
         unique_users_row[TOTAL_COLUMN_NAME] = int(metrics_dict['num_issues'])
         user_issues_row[TOTAL_COLUMN_NAME] = int(metrics_dict['num_users'])
 
@@ -77,7 +76,7 @@ def summarize_metrics(
     sheets = {
         SHEET_NAMES[0]: unique_users_df,
         SHEET_NAMES[1]: users_issues_df,
-        SHEET_NAMES[2]: vendor_df
+        SHEET_NAMES[2]: vendor_df,
     }
     if verbose:
         for sheet_name, df in sheets.items():
@@ -98,6 +97,7 @@ def _create_df():
     for year in range(2021, get_current_year() + 1):
         columns.append(year)
     return pd.DataFrame(columns=columns)
+
 
 def append_row(df, row):
     """Append a dictionary as a row to a DataFrame."""

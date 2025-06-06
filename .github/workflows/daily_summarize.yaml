@@ -37,7 +37,7 @@ jobs:
         repository: sdv-dev/sdv-dev.github.io
         path: sdv-dev.github.io
         ref: 'gatsby-home'
-        token: ${{ secrets.GH_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Write to sdv-dev.github.io repo
       run: |
         ls
@@ -47,7 +47,7 @@ jobs:
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git add --force assets/*.xlsx
         git commit -m "Upload GitHub Summary - $(date '+%Y-%m-%d %H:%M:%S')"
-        git remote set-url origin https://sdv-team:${{ secrets.GH_TOKEN }}@github.com/sdv-dev/sdv-dev.github.io
+        git remote set-url origin https://sdv-team:${{ secrets.GITHUB_TOKEN }}@github.com/sdv-dev/sdv-dev.github.io
         git push origin gatsby-home
   alert:
     needs: [summarize]
