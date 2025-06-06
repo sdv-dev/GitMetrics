@@ -45,7 +45,7 @@ jobs:
         cd sdv-dev.github.io
         git config --local user.name "github-actions[bot]"
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git add --force assets/*.xlsx
+        git add --force assets/GitHub_Summary.xlsx
         git commit -m "Upload GitHub Summary - $(date '+%Y-%m-%d %H:%M:%S')"
         git remote set-url origin https://sdv-team:${{ secrets.GITHUB_TOKEN }}@github.com/sdv-dev/sdv-dev.github.io
         git push origin gatsby-home
