@@ -19,7 +19,8 @@ dependencies = [
     "requests",
     "python-benedict",
     "PyYAML",
-    "PyDrive"
+    "PyDrive",
+    "validators",
 ]
 
 [project.urls]
@@ -33,9 +34,12 @@ include = ['github_analytics', 'github_analytics.*']
 
 [project.optional-dependencies]
 dev = [
-    "ruff>=0.9.8",
+    "ruff >= 0.9.8",
     "invoke",
-    "slack-sdk>=3.34,<4.0",
+    "slack-sdk >= 3.34,<4.0",
+]
+test = [
+    'pytest >= 8.1.1',
 ]
 
 [tool.ruff]

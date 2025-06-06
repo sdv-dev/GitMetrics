@@ -10,6 +10,8 @@ import warnings
 import yaml
 
 from github_analytics.main import collect_projects, collect_traffic
+from github_analytics.utils import is_url
+from github_analytics.summarize import summarize_metrics
 
 LOGGER = logging.getLogger(__name__)
 
@@ -25,8 +27,14 @@ def _env_setup(logfile, verbosity):
 
 
 def _load_config(config_path):
-    config_path = pathlib.Path(config_path)
-    config = yaml.safe_load(config_path.read_text())
+
+    if is_url(config_path):
+        with open(config_path) as stream:
+            config = yaml.safe_load(stream)
+    else:
+        config_path = pathlib.Path(config_path)
+        config = yaml.safe_load(config_path.read_text())
+
     import_config = config.pop('import_config', None)
     if import_config:
         import_config_path = pathlib.Path(import_config)
@@ -123,6 +131,21 @@ def _traffic_collection(args, parser):
         output_folder=output_folder,
     )
 
+def _summarize(args, parser):
+    config = _load_config(args.config_file)
+    projects = config['projects']
+    vendors = config['vendors']
+    output_folder = args.output_folder or config.get('output-folder', '.')
+
+    summarize_metrics(
+        projects=projects,
+        vendors=vendors,
+        input_folder=args.input_folder,
+        output_folder=output_folder,
+        dry_run=args.dry_run,
+        verbose=args.verbose,
+    )
+
 
 def _get_parser():
     # Logging
@@ -213,7 +236,40 @@ def _get_parser():
         help='Projects to collect. Defaults to ALL if not given',
     )
     traffic.add_argument('-r', '--repositories', nargs='*', help='List of repositories to add.')
-
+    summarize = action.add_parser(
+        'summarize', help='Summarize the downloads data.', parents=[logging_args]
+    )
+    summarize.set_defaults(action=_summarize)
+    summarize.add_argument(
+        '-c',
+        '--config-file',
+        type=str,
+        default='summarize_config.yaml',
+        help='Path to the configuration file.',
+    )
+    summarize.add_argument(
+        '-i',
+        '--input-folder',
+        type=str,
+        default=None,
+        help='Path to the folder containing xslx files, with the calculated GitHub metrics.',
+    )
+    summarize.add_argument(
+        '-o',
+        '--output-folder',
+        type=str,
+        required=False,
+        help=(
+            'Path to the folder where data will be outputted. It can be a local path or a'
+            ' Google Drive folder path in the format gdrive://<folder-id>'
+        ),
+    )
+    summarize.add_argument(
+        '-d',
+        '--dry-run',
+        action='store_true',
+        help='Do not upload the summary results. Just calculate them.',
+    )
     return parser
 
 
