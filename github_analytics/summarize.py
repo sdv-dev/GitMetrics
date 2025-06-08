@@ -19,6 +19,16 @@ OUTPUT_FILENAME = 'GitHub_Summary'
 SHEET_NAMES = ['Unique users', 'User issues', 'vendor-mapping']
 
 
+def _extract_row(df, date_column):
+    row = {TOTAL_COLUMN_NAME: [len(df)]}
+    for year in range(2021, get_current_year() + 1):
+        min_datetime, max_datetime = get_min_max_dt_in_year(year)
+        matching_df = df[df[date_column] >= min_datetime]
+        matching_df = matching_df[matching_df[date_column] <= max_datetime]
+        row[year] = [len(matching_df)]
+    return row
+
+
 def summarize_metrics(
     projects,
     vendors,
@@ -36,13 +46,10 @@ def summarize_metrics(
     for project_info in projects:
         ecosystem_name = project_info['ecosystem']
 
-        unique_users_row = {ECOSYSTEM_COLUMN_NAME: [ecosystem_name]}
-        user_issues_row = unique_users_row.copy()
-
         github_org = project_info.get('github_org', ecosystem_name)
         if not github_org:
-            users_issues_df = append_row(users_issues_df, user_issues_row)
-            unique_users_df = append_row(unique_users_df, unique_users_row)
+            users_issues_df = append_row(users_issues_df, {ECOSYSTEM_COLUMN_NAME: [ecosystem_name]})
+            unique_users_df = append_row(unique_users_df, {ECOSYSTEM_COLUMN_NAME: [ecosystem_name]})
             continue
         github_org = github_org.lower()
 
@@ -50,27 +57,21 @@ def summarize_metrics(
         metrics_filepath = os.path.join(input_folder, filename)
         df = load_spreadsheet(metrics_filepath)
 
-        metrics_df = df['Metrics']
-        metrics_dict = pd.Series(metrics_df['value'].values, index=metrics_df['metric']).to_dict()
-        unique_users_row[TOTAL_COLUMN_NAME] = int(metrics_dict['num_issues'])
-        user_issues_row[TOTAL_COLUMN_NAME] = int(metrics_dict['num_users'])
-
-        issue_users_df = df['Unique Issue Users']
-        for year in range(2021, get_current_year() + 1):
-            min_datetime, max_datetime = get_min_max_dt_in_year(year)
-            issue_users = issue_users_df[issue_users_df['first_issue_date'] >= min_datetime]
-            issue_users = issue_users[issue_users['first_issue_date'] <= max_datetime]
-            unique_users_row[year] = len(issue_users)
+        unique_issue_users_df = df['Unique Issue Users']
+        unique_users_row = _extract_row(
+            unique_issue_users_df,
+            'first_issue_date',
+        )
+        unique_users_row[ECOSYSTEM_COLUMN_NAME] = [ecosystem_name]
         unique_users_df = append_row(unique_users_df, unique_users_row)
 
         issues_df = df['Issues']
-        for year in range(2021, get_current_year() + 1):
-            min_datetime, max_datetime = get_min_max_dt_in_year(year)
-            issues_in_year = issues_df[issues_df['created_at'] >= min_datetime]
-            issues_in_year = issues_in_year[issues_in_year['created_at'] <= max_datetime]
-            user_issues_row[year] = len(issues_in_year)
-
-        users_issues_df = append_row(users_issues_df, user_issues_row)
+        issues_row = _extract_row(
+            issues_df,
+            'created_at',
+        )
+        issues_row[ECOSYSTEM_COLUMN_NAME] = [ecosystem_name]
+        users_issues_df = append_row(users_issues_df, issues_row)
 
     vendor_df = vendor_df.rename(columns={vendor_df.columns[0]: ECOSYSTEM_COLUMN_NAME})
     sheets = {
