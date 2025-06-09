@@ -25,7 +25,7 @@ jobs:
     - name: Install pip and dependencies
       run: |
         uv pip install -U pip
-        uv pip install -e .
+        uv pip install .
     - name: Collect Github Data
       run: |
         uv run github-analytics collect -v -q -t ${{ secrets.GITHUB_TOKEN }} -m -c daily.yaml
@@ -47,7 +47,7 @@ jobs:
     - name: Install pip and dependencies
       run: |
         uv pip install -U pip
-        uv pip install -e .[dev]
+        uv pip install .[dev]
     - name: Slack alert if failure
       run: python -m github_analytics.slack_utils -r ${{ github.run_id }} -c ${{ github.event.inputs.slack_channel || 'sdv-alerts' }}
       env:
