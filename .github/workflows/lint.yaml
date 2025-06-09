@@ -18,7 +18,6 @@ jobs:
       with:
         enable-cache: true
         activate-environment: true
-        python-version: "3.13"
     - name: Install pip and dependencies
       run: |
         uv pip install -U pip
