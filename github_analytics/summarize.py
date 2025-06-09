@@ -99,7 +99,7 @@ def summarize_metrics(
 
         filename = f'{github_org}'
         metrics_filepath = os.path.join(input_folder, filename)
-        df = load_spreadsheet(metrics_filepath)
+        df = load_spreadsheet(metrics_filepath, sheet_name=None)
 
         unique_issue_users_df = df['Unique Issue Users']
         unique_users_row = _extract_row(
