@@ -11,7 +11,6 @@ import yaml
 
 from github_analytics.main import collect_projects, collect_traffic
 from github_analytics.summarize import summarize_metrics
-from github_analytics.utils import is_url
 
 LOGGER = logging.getLogger(__name__)
 
@@ -27,12 +26,8 @@ def _env_setup(logfile, verbosity):
 
 
 def _load_config(config_path):
-    if is_url(config_path):
-        with open(config_path) as stream:
-            config = yaml.safe_load(stream)
-    else:
-        config_path = pathlib.Path(config_path)
-        config = yaml.safe_load(config_path.read_text())
+    config_path = pathlib.Path(config_path)
+    config = yaml.safe_load(config_path.read_text())
 
     import_config = config.pop('import_config', None)
     if import_config:

@@ -17,11 +17,12 @@ ECOSYSTEM_COLUMN_NAME = 'Ecosystem'
 TOTAL_COLUMN_NAME = 'Total Since Beginning'
 OUTPUT_FILENAME = 'GitHub_Summary'
 SHEET_NAMES = ['Unique users', 'User issues', 'vendor-mapping']
+START_YEAR = 2021
 
 
 def _extract_row(df, date_column):
     row = {TOTAL_COLUMN_NAME: [len(df)]}
-    for year in range(2021, get_current_year() + 1):
+    for year in range(START_YEAR, get_current_year() + 1):
         min_datetime, max_datetime = get_min_max_dt_in_year(year)
         matching_df = df[df[date_column] >= min_datetime]
         matching_df = matching_df[matching_df[date_column] <= max_datetime]
@@ -37,7 +38,50 @@ def summarize_metrics(
     dry_run=False,
     verbose=False,
 ):
-    """Summarize GitHub analytics."""
+    """Summarize GitHub analytics.
+
+    Args:
+        projects (dict[str, str | list[str]]):
+            List of projects/ecosysems to summarize. Must contain
+            If it is an ecosystem and download counts needs to be adjusted it must have:
+                - base_project (str): This is the base project for the ecosystem.
+                - dependency_projects (list[str]): These are direct dependencies of the base project
+                    and maintained by the same org.
+                    The downlaods counts are subtracted from the base project, since they are
+                    direct dependencies.
+                - parent_projects (list[str]): These are parent projects maintained by the same org.
+                    These parent projects have a core dependency on the base project.
+                    Their base project download count is subtracted from each parent parent.
+            If the downloads counts should be simply added together, then the following is required:
+                - projects (list[list]): The list of projects to add.
+        vendors (dict[str, str | list[str]]):
+            The vendors and the projects owned by the Vendors.
+            FOr each vendor, the following must be defined:
+                - ecosystem (str): The user facing name.
+                - name (str): The actual name of the vendor.
+                - projects (list[str]): The projects owned by the vendor.
+                    The downloads counts are summed.
+
+        input_folder (str):
+            The folder containing the location collected GitHub metrics.
+            The folder must only contain xlsx files.
+            The name of each file must match the `github_org` in summarize_config.yaml.
+            The GitHub metrics are computed from the xlsx files in this folder.
+
+        output_folder (str):
+            Folder in which GitHub_Summary.xlsx will be written.
+            It can be passed as a local folder or as a Google Drive path in the format
+            `gdrive://{folder_id}`.
+
+        dry_run (bool):
+            Whether of not to actually upload the summary results.
+            If true, it just calculate the summary results. Defaults to False.
+
+        verbose (bool):
+            If true, will output the dataframes of the summary metrics
+            (one dataframe for each sheet). Defaults to False.
+
+    """
     vendor_df = pd.DataFrame.from_records(vendors)
     unique_users_df = _create_df()
     users_issues_df = _create_df()
@@ -95,7 +139,7 @@ def summarize_metrics(
 
 def _create_df():
     columns = [ECOSYSTEM_COLUMN_NAME, TOTAL_COLUMN_NAME]
-    for year in range(2021, get_current_year() + 1):
+    for year in range(START_YEAR, get_current_year() + 1):
         columns.append(year)
     return pd.DataFrame(columns=columns)
 
