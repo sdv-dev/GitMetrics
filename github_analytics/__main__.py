@@ -130,13 +130,11 @@ def _summarize(args, parser):
     config = _load_config(args.config_file)
     projects = config['projects']
     vendors = config['vendors']
-    output_folder = args.output_folder or config.get('output-folder', '.')
 
     summarize_metrics(
         projects=projects,
         vendors=vendors,
         input_folder=args.input_folder,
-        output_folder=output_folder,
         dry_run=args.dry_run,
         verbose=args.verbose,
     )
@@ -246,24 +244,14 @@ def _get_parser():
         '-i',
         '--input-folder',
         type=str,
-        default=None,
+        required=True,
         help='Path to the folder containing xslx files, with the calculated GitHub metrics.',
-    )
-    summarize.add_argument(
-        '-o',
-        '--output-folder',
-        type=str,
-        required=False,
-        help=(
-            'Path to the folder where data will be outputted. It can be a local path or a'
-            ' Google Drive folder path in the format gdrive://<folder-id>'
-        ),
     )
     summarize.add_argument(
         '-d',
         '--dry-run',
         action='store_true',
-        help='Do not upload the summary results. Just calculate them.',
+        help='Do not actually create the summary results file. Just calculate them.',
     )
     return parser
 
