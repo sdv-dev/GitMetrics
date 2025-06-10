@@ -34,7 +34,6 @@ def summarize_metrics(
     projects,
     vendors,
     input_folder,
-    output_folder,
     dry_run=False,
     verbose=False,
 ):
@@ -43,35 +42,21 @@ def summarize_metrics(
     Args:
         projects (dict[str, str | list[str]]):
             List of projects/ecosysems to summarize. Must contain
-            If it is an ecosystem and download counts needs to be adjusted it must have:
-                - base_project (str): This is the base project for the ecosystem.
-                - dependency_projects (list[str]): These are direct dependencies of the base project
-                    and maintained by the same org.
-                    The downlaods counts are subtracted from the base project, since they are
-                    direct dependencies.
-                - parent_projects (list[str]): These are parent projects maintained by the same org.
-                    These parent projects have a core dependency on the base project.
-                    Their base project download count is subtracted from each parent parent.
-            If the downloads counts should be simply added together, then the following is required:
-                - projects (list[list]): The list of projects to add.
+                - ecosystem (str): The user facing name of the ecossytem.
+                - github_org (str): The GitHub organization for this ecosystem.
+
         vendors (dict[str, str | list[str]]):
-            The vendors and the projects owned by the Vendors.
-            FOr each vendor, the following must be defined:
-                - ecosystem (str): The user facing name.
+            The vendors and the projects owned by the mentioned vendor.
+            For each vendor, the following must be defined:
                 - name (str): The actual name of the vendor.
-                - projects (list[str]): The projects owned by the vendor.
-                    The downloads counts are summed.
+                - github_org (str): The GitHub organization for this vendor.
 
         input_folder (str):
-            The folder containing the location collected GitHub metrics.
-            The folder must only contain xlsx files.
-            The name of each file must match the `github_org` in summarize_config.yaml.
+            The folder containing the location of the collected GitHub metrics.
+            The folder must only contain spreadsheet (xlsx) files.
+            The name of each file must match the `github_org` (lowercase) in
+                summarize_config.yaml.
             The GitHub metrics are computed from the xlsx files in this folder.
-
-        output_folder (str):
-            Folder in which GitHub_Summary.xlsx will be written.
-            It can be passed as a local folder or as a Google Drive path in the format
-            `gdrive://{folder_id}`.
 
         dry_run (bool):
             Whether of not to actually upload the summary results.
@@ -126,12 +111,8 @@ def summarize_metrics(
     if verbose:
         for sheet_name, df in sheets.items():
             LOGGER.info(f'Sheet Name: {sheet_name}')
-            LOGGER.info(df)
+            LOGGER.info(df.to_string())
     if not dry_run:
-        # Write to Google Drive/Output folder
-        output_path = os.path.join(output_folder, OUTPUT_FILENAME)
-        create_spreadsheet(output_path=output_path, sheets=sheets)
-
         # Write to local directory
         output_path = os.path.join(dir_path, OUTPUT_FILENAME)
         create_spreadsheet(output_path=output_path, sheets=sheets)

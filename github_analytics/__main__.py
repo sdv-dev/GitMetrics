@@ -232,7 +232,7 @@ def _get_parser():
     )
     traffic.add_argument('-r', '--repositories', nargs='*', help='List of repositories to add.')
     summarize = action.add_parser(
-        'summarize', help='Summarize the downloads data.', parents=[logging_args]
+        'summarize', help='Summarize the github analytics information.', parents=[logging_args]
     )
     summarize.set_defaults(action=_summarize)
     summarize.add_argument(
