@@ -12,14 +12,14 @@ authors = [
 ]
 requires-python = ">=3.13"
 dependencies = [
-    "pandas>=2.2.3",
+    "pandas >= 2.2.3",
     "tqdm",
     "openpyxl",
     "xlsxwriter",
     "requests",
     "python-benedict",
     "PyYAML",
-    "PyDrive"
+    "PyDrive",
 ]
 
 [project.urls]
@@ -33,9 +33,12 @@ include = ['github_analytics', 'github_analytics.*']
 
 [project.optional-dependencies]
 dev = [
-    "ruff>=0.9.8",
+    "ruff >= 0.9.8",
     "invoke",
-    "slack-sdk>=3.34,<4.0",
+    "slack-sdk >= 3.34,<4.0",
+]
+test = [
+    'pytest >= 8.1.1',
 ]
 
 [tool.ruff]

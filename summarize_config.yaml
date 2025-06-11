@@ -1,0 +1,39 @@
+output-folder: gdrive://1ZvsuVbFAUk3BN-n6Pv_lUBLwviHZSxM2
+projects:
+  - ecosystem: "sdv"
+    base_project: "sdv"
+    dependency_projects: ["rdt", "copulas", "ctgan", "deepecho", "sdmetrics"]
+    parent_projects: ["sdgym"]
+    calculate_breakdown: true
+    github_org: "sdv-dev"
+  - ecosystem: "Gretel"
+    projects: ["gretel-synthetics", "gretel-trainer"]
+  - ecosystem: "be-great"
+    projects: ["be-great"]
+    github_org: "be_great"
+  - ecosystem: "realtabformer"
+    projects: ["realtabformer"]
+  - ecosystem: "smartnoise-synth"
+    projects: ["smartnoise-synth"]
+    github_org: "smartnoise-sdk"
+  - ecosystem: "synthcity"
+    projects: ["synthcity"]
+    github_org: "synthcity"
+
+vendors:
+  - ecosystem: "Vendor 1"
+    name: "Synthesized"
+    projects: ["synthesized"]
+    github_org: null
+  - ecosystem: "Vendor 2"
+    name: "ydata"
+    projects: ["ydata-synthetic", "ydata-sdk"]
+    github_org: "ydata"
+  - ecosystem: "Vendor 3"
+    name: "datomize"
+    projects: ["datomize"]
+    github_org: null
+  - ecosystem: "Vendor 4"
+    name: "mostlyai"
+    projects: ["mostlyai", "mostlyai-mock"]
+    github_org: "mostly-ai"
