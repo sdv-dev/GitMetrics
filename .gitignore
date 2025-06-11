@@ -1,3 +1,16 @@
+settings.yaml
+bigquery_creds.json
+client_secrets.json
+credentials.json
+sdv-dev.github.io/*
+
+notebooks
+*.xlsx
+*.csv
+
+secrets/
+*.bak
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

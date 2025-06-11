@@ -24,7 +24,13 @@ def _add_sheet(writer, data, sheet):
     data.to_excel(writer, sheet_name=sheet, index=False)
 
     for column in data:
-        column_width = max(data[column].astype(str).map(len).max(), len(column))
+        column_length = None
+        if isinstance(column, (int, float)):
+            column_length = len(str(column))
+        else:
+            column_length = len(column)
+
+        column_width = max(data[column].astype(str).map(len).max(), column_length)
         col_idx = data.columns.get_loc(column)
         writer.sheets[sheet].set_column(col_idx, col_idx, column_width + 2)
 
@@ -68,7 +74,7 @@ def create_spreadsheet(output_path, sheets):
         output_path.write_bytes(output.getbuffer())
 
 
-def load_spreadsheet(spreadsheet):
+def load_spreadsheet(spreadsheet, sheet_name=None):
     """Load a spreadsheet previously created by github-analytics.
 
     Args:
@@ -90,7 +96,7 @@ def load_spreadsheet(spreadsheet):
         spreadsheet += '.xlsx'
         path = spreadsheet
 
-    sheets = pd.read_excel(spreadsheet, sheet_name=None)
+    sheets = pd.read_excel(spreadsheet, sheet_name=sheet_name)
     for sheet in sheets.values():  # noqa
         for column in DATE_COLUMNS:
             if column in sheet:
