@@ -183,7 +183,7 @@ def collect_project_metrics(
         previous = None
     else:
         try:
-            previous = load_spreadsheet(output_path, sheet_name=0)
+            previous = load_spreadsheet(output_path, sheet_name=None)
         except FileNotFoundError:
             previous = None
 
