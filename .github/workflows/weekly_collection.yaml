@@ -1,4 +1,4 @@
-name: Weekly collection
+name: Weekly Collection
 
 on:
   workflow_dispatch:
