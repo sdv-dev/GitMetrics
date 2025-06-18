@@ -6,9 +6,14 @@ import os
 import pandas as pd
 from tqdm import tqdm
 
+from github_analytics.constants import (
+    ECOSYSTEM_COLUMN_NAME,
+    METRIC_COLUMN_NAME,
+    METRICS_SHEET_NAME,
+    VALUE_COLUMN_NAME,
+)
 from github_analytics.output import create_spreadsheet, load_spreadsheet
 
-ECOSYSTEM_COLUMN_NAME = 'Ecosystem'
 OUTPUT_FILENAME = 'Consolidated_Overview'
 SHEET_NAME = 'Overview'
 
@@ -38,8 +43,8 @@ def consolidate_metrics(projects, output_folder, dry_run=False, verbose=True):
     for project in tqdm(projects):
         row_info = {ECOSYSTEM_COLUMN_NAME: project}
         filepath = os.path.join(output_folder, project)
-        df = load_spreadsheet(filepath, sheet_name='Metrics')
-        row = df[['metric', 'value']].T
+        df = load_spreadsheet(filepath, sheet_name=METRICS_SHEET_NAME)
+        row = df[[METRIC_COLUMN_NAME, VALUE_COLUMN_NAME]].T
         row = row.reset_index(drop=True)
 
         row = row.rename(columns=row.iloc[0])

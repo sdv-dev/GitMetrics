@@ -5,6 +5,7 @@ import os
 
 import pandas as pd
 
+from github_analytics.constants import ECOSYSTEM_COLUMN_NAME
 from github_analytics.output import create_spreadsheet, load_spreadsheet
 from github_analytics.time_utils import get_current_year, get_min_max_dt_in_year
 
@@ -13,7 +14,6 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 
 LOGGER = logging.getLogger(__name__)
 
-ECOSYSTEM_COLUMN_NAME = 'Ecosystem'
 TOTAL_COLUMN_NAME = 'Total Since Beginning'
 OUTPUT_FILENAME = 'GitHub_Summary'
 SHEET_NAMES = ['Unique users', 'User issues', 'vendor-mapping']
