@@ -186,7 +186,7 @@ def _get_parser():
         '--output-folder',
         type=str,
         required=False,
-        help='Output folder path. Defaults to .',
+        help='Output folder path. Defaults to output folder in config-file.',
     )
     collect.add_argument('-t', '--token', type=str, required=False, help='Github Token to use.')
     collect.add_argument(
@@ -240,7 +240,7 @@ def _get_parser():
         '--output-folder',
         type=str,
         required=False,
-        help='Output folder path. Defaults to .',
+        help='Output folder path. Defaults to output folder in config-file.',
     )
 
     # Traffic
