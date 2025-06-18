@@ -9,6 +9,7 @@ import warnings
 
 import yaml
 
+from github_analytics.consolidate import consolidate_metrics
 from github_analytics.main import collect_projects, collect_traffic
 from github_analytics.summarize import summarize_metrics
 
@@ -140,6 +141,19 @@ def _summarize(args, parser):
     )
 
 
+def _consolidate(args, parser):
+    config = _load_config(args.config_file)
+    output_folder = args.output_folder or config.get('output_folder', '.')
+    projects = config['projects']
+
+    consolidate_metrics(
+        projects=projects,
+        output_folder=output_folder,
+        dry_run=args.dry_run,
+        verbose=args.verbose,
+    )
+
+
 def _get_parser():
     # Logging
     logging_args = argparse.ArgumentParser(add_help=False)
@@ -163,7 +177,7 @@ def _get_parser():
     action = parser.add_subparsers(title='action')
     action.required = True
 
-    # collect
+    # Collect
     collect = action.add_parser('collect', help='Collect github metrics.', parents=[logging_args])
     collect.set_defaults(action=_collect)
 
@@ -203,6 +217,31 @@ def _get_parser():
         action='store_false',
         help='Start from scratch instead of incrementing over existing data.',
     )
+    # Consolidate
+    consolidate = action.add_parser(
+        'consolidate', help='Consolidate github metrics', parents=[logging_args]
+    )
+    consolidate.set_defaults(action=_consolidate)
+    consolidate.add_argument(
+        '-c',
+        '--config-file',
+        type=str,
+        default='config.yaml',
+        help='Path to the configuration file.',
+    )
+    consolidate.add_argument(
+        '-d',
+        '--dry-run',
+        action='store_true',
+        help='Do not actually create the conslidated overview file. Just calculate it.',
+    )
+    consolidate.add_argument(
+        '-o',
+        '--output-folder',
+        type=str,
+        required=False,
+        help='Output folder path. Defaults to .',
+    )
 
     # Traffic
     traffic = action.add_parser(
@@ -229,6 +268,8 @@ def _get_parser():
         help='Projects to collect. Defaults to ALL if not given',
     )
     traffic.add_argument('-r', '--repositories', nargs='*', help='List of repositories to add.')
+
+    # Summarize
     summarize = action.add_parser(
         'summarize', help='Summarize the github analytics information.', parents=[logging_args]
     )

@@ -97,10 +97,15 @@ def load_spreadsheet(spreadsheet, sheet_name=None):
         path = spreadsheet
 
     sheets = pd.read_excel(spreadsheet, sheet_name=sheet_name)
-    for sheet in sheets.values():  # noqa
+    if not sheet_name:
+        for sheet in sheets.values():  # noqa
+            for column in DATE_COLUMNS:
+                if column in sheet:
+                    sheet[column] = pd.to_datetime(sheet[column], utc=True).dt.tz_convert(None)
+    else:
         for column in DATE_COLUMNS:
-            if column in sheet:
-                sheet[column] = pd.to_datetime(sheet[column], utc=True).dt.tz_convert(None)
+            if column in sheets:
+                sheets[column] = pd.to_datetime(sheets[column], utc=True).dt.tz_convert(None)
 
     LOGGER.info('Loaded spreadsheet %s', path)
 

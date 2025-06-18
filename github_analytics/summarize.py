@@ -60,10 +60,10 @@ def summarize_metrics(
 
         dry_run (bool):
             Whether of not to actually upload the summary results.
-            If true, it just calculate the summary results. Defaults to False.
+            If True, it just calculate the summary results. Defaults to False.
 
         verbose (bool):
-            If true, will output the dataframes of the summary metrics
+            If True, will output the dataframes of the summary metrics
             (one dataframe for each sheet). Defaults to False.
 
     """
