@@ -1,4 +1,4 @@
-name: Manual collection
+name: Manual Collection
 
 on:
   workflow_dispatch:
