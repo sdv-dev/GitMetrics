@@ -6,6 +6,7 @@ import pathlib
 
 import pandas as pd
 
+from github_analytics.constants import METRICS_SHEET_NAME
 from github_analytics.drive import get_or_create_gdrive_folder
 from github_analytics.github.repository import RepositoryClient
 from github_analytics.github.repository_owner import RepositoryOwnerClient
@@ -227,7 +228,7 @@ def collect_project_metrics(
     }
     if add_metrics:
         metrics = compute_metrics(issues, pull_requests, users, contributors, stargazers)
-        sheets = dict({'Metrics': metrics}, **sheets)
+        sheets = dict({METRICS_SHEET_NAME: metrics}, **sheets)
 
     if output_path:
         create_spreadsheet(output_path, sheets)

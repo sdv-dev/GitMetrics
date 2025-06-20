@@ -2,6 +2,8 @@
 
 import pandas as pd
 
+from github_analytics.constants import METRIC_COLUMN_NAME, VALUE_COLUMN_NAME
+
 
 def compute_metrics(issues, pull_requests, users, contributors, stargazers):
     """Compute metrics for the given data.
@@ -39,48 +41,48 @@ def compute_metrics(issues, pull_requests, users, contributors, stargazers):
 
     return pd.DataFrame([
         {
-            'metric': 'num_issues',
-            'value': num_issues,
+            METRIC_COLUMN_NAME: 'num_issues',
+            VALUE_COLUMN_NAME: num_issues,
             'description': 'Total number of Issues',
         },
         {
-            'metric': 'num_pull_requests',
-            'value': num_pull_requests,
+            METRIC_COLUMN_NAME: 'num_pull_requests',
+            VALUE_COLUMN_NAME: num_pull_requests,
             'description': 'Total number of Pull Requests',
         },
         {
-            'metric': 'num_users',
-            'value': num_users,
+            METRIC_COLUMN_NAME: 'num_users',
+            VALUE_COLUMN_NAME: num_users,
             'description': 'Total number of Issue Users',
         },
         {
-            'metric': 'num_contgributors',
-            'value': num_contributors,
+            METRIC_COLUMN_NAME: 'num_contgributors',
+            VALUE_COLUMN_NAME: num_contributors,
             'description': 'Total number of Contributors',
         },
         {
-            'metric': 'num_stargazers',
-            'value': num_stargazers,
+            METRIC_COLUMN_NAME: 'num_stargazers',
+            VALUE_COLUMN_NAME: num_stargazers,
             'description': 'Total number of Stargazers',
         },
         {
-            'metric': 'num_non_contributor_users',
-            'value': num_non_contrib_users,
+            METRIC_COLUMN_NAME: 'num_non_contributor_users',
+            VALUE_COLUMN_NAME: num_non_contrib_users,
             'description': 'Total number of Users that are not Contributors',
         },
         {
-            'metric': 'num_non_contributor_stargazers',
-            'value': num_non_contrib_stars,
+            METRIC_COLUMN_NAME: 'num_non_contributor_stargazers',
+            VALUE_COLUMN_NAME: num_non_contrib_stars,
             'description': 'Total number of Stargazers that are not Contributors',
         },
         {
-            'metric': 'USR',
-            'value': usr,
+            METRIC_COLUMN_NAME: 'USR',
+            VALUE_COLUMN_NAME: usr,
             'description': 'Users / Stargazers ratio',
         },
         {
-            'metric': 'USR-C',
-            'value': usrc,
+            METRIC_COLUMN_NAME: 'USR-C',
+            VALUE_COLUMN_NAME: usrc,
             'description': 'USR Excluding Contributors',
         },
     ])

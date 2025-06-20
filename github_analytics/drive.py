@@ -27,7 +27,6 @@ def split_drive_path(path):
     """Extract the folder and filename from the google drive path string."""
     assert is_drive_path(path), f'{path} is not a google drive path'
     folder, filename = path[9:].split('/')
-
     return folder, filename
 
 
