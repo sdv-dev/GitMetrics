@@ -74,7 +74,7 @@ def _get_repositories_list(token, owner, quiet=False):
 
 
 def _get_profiles(token, issues, pull_requests, stargazers, previous, quiet):
-    all_users = pd.concat([issues.user, pull_requests.user], ignore_index=True)
+    all_users = pd.concat([issues['user'], pull_requests['user']], ignore_index=True)
     unique_users = all_users.dropna().unique().tolist()
 
     users = stargazers[USER_COLUMNS].drop_duplicates()
