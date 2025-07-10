@@ -1,1 +1,1 @@
-"""Classes and functions to extract stats from Github."""
+"""Classes and functions to extract stats from GitHub."""

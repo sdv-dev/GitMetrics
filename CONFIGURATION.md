@@ -144,7 +144,7 @@ projects:
 
 GitMetrics is configured to collect data daily and weekly via the
 [.github/workflow/daily.yaml](.github/workflow/daily.yaml) and [.github/workflow/weekly.yaml](
-.github/workflow/weekly.yaml) Github Action Workflows.
+.github/workflow/weekly.yaml) GitHub Action Workflows.
 
 These workflows are configured to execute the `gitmetrics collect` command using the
 [daily.yaml](daily.yaml) and [weekly.yaml](weekly.yaml) configuration files respectively,

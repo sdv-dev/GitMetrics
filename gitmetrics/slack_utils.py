@@ -78,7 +78,7 @@ def send_alert(args):
 
 def get_parser():
     """Get the parser."""
-    parser = argparse.ArgumentParser(description='Function to alert when a Github workflow fails.')
+    parser = argparse.ArgumentParser(description='Function to alert when a GitHub workflow fails.')
     parser.add_argument('-r', '--run-id', type=str, help='The id of the github run.')
     parser.add_argument(
         '-c',

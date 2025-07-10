@@ -158,11 +158,11 @@ def collect_project_metrics(
     incremental=True,
     add_metrics=False,
 ):
-    """Pull data from Github to create metrics.
+    """Pull data from GitHub to create metrics.
 
     Args:
         token (str):
-            Github token to use.
+            GitHub token to use.
         repositories (list[str]):
             List of repositories to analyze, passed as ``{org_name}/{repo_name}``
         output_path (str):
@@ -244,7 +244,7 @@ def collect_projects(
 
     Args:
         token (str):
-            Github token to use.
+            GitHub token to use.
         projects (dict[str, List[str]]):
             Projects to collect, passed as a dict of project names
             and lists of repositories.
@@ -275,7 +275,7 @@ def collect_traffic(token, projects, output_folder):
 
     Args:
         token (str):
-            Github token to use.
+            GitHub token to use.
         projects (dict[str, List[str]]):
             Projects to collect, passed as a dict of project names
             and lists of repositories.

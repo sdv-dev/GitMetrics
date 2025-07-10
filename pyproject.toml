@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "gitmetrics"
 version = "0.0.1.dev0"
-description = "Scripts to extract multiple metrics from Github Projects."
+description = "Scripts to extract multiple metrics from GitHub Projects."
 readme = "README.md"
 authors = [
     { name = "DataCebo", email = "info@datacebo.com" }

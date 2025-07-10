@@ -25,7 +25,7 @@ jobs:
       run: |
         uv pip install -U pip
         uv pip install .
-    - name: Collect Github Data
+    - name: Collect GitHub Data
       run: |
         uv run gitmetrics collect -v -q -t ${{ secrets.GITHUB_TOKEN }} -m -c daily.yaml
       env:

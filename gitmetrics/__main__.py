@@ -53,7 +53,7 @@ def _load_config(config_path):
 def _collect(args, parser):
     token = args.token or os.getenv('GITHUB_TOKEN')
     if token is None:
-        token = input('Please input your Github Token: ')
+        token = input('Please input your GitHub Token: ')
 
     config = _load_config(args.config_file)
     config_projects = config['projects']
@@ -93,7 +93,7 @@ def _collect(args, parser):
 def _traffic_collection(args, parser):
     token = args.token or os.getenv('GITHUB_TOKEN')
     if token is None:
-        token = input('Please input your Github Token: ')
+        token = input('Please input your GitHub Token: ')
 
     config = _load_config(args.config_file)
     config_projects = config['projects']
@@ -188,7 +188,7 @@ def _get_parser():
         required=False,
         help='Output folder path. Defaults to output folder in config-file.',
     )
-    collect.add_argument('-t', '--token', type=str, required=False, help='Github Token to use.')
+    collect.add_argument('-t', '--token', type=str, required=False, help='GitHub Token to use.')
     collect.add_argument(
         '-p',
         '--projects',
@@ -249,7 +249,7 @@ def _get_parser():
     )
     traffic.set_defaults(action=_traffic_collection)
 
-    traffic.add_argument('-t', '--token', type=str, required=False, help='Github Token to use.')
+    traffic.add_argument('-t', '--token', type=str, required=False, help='GitHub Token to use.')
     traffic.add_argument(
         '-c',
         '--config-file',

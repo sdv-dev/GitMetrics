@@ -1,6 +1,6 @@
 # GitMetrics
 
-Scripts to extract multiple metrics from Github Projects.
+Scripts to extract multiple metrics from GitHub Projects.
 
 ## Install
 
@@ -20,11 +20,11 @@ pip install -e .[test,dev]
 
 # Local Usage
 
-To collect metrics from github by running `gitmetrics` on your computer you need to provide:
+To collect metrics from GitHub by running `gitmetrics` on your computer you need to provide:
 
-1. A Github Token. Documentation about how to create a Personal Access Token can be found
+1. A GitHub Token. Documentation about how to create a Personal Access Token can be found
    [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
-2. A list of Github Repositories for which to collect the metrics. The repositories need
+2. A list of GitHub Repositories for which to collect the metrics. The repositories need
    to be given as `{org-name}/{repo-name}`, like `sdv-dev/SDV`.
 3. (Optional) A filename where the output will be stored. If a name containing the `.xlsx`
    extension is given (like `path/to/my-filename.xlsx`), it will be used as provided.
@@ -91,13 +91,13 @@ must be called passing the following optional arguments:
   spreadsheet.
 - `-n / --not-incremental`: If indicated, collect data from scratch instead of doing it
   incrementally over the existing data.
-- `-t / --token`: Github token to use. If not given, it will be requested in a prompt.
+- `-t / --token`: GitHub token to use. If not given, it will be requested in a prompt.
 - `-l / --logfile LOGFILE`: Write logs to the indicated logfile.
 - `-v / --verbose`: Be more verbose.
 
 ```bash
 $ gitmetrics github -p sdv-dev -c config.yaml
-Please input your Github Token: <my-github-token>
+Please input your GitHub Token: <my-github-token>
 2021-11-12 15:42:43,100 - INFO - Getting information for repository sdv-dev/RDT
 100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 300.87it/s]
 100%|███████████████████████████████████████████████████████████████| 182/182 [00:00<00:00, 324.25it/s]
@@ -160,7 +160,7 @@ For this to work, the following things are required:
 
 The GitMetrics script can be configured using a YAML file that indicates which repositories
 to collect and where to store the collected data, as well as when to execute the collection
-of data using Github Actions.
+of data using GitHub Actions.
 
 For more details about how to configure this, check the [CONFIGURATION.md](CONFIGURATION.md)
 document.
