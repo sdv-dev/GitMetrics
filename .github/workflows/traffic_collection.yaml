@@ -12,7 +12,7 @@ on:
     - cron: "0 0 */14 * *"  # Runs every 14 days at midnight UTC
 
 jobs:
-  collect_traffic:
+  daily_traffic_collection:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
   alert:
-    needs: [daily_github_collection]
+    needs: [daily_traffic_collection]
     runs-on: ubuntu-latest
     if: failure()
     steps:
