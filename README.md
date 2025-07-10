@@ -36,7 +36,7 @@ To collect metrics from GitHub by running `gitmetrics` on your computer you need
 ## Python Interface
 
 In order to run the collection script from python, the `collect_project_metrics` function
-needs to be imported from the `gitmetricsalytics` package and executed passing the values
+needs to be imported from the `gitmetrics` package and executed passing the values
 indicated above.
 
 **NOTE**: For detailed output, logging must be enabled as shown in the example below.
@@ -44,30 +44,30 @@ indicated above.
 ```python3
 >>> import logging
 >>> logging.basicConfig(level=logging.INFO)
->>> from gitmetricsalytics import collect_project_metrics
+>>> from gitmetrics import collect_project_metrics
 >>> repositories = ['sdv-dev/RDT', 'sdv-dev/SDV', 'sdv-dev/Copulas', 'sdv-dev/CTGAN']
 >>> output_name = 'sdv-dev'
 >>> token = '<my-github-token>'
 >>> collect_project_metrics(token, repositories, output_name)
-INFO:gitmetricsalytics.main:Getting information for repository sdv-dev/RDT
+INFO:gitmetrics.main:Getting information for repository sdv-dev/RDT
 100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 195.00it/s]
 100%|███████████████████████████████████████████████████████████████| 182/182 [00:00<00:00, 364.64it/s]
 100%|███████████████████████████████████████████████████████████████| 37/37 [00:00<00:00, 91020.09it/s]
-INFO:gitmetricsalytics.main:Getting information for repository sdv-dev/SDV
+INFO:gitmetrics.main:Getting information for repository sdv-dev/SDV
 100%|███████████████████████████████████████████████████████████████| 389/389 [00:02<00:00, 193.20it/s]
 100%|███████████████████████████████████████████████████████████████| 219/219 [00:00<00:00, 231.17it/s]
 100%|███████████████████████████████████████████████████████████████| 561/561 [00:03<00:00, 158.39it/s]
-INFO:gitmetricsalytics.main:Getting information for repository sdv-dev/Copulas
+INFO:gitmetrics.main:Getting information for repository sdv-dev/Copulas
 100%|███████████████████████████████████████████████████████████████| 138/138 [00:00<00:00, 333.27it/s]
 100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 287.29it/s]
 100%|███████████████████████████████████████████████████████████████| 245/245 [00:01<00:00, 204.88it/s]
-INFO:gitmetricsalytics.main:Getting information for repository sdv-dev/CTGAN
+INFO:gitmetrics.main:Getting information for repository sdv-dev/CTGAN
 100%|███████████████████████████████████████████████████████████████| 113/113 [00:00<00:00, 287.26it/s]
 100%|██████████████████████████████████████████████████████████████| 64/64 [00:00<00:00, 134824.44it/s]
 100%|███████████████████████████████████████████████████████████████| 498/498 [00:02<00:00, 171.11it/s]
-INFO:gitmetricsalytics.main:Getting 164 missing users
+INFO:gitmetrics.main:Getting 164 missing users
  99%|██████████████████████████████████████████████████████████████▌| 163/164 [00:01<00:00, 121.99it/s]
-INFO:gitmetricsalytics.output:Creating file github-metrics-sdv-dev-2021-11-12.xlsx
+INFO:gitmetrics.output:Creating file github-metrics-sdv-dev-2021-11-12.xlsx
 ```
 
 

@@ -22,7 +22,7 @@ def _env_setup(logfile, verbosity):
     format_ = '%(asctime)s - %(levelname)s - %(message)s'
     level = (3 - verbosity) * 10
     logging.basicConfig(filename=logfile, level=level, format=format_)
-    logging.getLogger('gitmetricsalytics').setLevel(level)
+    logging.getLogger('gitmetrics').setLevel(level)
     logging.getLogger().setLevel(logging.WARN)
 
 
