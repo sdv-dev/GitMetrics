@@ -1,13 +1,13 @@
-"""Summarize GitHub Analytics."""
+"""Summarize GitMetrics."""
 
 import logging
 import os
 
 import pandas as pd
 
-from github_analytics.constants import ECOSYSTEM_COLUMN_NAME
-from github_analytics.output import create_spreadsheet, load_spreadsheet
-from github_analytics.time_utils import get_current_year, get_min_max_dt_in_year
+from gitmetrics.constants import ECOSYSTEM_COLUMN_NAME
+from gitmetrics.output import create_spreadsheet, load_spreadsheet
+from gitmetrics.time_utils import get_current_year, get_min_max_dt_in_year
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -37,7 +37,7 @@ def summarize_metrics(
     dry_run=False,
     verbose=False,
 ):
-    """Summarize GitHub analytics.
+    """Summarize GitMetrics.
 
     Args:
         projects (dict[str, str | list[str]]):

@@ -6,14 +6,14 @@ import pathlib
 
 import pandas as pd
 
-from github_analytics.constants import METRICS_SHEET_NAME
-from github_analytics.drive import get_or_create_gdrive_folder
-from github_analytics.github.repository import RepositoryClient
-from github_analytics.github.repository_owner import RepositoryOwnerClient
-from github_analytics.github.traffic import TrafficClient
-from github_analytics.github.users import UsersClient
-from github_analytics.metrics import compute_metrics
-from github_analytics.output import create_spreadsheet, load_spreadsheet
+from gitmetrics.constants import METRICS_SHEET_NAME
+from gitmetrics.drive import get_or_create_gdrive_folder
+from gitmetrics.github.repository import RepositoryClient
+from gitmetrics.github.repository_owner import RepositoryOwnerClient
+from gitmetrics.github.traffic import TrafficClient
+from gitmetrics.github.users import UsersClient
+from gitmetrics.metrics import compute_metrics
+from gitmetrics.output import create_spreadsheet, load_spreadsheet
 
 LOGGER = logging.getLogger(__name__)
 
@@ -158,11 +158,11 @@ def collect_project_metrics(
     incremental=True,
     add_metrics=False,
 ):
-    """Pull data from Github to create metrics.
+    """Pull data from GitHub to create metrics.
 
     Args:
         token (str):
-            Github token to use.
+            GitHub token to use.
         repositories (list[str]):
             List of repositories to analyze, passed as ``{org_name}/{repo_name}``
         output_path (str):
@@ -244,7 +244,7 @@ def collect_projects(
 
     Args:
         token (str):
-            Github token to use.
+            GitHub token to use.
         projects (dict[str, List[str]]):
             Projects to collect, passed as a dict of project names
             and lists of repositories.
@@ -275,7 +275,7 @@ def collect_traffic(token, projects, output_folder):
 
     Args:
         token (str):
-            Github token to use.
+            GitHub token to use.
         projects (dict[str, List[str]]):
             Projects to collect, passed as a dict of project names
             and lists of repositories.

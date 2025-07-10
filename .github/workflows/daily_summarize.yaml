@@ -28,7 +28,7 @@ jobs:
         uv pip install .
     - name: Run Summarize
       run: |
-        uv run github-analytics summarize \
+        uv run gitmetrics summarize \
           --input-folder ***REMOVED***
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
@@ -66,9 +66,9 @@ jobs:
         uv pip install .[dev]
     - name: Slack alert if failure
       run: |
-        uv run python -m github_analytics.slack_utils \
+        uv run python -m gitmetrics.slack_utils \
         -r ${{ github.run_id }} \
         -c ${{ github.event.inputs.slack_channel || 'sdv-alerts' }} \
-        -m 'Summarize GitHub Analytics build failed :fire: :dumpster-fire: :fire:'
+        -m 'Summarize GitMetrics build failed :fire: :dumpster-fire: :fire:'
       env:
         SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}

@@ -1,4 +1,4 @@
-"""Github Analytics CLI."""
+"""GitMetrics CLI."""
 
 import argparse
 import logging
@@ -9,9 +9,9 @@ import warnings
 
 import yaml
 
-from github_analytics.consolidate import consolidate_metrics
-from github_analytics.main import collect_projects, collect_traffic
-from github_analytics.summarize import summarize_metrics
+from gitmetrics.consolidate import consolidate_metrics
+from gitmetrics.main import collect_projects, collect_traffic
+from gitmetrics.summarize import summarize_metrics
 
 LOGGER = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ def _env_setup(logfile, verbosity):
     format_ = '%(asctime)s - %(levelname)s - %(message)s'
     level = (3 - verbosity) * 10
     logging.basicConfig(filename=logfile, level=level, format=format_)
-    logging.getLogger('github_analytics').setLevel(level)
+    logging.getLogger('gitmetrics').setLevel(level)
     logging.getLogger().setLevel(logging.WARN)
 
 
@@ -53,7 +53,7 @@ def _load_config(config_path):
 def _collect(args, parser):
     token = args.token or os.getenv('GITHUB_TOKEN')
     if token is None:
-        token = input('Please input your Github Token: ')
+        token = input('Please input your GitHub Token: ')
 
     config = _load_config(args.config_file)
     config_projects = config['projects']
@@ -93,7 +93,7 @@ def _collect(args, parser):
 def _traffic_collection(args, parser):
     token = args.token or os.getenv('GITHUB_TOKEN')
     if token is None:
-        token = input('Please input your Github Token: ')
+        token = input('Please input your GitHub Token: ')
 
     config = _load_config(args.config_file)
     config_projects = config['projects']
@@ -169,8 +169,8 @@ def _get_parser():
     )
 
     parser = argparse.ArgumentParser(
-        prog='github-analytics',
-        description='Github Analytics Command Line Interface',
+        prog='gitmetrics',
+        description='GitMetrics Command Line Interface',
         parents=[logging_args],
     )
     parser.set_defaults(action=None)
@@ -188,7 +188,7 @@ def _get_parser():
         required=False,
         help='Output folder path. Defaults to output folder in config-file.',
     )
-    collect.add_argument('-t', '--token', type=str, required=False, help='Github Token to use.')
+    collect.add_argument('-t', '--token', type=str, required=False, help='GitHub Token to use.')
     collect.add_argument(
         '-p',
         '--projects',
@@ -249,7 +249,7 @@ def _get_parser():
     )
     traffic.set_defaults(action=_traffic_collection)
 
-    traffic.add_argument('-t', '--token', type=str, required=False, help='Github Token to use.')
+    traffic.add_argument('-t', '--token', type=str, required=False, help='GitHub Token to use.')
     traffic.add_argument(
         '-c',
         '--config-file',
@@ -271,7 +271,7 @@ def _get_parser():
 
     # Summarize
     summarize = action.add_parser(
-        'summarize', help='Summarize the github analytics information.', parents=[logging_args]
+        'summarize', help='Summarize the GitMetrics information.', parents=[logging_args]
     )
     summarize.set_defaults(action=_summarize)
     summarize.add_argument(
@@ -298,7 +298,7 @@ def _get_parser():
 
 
 def main():
-    """Run the Github Analytics CLI."""
+    """Run the GitMetrics CLI."""
     parser = _get_parser()
     if len(sys.argv) < 2:
         parser.print_help()
