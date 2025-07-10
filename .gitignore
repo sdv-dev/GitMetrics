@@ -3,6 +3,7 @@ bigquery_creds.json
 client_secrets.json
 credentials.json
 sdv-dev.github.io/*
+uv.lock
 
 notebooks
 *.xlsx

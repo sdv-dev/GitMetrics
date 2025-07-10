@@ -6,13 +6,13 @@ import os
 import pandas as pd
 from tqdm import tqdm
 
-from github_analytics.constants import (
+from gitmetrics.constants import (
     ECOSYSTEM_COLUMN_NAME,
     METRIC_COLUMN_NAME,
     METRICS_SHEET_NAME,
     VALUE_COLUMN_NAME,
 )
-from github_analytics.output import create_spreadsheet, load_spreadsheet
+from gitmetrics.output import create_spreadsheet, load_spreadsheet
 
 OUTPUT_FILENAME = 'Consolidated_Overview'
 SHEET_NAME = 'Overview'

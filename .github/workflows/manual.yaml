@@ -33,9 +33,9 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install .
-    - name: Collect Github Data
+    - name: Collect GitHub Data
       run: |
-        github-analytics collect -v -q \
+        gitmetrics collect -v -q \
           -t ${{ secrets.GITHUB_TOKEN }} \
           -p ${{ github.event.inputs.project }} \
           -r ${{ github.event.inputs.repositories }} \

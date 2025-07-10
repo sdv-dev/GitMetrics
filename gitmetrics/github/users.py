@@ -5,8 +5,8 @@ import logging
 import pandas as pd
 from tqdm.auto import tqdm
 
-from github_analytics.github.client import GQLClient
-from github_analytics.utils import to_utc
+from gitmetrics.github.client import GQLClient
+from gitmetrics.utils import to_utc
 
 LOGGER = logging.getLogger(__name__)
 

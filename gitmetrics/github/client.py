@@ -27,11 +27,11 @@ ISO_DATETIME = '%Y-%m-%dT%H:%M:%SZ'
 
 
 class GQLClient:
-    """Generic Github API v4 client that handles pagination.
+    """Generic GitHub API v4 client that handles pagination.
 
     Args:
         token (str):
-            Github token to use.
+            GitHub token to use.
     """
 
     def __init__(self, token, quiet):

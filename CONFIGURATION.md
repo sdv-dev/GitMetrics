@@ -1,14 +1,14 @@
-# Github Analytics Configuration
+# GitMetrics Configuration
 
-The Github Analytics script can be configured using a YAML file that indicates which repositories
+The GitMetrics script can be configured using a YAML file that indicates which repositories
 to collect and where to store the collected data.
 
-Additionally, [Github Actions Workflows](.github/workflows) are being used to trigger the
+Additionally, [GitMetrics Workflows](.github/workflows) are being used to trigger the
 collection of such projects either manually or on a scheduled basis.
 
 ## Configuration file format
 
-The configuration file for `github-analytics` must have the following contents:
+The configuration file for `gitmetrics` must have the following contents:
 
 * `output_folder`: Folder where results will be written. Can be a Google Drive in the format
   gdrive://<folder-name>
@@ -48,7 +48,7 @@ projects:
 ### Adding an entire organization
 
 Optionally, an organization or user name can be added to the confiuration instead of the
-individual repositories, and then `github-analytics` will translate that into the list of
+individual repositories, and then `gitmetrics` will translate that into the list of
 repositories owned by that user or organization *which are not forks of other repositories*.
 
 For example, this configuration file would include all the repositories listed above,
@@ -78,12 +78,12 @@ projects:
 
 ## Default Configuration File
 
-By default, Github Analytics collects the projects configured in the [config.yaml](config.yaml)
+By default, GitMetrics collects the projects configured in the [config.yaml](config.yaml)
 file included in the project. However, passing a different configuration file when running the
 command line script is possible via the `-c` flag, as shown in the example above:
 
 ```bash
-$ github-analytics collect -c my_config_file.yaml ...
+$ gitmetrics collect -c my_config_file.yaml ...
 ```
 
 ### Importing other configuration files
@@ -142,11 +142,11 @@ projects:
 
 ## Daily and Weekly Collection
 
-Github Analytics is configured to collect data daily and weekly via the
+GitMetrics is configured to collect data daily and weekly via the
 [.github/workflow/daily.yaml](.github/workflow/daily.yaml) and [.github/workflow/weekly.yaml](
-.github/workflow/weekly.yaml) Github Action Workflows.
+.github/workflow/weekly.yaml) GitHub Action Workflows.
 
-These workflows are configured to execute the `github-analytics collect` command using the
+These workflows are configured to execute the `gitmetrics collect` command using the
 [daily.yaml](daily.yaml) and [weekly.yaml](weekly.yaml) configuration files respectively,
 which:
 - Import the [config.yaml](config.yaml) file, where all the project repositories are listed
