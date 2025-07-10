@@ -29,7 +29,7 @@ Homepage = "https://github.com/datacebo/gitmetrics"
 gitmetrics = "gitmetrics.__main__:main"
 
 [tool.setuptools.packages.find]
-include = ['github_analytics', 'github_analytics.*']
+include = ['gitmetricsalytics', 'gitmetricsalytics.*']
 
 [project.optional-dependencies]
 dev = [
@@ -45,7 +45,7 @@ test = [
 preview = true
 line-length = 100
 indent-width = 4
-src = ["github_analytics"]
+src = ["gitmetricsalytics"]
 exclude = [
     "docs",
     ".tox",
@@ -91,7 +91,7 @@ docstring-code-format = true
 docstring-code-line-length = "dynamic"
 
 [tool.ruff.lint.isort]
-known-first-party = ["github_analytics"]
+known-first-party = ["gitmetricsalytics"]
 lines-between-types = 0
 
 [tool.ruff.lint.per-file-ignores]
