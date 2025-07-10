@@ -27,12 +27,12 @@ jobs:
         uv pip install .
     - name: Collect GitHub Data
       run: |
-        uv run github-analytics collect -v -q -t ${{ secrets.GITHUB_TOKEN }} -m -c weekly.yaml
+        uv run gitmetrics collect -v -q -t ${{ secrets.GITHUB_TOKEN }} -m -c weekly.yaml
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
     - name: Consolidate GitHub Data
       run: |
-        uv run github-analytics consolidate -v -c weekly.yaml
+        uv run gitmetrics consolidate -v -c weekly.yaml
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
   alert:

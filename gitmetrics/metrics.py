@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from github_analytics.constants import METRIC_COLUMN_NAME, VALUE_COLUMN_NAME
+from gitmetrics.constants import METRIC_COLUMN_NAME, VALUE_COLUMN_NAME
 
 
 def compute_metrics(issues, pull_requests, users, contributors, stargazers):

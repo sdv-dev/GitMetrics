@@ -6,14 +6,14 @@ import pathlib
 
 import pandas as pd
 
-from github_analytics.constants import METRICS_SHEET_NAME
-from github_analytics.drive import get_or_create_gdrive_folder
-from github_analytics.github.repository import RepositoryClient
-from github_analytics.github.repository_owner import RepositoryOwnerClient
-from github_analytics.github.traffic import TrafficClient
-from github_analytics.github.users import UsersClient
-from github_analytics.metrics import compute_metrics
-from github_analytics.output import create_spreadsheet, load_spreadsheet
+from gitmetrics.constants import METRICS_SHEET_NAME
+from gitmetrics.drive import get_or_create_gdrive_folder
+from gitmetrics.github.repository import RepositoryClient
+from gitmetrics.github.repository_owner import RepositoryOwnerClient
+from gitmetrics.github.traffic import TrafficClient
+from gitmetrics.github.users import UsersClient
+from gitmetrics.metrics import compute_metrics
+from gitmetrics.output import create_spreadsheet, load_spreadsheet
 
 LOGGER = logging.getLogger(__name__)
 

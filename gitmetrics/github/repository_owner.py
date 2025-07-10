@@ -1,6 +1,6 @@
 """GQLClient subclass specialized in repository_owner-related queries."""
 
-from github_analytics.github.client import GQLClient
+from gitmetrics.github.client import GQLClient
 
 REPOSITORIES = """
 {{

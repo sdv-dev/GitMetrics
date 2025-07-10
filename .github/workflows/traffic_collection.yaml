@@ -27,7 +27,7 @@ jobs:
         uv pip install .
     - name: Collect Github Traffic Data
       run: |
-        uv run github-analytics traffic -v -t ${{ secrets.GH_TRAFFIC_TOKEN }} -c traffic_config.yaml
+        uv run gitmetrics traffic -v -t ${{ secrets.GH_TRAFFIC_TOKEN }} -c traffic_config.yaml
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
   alert:

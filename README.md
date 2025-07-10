@@ -1,11 +1,11 @@
-# Github Analytics
+# GitMetrics
 
 Scripts to extract multiple metrics from Github Projects.
 
 ## Install
 
 ```bash
-pip install git+ssh://git@github.com/datacebo/github-analytics
+pip install git+ssh://git@github.com/datacebo/gitmetrics
 ```
 
 ### Development
@@ -13,14 +13,14 @@ pip install git+ssh://git@github.com/datacebo/github-analytics
 For development, clone the repository and install `dev-requirements.txt`:
 
 ```bash
-git clone git@github.com:datacebo/github-analytics
-cd github-analytics
+git clone git@github.com:datacebo/gitmetrics
+cd gitmetrics
 pip install -r dev-requirements.txt
 ```
 
 # Local Usage
 
-To collect metrics from github by running `github-analytics` on your computer you need to provide:
+To collect metrics from github by running `gitmetrics` on your computer you need to provide:
 
 1. A Github Token. Documentation about how to create a Personal Access Token can be found
    [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
@@ -73,7 +73,7 @@ INFO:github_analytics.output:Creating file github-metrics-sdv-dev-2021-11-12.xls
 
 ## Command Line Interface
 
-In order to run the collection script from the command line, the `github-analytics collect` command
+In order to run the collection script from the command line, the `gitmetrics collect` command
 must be called passing the following optional arguments:
 
 - `-c / --config-file CONFIG_FILE`: Path to the config file to use. Defaults to `config.yaml`.
@@ -96,7 +96,7 @@ must be called passing the following optional arguments:
 - `-v / --verbose`: Be more verbose.
 
 ```bash
-$ github-analytics github -p sdv-dev -c config.yaml
+$ gitmetrics github -p sdv-dev -c config.yaml
 Please input your Github Token: <my-github-token>
 2021-11-12 15:42:43,100 - INFO - Getting information for repository sdv-dev/RDT
 100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 300.87it/s]
@@ -144,7 +144,7 @@ aggregation metrics for the entire project.
 
 ## Google Drive Integration
 
-Github Analytics is capable of reading and writing results in Google Spreadsheets.
+GitMetrics is capable of reading and writing results in Google Spreadsheets.
 
 For this to work, the following things are required:
 
@@ -156,9 +156,9 @@ For this to work, the following things are required:
    the corresponding `settings.yaml` file, or passed via the `PYDRIVE_CREDENTIALS` environment
    variable.
 
-# Github Analytics Configuration
+# GitMetrics Configuration
 
-The Github Analytics script can be configured using a YAML file that indicates which repositories
+The GitMetrics script can be configured using a YAML file that indicates which repositories
 to collect and where to store the collected data, as well as when to execute the collection
 of data using Github Actions.
 

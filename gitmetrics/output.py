@@ -6,7 +6,7 @@ import pathlib
 
 import pandas as pd
 
-from github_analytics import drive
+from gitmetrics import drive
 
 LOGGER = logging.getLogger(__name__)
 
@@ -75,7 +75,7 @@ def create_spreadsheet(output_path, sheets):
 
 
 def load_spreadsheet(spreadsheet, sheet_name=None):
-    """Load a spreadsheet previously created by github-analytics.
+    """Load a spreadsheet previously created by gitmetrics.
 
     Args:
         spreadsheet (str or stream):

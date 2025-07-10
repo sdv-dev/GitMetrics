@@ -3,7 +3,7 @@ requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "github-analytics"
+name = "gitmetrics"
 version = "0.0.1.dev0"
 description = "Scripts to extract multiple metrics from Github Projects."
 readme = "README.md"
@@ -23,10 +23,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/DataCebo/github-analytics"
+Homepage = "https://github.com/datacebo/gitmetrics"
 
 [project.scripts]
-github-analytics = "github_analytics.__main__:main"
+gitmetrics = "gitmetrics.__main__:main"
 
 [tool.setuptools.packages.find]
 include = ['github_analytics', 'github_analytics.*']
