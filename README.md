@@ -15,7 +15,7 @@ For development, clone the repository and install `dev-requirements.txt`:
 ```bash
 git clone git@github.com:datacebo/gitmetrics
 cd gitmetrics
-pip install -r dev-requirements.txt
+pip install -e .[test,dev]
 ```
 
 # Local Usage
