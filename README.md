@@ -1,127 +1,17 @@
+<div align="center">
+<br/>
+<p align="center">
+    <i>This repository is part of <a href="https://sdv.dev">The Synthetic Data Vault Project</a>, a project from <a href="https://datacebo.com">DataCebo</a>.</i>
+</p>
+<div align="left">
+
 # GitMetrics
 
-Scripts to extract multiple metrics from GitHub Projects.
-
-## Install
-
-```bash
-pip install git+ssh://git@github.com/datacebo/gitmetrics
-```
-
-### Development
-
-For development, clone the repository and install `dev-requirements.txt`:
-
-```bash
-git clone git@github.com:datacebo/gitmetrics
-cd gitmetrics
-pip install -e .[test,dev]
-```
-
-# Local Usage
-
-To collect metrics from GitHub by running `gitmetrics` on your computer you need to provide:
-
-1. A GitHub Token. Documentation about how to create a Personal Access Token can be found
-   [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
-2. A list of GitHub Repositories for which to collect the metrics. The repositories need
-   to be given as `{org-name}/{repo-name}`, like `sdv-dev/SDV`.
-3. (Optional) A filename where the output will be stored. If a name containing the `.xlsx`
-   extension is given (like `path/to/my-filename.xlsx`), it will be used as provided.
-   Otherwise, a filename will be created as `github-metrics-{name}-{today}.xlsx` within
-   the same folder where the script is run. For example, if `sdv` is passed as the name,
-   and the script is run on November, 9th, 2021, the output file will be
-   `github-metrics-sdv-2021-11-09.xlsx`.
-
-## Python Interface
-
-In order to run the collection script from python, the `collect_project_metrics` function
-needs to be imported from the `gitmetrics` package and executed passing the values
-indicated above.
-
-**NOTE**: For detailed output, logging must be enabled as shown in the example below.
-
-```python3
->>> import logging
->>> logging.basicConfig(level=logging.INFO)
->>> from gitmetrics import collect_project_metrics
->>> repositories = ['sdv-dev/RDT', 'sdv-dev/SDV', 'sdv-dev/Copulas', 'sdv-dev/CTGAN']
->>> output_name = 'sdv-dev'
->>> token = '<my-github-token>'
->>> collect_project_metrics(token, repositories, output_name)
-INFO:gitmetrics.main:Getting information for repository sdv-dev/RDT
-100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 195.00it/s]
-100%|███████████████████████████████████████████████████████████████| 182/182 [00:00<00:00, 364.64it/s]
-100%|███████████████████████████████████████████████████████████████| 37/37 [00:00<00:00, 91020.09it/s]
-INFO:gitmetrics.main:Getting information for repository sdv-dev/SDV
-100%|███████████████████████████████████████████████████████████████| 389/389 [00:02<00:00, 193.20it/s]
-100%|███████████████████████████████████████████████████████████████| 219/219 [00:00<00:00, 231.17it/s]
-100%|███████████████████████████████████████████████████████████████| 561/561 [00:03<00:00, 158.39it/s]
-INFO:gitmetrics.main:Getting information for repository sdv-dev/Copulas
-100%|███████████████████████████████████████████████████████████████| 138/138 [00:00<00:00, 333.27it/s]
-100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 287.29it/s]
-100%|███████████████████████████████████████████████████████████████| 245/245 [00:01<00:00, 204.88it/s]
-INFO:gitmetrics.main:Getting information for repository sdv-dev/CTGAN
-100%|███████████████████████████████████████████████████████████████| 113/113 [00:00<00:00, 287.26it/s]
-100%|██████████████████████████████████████████████████████████████| 64/64 [00:00<00:00, 134824.44it/s]
-100%|███████████████████████████████████████████████████████████████| 498/498 [00:02<00:00, 171.11it/s]
-INFO:gitmetrics.main:Getting 164 missing users
- 99%|██████████████████████████████████████████████████████████████▌| 163/164 [00:01<00:00, 121.99it/s]
-INFO:gitmetrics.output:Creating file github-metrics-sdv-dev-2021-11-12.xlsx
-```
-
-
-## Command Line Interface
-
-In order to run the collection script from the command line, the `gitmetrics collect` command
-must be called passing the following optional arguments:
-
-- `-c / --config-file CONFIG_FILE`: Path to the config file to use. Defaults to `config.yaml`.
-  Format of the `config.yaml` file is documented below.
-- `-o / --output-folder OUTPUT_FILDER`: Path to the folder in which spreadsheets will be created.
-  Defaults to the value given in the config file, or to `'.'` if there is none, and supports
-  `gdrive://<folder-name>` format for Google Drive folders.
-- `-p / --projects PROJECT [PROJECT [PROJECT...]]`: Names of the projects to pull. These will be
-  used to search for repository lists inside the config file. If not given, defaults to all the
-  projects found in the config file.
-- `-r / --repositories REPOSITORY [REPOSITORY [REPOSITORY...]]`: Optional, list of repositories
-  to extract for the indicated project. If this is given, one and only one `project` must be
-  passed, which will be used as the name for the output spreadsheet.
-- `-m / --add-metrics`: If indicated, add a `Metrics` tab with the project metrics to the
-  spreadsheet.
-- `-n / --not-incremental`: If indicated, collect data from scratch instead of doing it
-  incrementally over the existing data.
-- `-t / --token`: GitHub token to use. If not given, it will be requested in a prompt.
-- `-l / --logfile LOGFILE`: Write logs to the indicated logfile.
-- `-v / --verbose`: Be more verbose.
-
-```bash
-$ gitmetrics github -p sdv-dev -c config.yaml
-Please input your GitHub Token: <my-github-token>
-2021-11-12 15:42:43,100 - INFO - Getting information for repository sdv-dev/RDT
-100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 300.87it/s]
-100%|███████████████████████████████████████████████████████████████| 182/182 [00:00<00:00, 324.25it/s]
-100%|███████████████████████████████████████████████████████████████| 37/37 [00:00<00:00, 88276.02it/s]
-2021-11-12 15:42:45,862 - INFO - Getting information for repository sdv-dev/SDV
-100%|███████████████████████████████████████████████████████████████| 389/389 [00:01<00:00, 203.20it/s]
-100%|███████████████████████████████████████████████████████████████| 219/219 [00:00<00:00, 228.34it/s]
-100%|███████████████████████████████████████████████████████████████| 561/561 [00:03<00:00, 152.64it/s]
-2021-11-12 15:42:54,465 - INFO - Getting information for repository sdv-dev/CTGAN
-100%|███████████████████████████████████████████████████████████████| 113/113 [00:00<00:00, 283.67it/s]
-100%|██████████████████████████████████████████████████████████████| 64/64 [00:00<00:00, 134486.70it/s]
-100%|███████████████████████████████████████████████████████████████| 498/498 [00:02<00:00, 179.84it/s]
-2021-11-12 15:42:59,545 - INFO - Getting information for repository sdv-dev/Copulas
-100%|███████████████████████████████████████████████████████████████| 138/138 [00:00<00:00, 318.99it/s]
-100%|███████████████████████████████████████████████████████████████| 143/143 [00:00<00:00, 303.94it/s]
-100%|███████████████████████████████████████████████████████████████| 245/245 [00:01<00:00, 170.51it/s]
-2021-11-12 15:43:04,178 - INFO - Getting 164 missing users
- 99%|██████████████████████████████████████████████████████████████▌| 163/164 [00:01<00:00, 110.06it/s]
-2021-11-12 15:43:05,688 - INFO - Creating file github-metrics-sdv-dev-2021-11-12.xlsx
-```
+**GitMetrics** extracts metrics from GitHub Projects, generating spreadsheets with repository analytics.
 
 ## Output
 
-The result is a spreadsheet that will contain 5 tabs:
+The result is a spreadsheet that will contain 5 tabs (for each given project):
 
 - **Issues**:
     Where all the issues are listed, including data about
@@ -139,28 +29,73 @@ The result is a spreadsheet that will contain 5 tabs:
     Where the unique users that stargazed the repositories
     are listed with all the information existing in their profile
 
-Optionally, and additional spreadsheet called **Metrics** will be created with the
+Optionally, an additional spreadsheet called **Metrics** will be created with the
 aggregation metrics for the entire project.
+
+
+# Install
+Install gitmetrics using pip:
+```shell
+pip install git+ssh://git@github.com/datacebo/gitmetrics
+```
+
+## Local Usage
+Collect metrics from GitHub by running `gitmetrics` on your computer. You need to provide the following:
+
+1. A GitHub Token. Documentation about how to create a Personal Access Token can be found
+   [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+2. A list of GitHub Repositories for which to collect the metrics, defined in a YAML file. The repositories need to be given as `{org-name}/{repo-name}`, (e.g. `sdv-dev/SDV`). See [daily.yaml](./daily.yaml) for an example.
+3. (__Optional__) A filename where the output will be stored. If a name containing the `.xlsx`
+   extension is given (like `path/to/my-filename.xlsx`), it will be used as provided.
+   Otherwise, a filename will be created as `github-metrics-{name}-{today}.xlsx` within
+   the same folder where the script is run.
+    - For example, if `sdv` is passed as the name,
+    and the script is run on November, 9th, 2021, the output file will be
+    `github-metrics-sdv-2021-11-09.xlsx`.
+
+You can run gitmetrics with the following CLI command:
+
+```shell
+gitmetrics collect --token {GITHUB_TOKEN} --add-metrics --config-file daily.yaml
+```
 
 ## Google Drive Integration
 
-GitMetrics is capable of reading and writing results in Google Spreadsheets.
-
-For this to work, the following things are required:
+GitMetrics is capable of reading and writing results in Google Spreadsheets. The following is required:
 
 1. The `output_path` needs to be given as a Google Drive path with the following format:
-   `gdrive://<folder-id>/<filename>`. For example: `***REMOVED***/sdv-dev`
+   `gdrive://<folder-id>/<filename>`.
 
 2. A set of Google Drive Credentials need to be provided in the format required by `PyDrive`. The
    credentials can be stored in a `credentials.json` file within the working directory, alongside
    the corresponding `settings.yaml` file, or passed via the `PYDRIVE_CREDENTIALS` environment
    variable.
+   - See [instructions from PyDrive](https://pythonhosted.org/PyDrive/quickstart.html).
 
-# GitMetrics Configuration
+## Workflows
+1. **Weekly Collection**: On a weekly basis, this workflow collects GitHub metrics for the repositories defined in [weekly.yaml](./weekly.yaml).
+2. **Daily Collection**: On a daily basis, this workflow collects GitHub metrics for the repositories defined in [daily.yaml](./daily.yaml).
+3. **Daily Summarize**: On a daily basis, this workflow summarizes the GitHub metrics (from the daily collection). The summarized data is published to a GitHub repo: [GitHub_Summary.xlsx](https://github.com/sdv-dev/sdv-dev.github.io/blob/gatsby-home/assets/GitHub_Summary.xlsx)
 
-The GitMetrics script can be configured using a YAML file that indicates which repositories
-to collect and where to store the collected data, as well as when to execute the collection
-of data using GitHub Actions.
+---
 
-For more details about how to configure this, check the [CONFIGURATION.md](CONFIGURATION.md)
-document.
+<div align="center">
+  <a href="https://datacebo.com"><picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/sdv-dev/SDV/blob/stable/docs/images/datacebo-logo-dark-mode.png">
+      <img align="center" width=40% src="https://github.com/sdv-dev/SDV/blob/stable/docs/images/datacebo-logo.png"></img>
+  </picture></a>
+</div>
+<br/>
+<br/>
+
+[The Synthetic Data Vault Project](https://sdv.dev) was first created at MIT's [Data to AI Lab](
+https://dai.lids.mit.edu/) in 2016. After 4 years of research and traction with enterprise, we
+created [DataCebo](https://datacebo.com) in 2020 with the goal of growing the project.
+Today, DataCebo is the proud developer of SDV, the largest ecosystem for
+synthetic data generation & evaluation. It is home to multiple libraries that support synthetic
+data, including:
+
+* 🔄 Data discovery & transformation. Reverse the transforms to reproduce realistic data.
+* 🧠 Multiple machine learning models -- ranging from Copulas to Deep Learning -- to create tabular,
+  multi table and time series data.
+* 📊 Measuring quality and privacy of synthetic data, and comparing different synthetic data

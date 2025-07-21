@@ -1,4 +1,3 @@
-output_folder: ***REMOVED***
 import_config: config.yaml
 projects:
   sdv-dev:

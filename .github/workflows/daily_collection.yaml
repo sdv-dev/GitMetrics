@@ -13,6 +13,7 @@ on:
 
 jobs:
   daily_github_collection:
+    environment: daily
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -21,16 +22,18 @@ jobs:
       with:
         enable-cache: true
         activate-environment: true
-    - name: Install pip and dependencies
+    - name: Install dependencies
       run: |
-        uv pip install -U pip
         uv pip install .
     - name: Collect GitHub Data
       run: |
-        uv run gitmetrics collect -v -q -t ${{ secrets.GITHUB_TOKEN }} -m -c daily.yaml
+        uv run gitmetrics collect -q \
+          --add-metrics \
+          --config-file daily.yaml \
+          --token ${{ secrets.GITHUB_TOKEN }} \
+          --output-folder ${{ secrets.OUTPUT_FOLDER }}
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
-
   alert:
     needs: [daily_github_collection]
     runs-on: ubuntu-latest
@@ -42,9 +45,8 @@ jobs:
       with:
         enable-cache: true
         activate-environment: true
-    - name: Install pip and dependencies
+    - name: Install dependencies
       run: |
-        uv pip install -U pip
         uv pip install .[dev]
     - name: Slack alert if failure
       run: python -m gitmetrics.slack_utils -r ${{ github.run_id }} -c ${{ github.event.inputs.slack_channel || 'sdv-alerts' }}

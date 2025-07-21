@@ -13,6 +13,7 @@ on:
 
 jobs:
   daily_traffic_collection:
+    environment: traffic
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -21,13 +22,15 @@ jobs:
       with:
         enable-cache: true
         activate-environment: true
-    - name: Install pip and dependencies
+    - name: Install dependencies
       run: |
-        uv pip install -U pip
         uv pip install .
     - name: Collect GitHub Traffic Data
       run: |
-        uv run gitmetrics traffic -v -t ${{ secrets.GH_TRAFFIC_TOKEN }} -c traffic_config.yaml
+        uv run gitmetrics traffic \
+          --config-file traffic_config.yaml \
+          --token ${{ secrets.GH_TRAFFIC_TOKEN }} \
+          --output-folder ${{ secrets.OUTPUT_FOLDER }}
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
   alert:
@@ -41,9 +44,8 @@ jobs:
       with:
         enable-cache: true
         activate-environment: true
-    - name: Install pip and dependencies
+    - name: Install dependencies
       run: |
-        uv pip install -U pip
         uv pip install .[dev]
     - name: Slack alert if failure
       run: python -m gitmetrics.slack_utils -r ${{ github.run_id }} -c ${{ github.event.inputs.slack_channel || 'sdv-alerts' }}

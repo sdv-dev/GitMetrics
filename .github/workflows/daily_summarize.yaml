@@ -13,6 +13,7 @@ on:
 
 jobs:
   summarize:
+    environment: daily
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -22,14 +23,13 @@ jobs:
       with:
         enable-cache: true
         activate-environment: true
-    - name: Install pip and dependencies
+    - name: Install dependencies
       run: |
-        uv pip install -U pip
         uv pip install .
     - name: Run Summarize
       run: |
         uv run gitmetrics summarize \
-          --input-folder ***REMOVED***
+          --input-folder ${{ secrets.OUTPUT_FOLDER }}
       env:
         PYDRIVE_CREDENTIALS: ${{ secrets.PYDRIVE_CREDENTIALS }}
     - uses: actions/checkout@v4
@@ -60,9 +60,8 @@ jobs:
       with:
         enable-cache: true
         activate-environment: true
-    - name: Install pip and dependencies
+    - name: Install dependencies
       run: |
-        uv pip install -U pip
         uv pip install .[dev]
     - name: Slack alert if failure
       run: |

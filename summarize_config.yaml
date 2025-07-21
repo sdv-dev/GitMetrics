@@ -1,4 +1,3 @@
-output-folder: ***REMOVED***
 projects:
   - ecosystem: "sdv"
     base_project: "sdv"
