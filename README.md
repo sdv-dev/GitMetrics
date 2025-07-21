@@ -75,8 +75,8 @@ For this to work, the following is required:
    - See [instructions from PyDrive](https://pythonhosted.org/PyDrive/quickstart.html).
 
 ## Workflows
-1. **Weekly Collection**: On a weekly basis, this workflow collects GitHub metrics for the repositories defined in [./weekly.yaml](./weekly.yaml).
-2. **Daily Collection**: On a daily basis, this workflow collects GitHub metrics for the repositories defined in [./daily.yaml](./daily.yaml).
+1. **Weekly Collection**: On a weekly basis, this workflow collects GitHub metrics for the repositories defined in [weekly.yaml](./weekly.yaml).
+2. **Daily Collection**: On a daily basis, this workflow collects GitHub metrics for the repositories defined in [daily.yaml](./daily.yaml).
 3. **Daily Summarize**: On a daily basis, this workflow summarizes the GitHub metrics (from the daily collection). The summarized data is published to a GitHub repo: [GitHub_Summary.xlsx](https://github.com/sdv-dev/sdv-dev.github.io/blob/gatsby-home/assets/GitHub_Summary.xlsx)
 
 ---
