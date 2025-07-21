@@ -61,9 +61,7 @@ gitmetrics collect --token {GITHUB_TOKEN} --add-metrics --config-file daily.yaml
 
 ## Google Drive Integration
 
-GitMetrics is capable of reading and writing results in Google Spreadsheets.
-
-For this to work, the following is required:
+GitMetrics is capable of reading and writing results in Google Spreadsheets. The following is required:
 
 1. The `output_path` needs to be given as a Google Drive path with the following format:
    `gdrive://<folder-id>/<filename>`.
