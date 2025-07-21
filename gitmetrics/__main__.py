@@ -78,12 +78,10 @@ def _collect(args, parser):
 
             projects[project] = config_projects[project]
 
-    output_folder = args.output_folder or config.get('output_folder', '.')
-
     collect_projects(
         token=token,
         projects=projects,
-        output_folder=output_folder,
+        output_folder=args.output_folder,
         quiet=args.quiet,
         incremental=args.incremental,
         add_metrics=args.add_metrics,
@@ -118,12 +116,10 @@ def _traffic_collection(args, parser):
 
             projects[project] = config_projects[project]
 
-    output_folder = args.output_folder or config.get('output_folder', '.')
-
     collect_traffic(
         token=token,
         projects=projects,
-        output_folder=output_folder,
+        output_folder=args.output_folder,
     )
 
 
@@ -143,12 +139,11 @@ def _summarize(args, parser):
 
 def _consolidate(args, parser):
     config = _load_config(args.config_file)
-    output_folder = args.output_folder or config.get('output_folder', '.')
     projects = config['projects']
 
     consolidate_metrics(
         projects=projects,
-        output_folder=output_folder,
+        output_folder=args.output_folder,
         dry_run=args.dry_run,
         verbose=args.verbose,
     )
