@@ -18,9 +18,8 @@ jobs:
       with:
         enable-cache: true
         activate-environment: true
-    - name: Install pip and dependencies
+    - name: Install dependencies
       run: |
-        uv pip install -U pip
         uv pip install .[dev]
     - name: Run lint checks
       run: uv run invoke lint

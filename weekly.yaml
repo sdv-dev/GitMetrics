@@ -1,4 +1,3 @@
-output_folder: gdrive://1MxHzo-QmxnypvekJTPZeSy4mQi4pAID2
 import_config: config.yaml
 projects:
   PyTorchLightning:

@@ -1,4 +1,3 @@
-output-folder: gdrive://1ZvsuVbFAUk3BN-n6Pv_lUBLwviHZSxM2
 projects:
   - ecosystem: "sdv"
     base_project: "sdv"

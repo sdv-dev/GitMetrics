@@ -185,8 +185,8 @@ def _get_parser():
         '-o',
         '--output-folder',
         type=str,
-        required=False,
-        help='Output folder path. Defaults to output folder in config-file.',
+        required=True,
+        help='Output folder path.',
     )
     collect.add_argument('-t', '--token', type=str, required=False, help='GitHub Token to use.')
     collect.add_argument(
@@ -239,8 +239,8 @@ def _get_parser():
         '-o',
         '--output-folder',
         type=str,
-        required=False,
-        help='Output folder path. Defaults to output folder in config-file.',
+        required=True,
+        help='Output folder path.',
     )
 
     # Traffic
@@ -258,7 +258,7 @@ def _get_parser():
         help='Path to the configuration file.',
     )
     traffic.add_argument(
-        '-o', '--output-folder', type=str, required=False, help='Output folder path.'
+        '-o', '--output-folder', type=str, required=True, help='Output folder path.'
     )
     traffic.add_argument(
         '-p',
@@ -286,7 +286,7 @@ def _get_parser():
         '--input-folder',
         type=str,
         required=True,
-        help='Path to the folder containing xslx files, with the calculated GitHub metrics.',
+        help='Path to the folder containing xlsx files, with the calculated GitHub metrics.',
     )
     summarize.add_argument(
         '-d',

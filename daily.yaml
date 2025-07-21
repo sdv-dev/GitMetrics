@@ -1,4 +1,3 @@
-output_folder: gdrive://1ZvsuVbFAUk3BN-n6Pv_lUBLwviHZSxM2
 import_config: config.yaml
 projects:
   sdv-dev:
