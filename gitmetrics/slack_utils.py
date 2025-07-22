@@ -5,7 +5,7 @@ import os
 
 from slack_sdk import WebClient
 
-GITHUB_URL_PREFIX = 'https://github.com/datacebo/gitmetrics/actions/runs/'
+GITHUB_URL_PREFIX = 'https://github.com/sdv-dev/gitmetrics/actions/runs/'
 DEFAULT_SLACK_CHANNEL = 'sdv-alerts-debug'
 
 
