@@ -11,6 +11,16 @@ authors = [
     { name = "DataCebo", email = "info@datacebo.com" }
 ]
 requires-python = ">=3.13"
+license = "MIT"
+license-files = ["LICENSE"]
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'Intended Audience :: Developers',
+    'Natural Language :: English',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.13',
+    "Topic :: Scientific/Engineering",
+]
 dependencies = [
     "pandas >= 2.2.3",
     "tqdm",
@@ -23,7 +33,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/datacebo/gitmetrics"
+Homepage = "https://github.com/sdv-dev/gitmetrics"
 
 [project.scripts]
 gitmetrics = "gitmetrics.__main__:main"
