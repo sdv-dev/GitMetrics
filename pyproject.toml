@@ -33,7 +33,7 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/datacebo/gitmetrics"
+Homepage = "https://github.com/sdv-dev/gitmetrics"
 
 [project.scripts]
 gitmetrics = "gitmetrics.__main__:main"
