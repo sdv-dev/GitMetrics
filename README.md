@@ -1,7 +1,7 @@
 <div align="center">
 <br/>
 <p align="center">
-    <i>This repository is part of <a href="https://sdv.dev">The Synthetic Data Vault Project</a>, a project from <a href="https://datacebo.com">DataCebo</a>.</i>
+    <i>An open source project by Engineering at <a href="https://datacebo.com">DataCebo</a>.</i>
 </p>
 
 [![Dev Status](https://img.shields.io/badge/Dev%20Status-5%20--%20Production%2fStable-green)](https://pypi.org/search/?c=Development+Status+%3A%3A+5+-+Production%2FStable)
@@ -88,28 +88,3 @@ GitMetrics is capable of reading and writing results in Google Spreadsheets. The
 1. **Weekly Collection**: On a weekly basis, this workflow collects GitHub metrics for the repositories defined in [weekly.yaml](./weekly.yaml).
 2. **Daily Collection**: On a daily basis, this workflow collects GitHub metrics for the repositories defined in [daily.yaml](./daily.yaml).
 3. **Daily Summarize**: On a daily basis, this workflow summarizes the GitHub metrics (from the daily collection). The summarized data is published to a GitHub repo: [GitHub_Summary.xlsx](https://github.com/sdv-dev/sdv-dev.github.io/blob/gatsby-home/assets/GitHub_Summary.xlsx)
-
----
-
-<div align="left">
-<br/>
-<p align="center">
-<a href="https://github.com/sdv-dev/SDV">
-<img align="center" width=40% src="https://github.com/sdv-dev/SDV/blob/stable/docs/images/SDV-logo.png"></img>
-</a>
-</p>
-</div>
-
-</div>
-
-[The Synthetic Data Vault Project](https://sdv.dev) was first created at MIT's [Data to AI Lab](
-https://dai.lids.mit.edu/) in 2016. After 4 years of research and traction with enterprise, we
-created [DataCebo](https://datacebo.com) in 2020 with the goal of growing the project.
-Today, DataCebo is the proud developer of SDV, the largest ecosystem for
-synthetic data generation & evaluation. It is home to multiple libraries that support synthetic
-data, including:
-
-* 🔄 Data discovery & transformation. Reverse the transforms to reproduce realistic data.
-* 🧠 Multiple machine learning models -- ranging from Copulas to Deep Learning -- to create tabular,
-  multi table and time series data.
-* 📊 Measuring quality and privacy of synthetic data, and comparing different synthetic data
