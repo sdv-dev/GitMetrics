@@ -1,7 +1,7 @@
 <div align="center">
 <br/>
 <p align="center">
-    <i>Originally developed for internal use by <a href="https://datacebo.com">DataCebo</a>, these projects are now available for the community.</i>
+    <i>An open source project by Engineering at <a href="https://datacebo.com">DataCebo</a>.</i>
 </p>
 
 [![Dev Status](https://img.shields.io/badge/Dev%20Status-5%20--%20Production%2fStable-green)](https://pypi.org/search/?c=Development+Status+%3A%3A+5+-+Production%2FStable)
