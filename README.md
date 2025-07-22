@@ -88,28 +88,3 @@ GitMetrics is capable of reading and writing results in Google Spreadsheets. The
 1. **Weekly Collection**: On a weekly basis, this workflow collects GitHub metrics for the repositories defined in [weekly.yaml](./weekly.yaml).
 2. **Daily Collection**: On a daily basis, this workflow collects GitHub metrics for the repositories defined in [daily.yaml](./daily.yaml).
 3. **Daily Summarize**: On a daily basis, this workflow summarizes the GitHub metrics (from the daily collection). The summarized data is published to a GitHub repo: [GitHub_Summary.xlsx](https://github.com/sdv-dev/sdv-dev.github.io/blob/gatsby-home/assets/GitHub_Summary.xlsx)
-
----
-
-<div align="left">
-<br/>
-<p align="center">
-<a href="https://github.com/sdv-dev/SDV">
-<img align="center" width=40% src="https://github.com/sdv-dev/SDV/blob/stable/docs/images/SDV-logo.png"></img>
-</a>
-</p>
-</div>
-
-</div>
-
-[The Synthetic Data Vault Project](https://sdv.dev) was first created at MIT's [Data to AI Lab](
-https://dai.lids.mit.edu/) in 2016. After 4 years of research and traction with enterprise, we
-created [DataCebo](https://datacebo.com) in 2020 with the goal of growing the project.
-Today, DataCebo is the proud developer of SDV, the largest ecosystem for
-synthetic data generation & evaluation. It is home to multiple libraries that support synthetic
-data, including:
-
-* 🔄 Data discovery & transformation. Reverse the transforms to reproduce realistic data.
-* 🧠 Multiple machine learning models -- ranging from Copulas to Deep Learning -- to create tabular,
-  multi table and time series data.
-* 📊 Measuring quality and privacy of synthetic data, and comparing different synthetic data
