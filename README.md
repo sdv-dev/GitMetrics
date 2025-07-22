@@ -113,4 +113,3 @@ data, including:
 * 🧠 Multiple machine learning models -- ranging from Copulas to Deep Learning -- to create tabular,
   multi table and time series data.
 * 📊 Measuring quality and privacy of synthetic data, and comparing different synthetic data
-* 📊 Measuring quality and privacy of synthetic data, and comparing different synthetic data
