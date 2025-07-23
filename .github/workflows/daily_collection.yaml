@@ -15,6 +15,7 @@ jobs:
   daily_github_collection:
     environment: daily
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     steps:
     - uses: actions/checkout@v4
     - name: Install uv
@@ -37,6 +38,7 @@ jobs:
   alert:
     needs: [daily_github_collection]
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     if: failure()
     steps:
     - uses: actions/checkout@v4

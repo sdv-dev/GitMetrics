@@ -36,6 +36,7 @@ jobs:
   alert:
     needs: [daily_traffic_collection]
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     if: failure()
     steps:
     - uses: actions/checkout@v4
