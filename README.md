@@ -9,15 +9,24 @@
 
 <div align="center">
   <a href="https://datacebo.com">
-  <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/sdv-dev/SDV/blob/stable/docs/images/datacebo-logo-dark-mode.png">
-      <img align="center" width=40% src="https://github.com/sdv-dev/SDV/blob/stable/docs/images/datacebo-logo.png"></img>
-  </picture></a>
-</div>
-<br/>
+    <picture>
+      <img align="center" width=40% src="https://github.com/sdv-dev/GitMetrics/blob/main/docs/images/datacebo-logo.png"></img>
+    </picture>
+  </a>
 </div>
 
-# GitMetrics
+</div>
+
+<br/>
+
+<div align="left">
+  <picture>
+    <img align="center" width=15% src="https://github.com/sdv-dev/GitMetrics/blob/main/docs/images/gitmetrics-logo.png"></img>
+  </picture>
+</div>
+
+---
+
 
 **GitMetrics** extracts metrics from GitHub Projects, generating spreadsheets with repository analytics.
 
