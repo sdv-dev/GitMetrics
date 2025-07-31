@@ -8,19 +8,20 @@
 [![Slack](https://img.shields.io/badge/Slack-Join%20now!-36C5F0?logo=slack)](https://bit.ly/sdv-slack-invite)
 
 <div align="center">
-<a href="https://datacebo.com">
+  <a href="https://datacebo.com">
     <picture>
-        <img align="center" width=40% src="docs/images/datacebo-logo.png"></img>
+      <img align="center" width=40% src="docs/images/datacebo-logo.png"></img>
     </picture>
-    </a>
-  </div>
+  </a>
+</div>
+
 </div>
 
 <br/>
 
 <div align="left">
   <picture>
-      <img align="center" width=15% src="docs/images/gitmetrics-logo.png"></img>
+    <img align="center" width=15% src="docs/images/gitmetrics-logo.png"></img>
   </picture>
 </div>
 
