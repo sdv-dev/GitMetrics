@@ -8,16 +8,24 @@
 [![Slack](https://img.shields.io/badge/Slack-Join%20now!-36C5F0?logo=slack)](https://bit.ly/sdv-slack-invite)
 
 <div align="center">
-  <a href="https://datacebo.com">
-  <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://github.com/sdv-dev/SDV/blob/stable/docs/images/datacebo-logo-dark-mode.png">
-      <img align="center" width=40% src="https://github.com/sdv-dev/SDV/blob/stable/docs/images/datacebo-logo.png"></img>
-  </picture></a>
-</div>
-<br/>
+<a href="https://datacebo.com">
+    <picture>
+        <img align="center" width=40% src="docs/images/datacebo-logo.png"></img>
+    </picture>
+    </a>
+  </div>
 </div>
 
-# GitMetrics
+<br/>
+
+<div align="left">
+  <picture>
+      <img align="center" width=15% src="docs/images/gitmetrics-logo.png"></img>
+  </picture>
+</div>
+
+---
+
 
 **GitMetrics** extracts metrics from GitHub Projects, generating spreadsheets with repository analytics.
 
