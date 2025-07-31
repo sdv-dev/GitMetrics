@@ -21,7 +21,7 @@
 
 <div align="left">
   <picture>
-    <img align="center" width=15% src="https://github.com/sdv-dev/GitMetrics/blob/main/docs/images/gitmetrics-logo.png"></img>
+    <img align="center" width=25% src="https://github.com/sdv-dev/GitMetrics/blob/main/docs/images/gitmetrics-logo.png"></img>
   </picture>
 </div>
 
