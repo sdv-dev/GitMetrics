@@ -104,7 +104,7 @@ def summarize_metrics(
 
     vendor_df = vendor_df.rename(columns={vendor_df.columns[0]: ECOSYSTEM_COLUMN_NAME})
     runtime_data = {
-        'attribute': ['date'],
+        'index': ['date'],
         'value': [get_dt_now_spelled_out()],
     }
     metainfo_df = pd.DataFrame(runtime_data)
