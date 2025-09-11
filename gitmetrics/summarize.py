@@ -7,7 +7,7 @@ import pandas as pd
 
 from gitmetrics.constants import ECOSYSTEM_COLUMN_NAME
 from gitmetrics.output import create_spreadsheet, load_spreadsheet
-from gitmetrics.time_utils import get_current_year, get_min_max_dt_in_year
+from gitmetrics.time_utils import get_current_year, get_dt_now_spelled_out, get_min_max_dt_in_year
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -16,7 +16,7 @@ LOGGER = logging.getLogger(__name__)
 
 TOTAL_COLUMN_NAME = 'Total Since Beginning'
 OUTPUT_FILENAME = 'GitHub_Summary'
-SHEET_NAMES = ['Unique users', 'User issues', 'vendor-mapping']
+SHEET_NAMES = ['Unique users', 'User issues', 'vendor-mapping', 'metainfo']
 START_YEAR = 2021
 
 
@@ -103,10 +103,16 @@ def summarize_metrics(
         users_issues_df = append_row(users_issues_df, issues_row)
 
     vendor_df = vendor_df.rename(columns={vendor_df.columns[0]: ECOSYSTEM_COLUMN_NAME})
+    runtime_data = {
+        'attribute': ['date'],
+        'value': [get_dt_now_spelled_out()],
+    }
+    metainfo_df = pd.DataFrame(runtime_data)
     sheets = {
         SHEET_NAMES[0]: unique_users_df,
         SHEET_NAMES[1]: users_issues_df,
         SHEET_NAMES[2]: vendor_df,
+        SHEET_NAMES[3]: metainfo_df,
     }
     if verbose:
         for sheet_name, df in sheets.items():

@@ -25,3 +25,13 @@ def get_min_max_dt_in_year(year):
     min_datetime = get_first_datetime_in_year(year)
     max_datetime = get_last_datetime_in_year(year)
     return min_datetime, max_datetime
+
+
+def format_datetime_as_date(dt: datetime):
+    """Format datetime as spelled out date (Month Day, Year)."""
+    return dt.strftime('%B %-d, %Y')
+
+
+def get_dt_now_spelled_out(tz=None):
+    """Get the current date as full spelled out string."""
+    return format_datetime_as_date(datetime.now(tz=tz))
