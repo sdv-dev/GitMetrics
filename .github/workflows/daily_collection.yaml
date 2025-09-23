@@ -2,11 +2,6 @@ name: Daily Collection
 
 on:
   workflow_dispatch:
-    inputs:
-      slack_channel:
-        description: Slack channel to post the error message to if the builds fail.
-        required: false
-        default: "sdv-alerts-debug"
 
   schedule:
     - cron:  '0 0 * * *'
@@ -50,7 +45,3 @@ jobs:
     - name: Install dependencies
       run: |
         uv pip install .[dev]
-    - name: Slack alert if failure
-      run: python -m gitmetrics.slack_utils -r ${{ github.run_id }} -c ${{ github.event.inputs.slack_channel || 'sdv-alerts' }}
-      env:
-        SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}

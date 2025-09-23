@@ -45,7 +45,6 @@ include = ['gitmetrics', 'gitmetrics.*']
 dev = [
     "ruff >= 0.9.8",
     "invoke",
-    "slack-sdk >= 3.34,<4.0",
 ]
 test = [
     'pytest >= 8.1.1',
